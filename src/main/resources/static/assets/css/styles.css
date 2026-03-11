@@ -111,8 +111,8 @@
   --placeholder-text: rgba(201, 168, 76, 0.48);
   --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.08), rgba(18, 18, 20, 0.92));
   --hero-photo-label: 'Authentieke coachfoto';
-  --select-menu-bg: #141416;
-  --select-menu-text: #f4eee4;
+  --select-menu-bg: #fff9f1;
+  --select-menu-text: #241e17;
 }
 
 [data-theme='light'] {
