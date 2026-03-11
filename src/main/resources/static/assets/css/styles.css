@@ -111,6 +111,8 @@
   --placeholder-text: rgba(201, 168, 76, 0.48);
   --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.08), rgba(18, 18, 20, 0.92));
   --hero-photo-label: 'Authentieke coachfoto';
+  --select-menu-bg: #141416;
+  --select-menu-text: #f4eee4;
 }
 
 [data-theme='light'] {
@@ -154,6 +156,8 @@
     linear-gradient(150deg, #fff8ef 0%, #f2e7d8 62%, #e9dccb 100%);
   --placeholder-text: rgba(145, 108, 20, 0.62);
   --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.1), rgba(255, 250, 242, 0.92));
+  --select-menu-bg: #fff9f1;
+  --select-menu-text: #241e17;
 }
 
 [data-lang='en'] {
@@ -1215,6 +1219,20 @@ nav {
   border: 1px solid rgba(201, 168, 76, 0.18);
   background: rgba(255, 255, 255, 0.02);
   color: var(--text);
+}
+
+.form select {
+  color-scheme: dark;
+}
+
+[data-theme='light'] .form select {
+  color-scheme: light;
+}
+
+.form select option,
+.form select optgroup {
+  background: var(--select-menu-bg);
+  color: var(--select-menu-text);
 }
 
 .form textarea {
