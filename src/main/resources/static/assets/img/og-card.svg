@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="TCoaching">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5f1ea" />
+      <stop offset="100%" stop-color="#ddd1c2" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#2f6f6c" />
+      <stop offset="100%" stop-color="#d49b61" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="930" cy="120" r="140" fill="#d49b61" fill-opacity="0.18" />
+  <circle cx="180" cy="520" r="190" fill="#2f6f6c" fill-opacity="0.18" />
+  <rect x="110" y="96" width="980" height="438" rx="38" fill="#ffffff" fill-opacity="0.62" />
+  <rect x="146" y="138" width="160" height="160" rx="48" fill="url(#accent)" />
+  <text x="226" y="242" text-anchor="middle" font-family="Georgia, serif" font-size="74" font-weight="700" fill="#0f1715">TC</text>
+  <text x="360" y="238" font-family="Georgia, serif" font-size="72" font-weight="700" fill="#1e2a25">TCoaching</text>
+  <text x="360" y="312" font-family="Arial, sans-serif" font-size="34" fill="#46544d">Life coaching, personal training en duurzame groei</text>
+  <text x="146" y="418" font-family="Arial, sans-serif" font-size="28" fill="#1e2a25">Rust. Richting. Actie. 1-op-1 begeleiding op maat.</text>
+  <text x="146" y="466" font-family="Arial, sans-serif" font-size="24" fill="#5f6c64">Voor life coaching, stressherstel, assertiviteit en training.</text>
+</svg>

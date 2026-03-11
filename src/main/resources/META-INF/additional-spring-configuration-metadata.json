@@ -1,0 +1,79 @@
+{
+  "properties": [
+    {
+      "name": "security.admin.require-non-default",
+      "type": "java.lang.Boolean",
+      "description": "Fail startup when configured admin credentials still use known defaults."
+    },
+    {
+      "name": "security.rate-limit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable the custom API rate limiting filter."
+    },
+    {
+      "name": "security.rate-limit.use-forwarded-headers",
+      "type": "java.lang.Boolean",
+      "description": "Trust forwarded headers from a known reverse proxy for rate limiting and request context."
+    },
+    {
+      "name": "security.rate-limit.requests-per-minute",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of allowed API requests per minute per client."
+    },
+    {
+      "name": "analytics.retention.days",
+      "type": "java.lang.Integer",
+      "description": "Number of days to retain page view and analytics event data before cleanup."
+    },
+    {
+      "name": "security.admin.username",
+      "type": "java.lang.String",
+      "description": "Username for the protected admin endpoints."
+    },
+    {
+      "name": "security.admin.password",
+      "type": "java.lang.String",
+      "description": "Password for the protected admin endpoints."
+    },
+    {
+      "name": "contact.captcha.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable captcha validation for public contact and lead forms."
+    },
+    {
+      "name": "contact.captcha.site-key",
+      "type": "java.lang.String",
+      "description": "Public site key used by the captcha widget on the frontend."
+    },
+    {
+      "name": "contact.captcha.secret",
+      "type": "java.lang.String",
+      "description": "Private secret used to verify captcha tokens server-side."
+    },
+    {
+      "name": "contact.captcha.verify-url",
+      "type": "java.lang.String",
+      "description": "Verification endpoint for the configured captcha provider."
+    },
+    {
+      "name": "contact.notification.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable email notifications for new contact requests."
+    },
+    {
+      "name": "contact.notification.to",
+      "type": "java.lang.String",
+      "description": "Destination email address for contact notifications."
+    },
+    {
+      "name": "contact.notification.from",
+      "type": "java.lang.String",
+      "description": "From address used for outbound notification emails."
+    },
+    {
+      "name": "contact.notification.subject",
+      "type": "java.lang.String",
+      "description": "Subject line for new contact notification emails."
+    }
+  ]
+}

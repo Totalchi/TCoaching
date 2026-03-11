@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+target
+actions-runner
+*.log
+*.iml
+README.md
+HELP.md
+*** End of File

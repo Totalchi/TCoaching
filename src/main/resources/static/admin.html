@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="nl" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#f5f1ea" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="brand-mark">TC</div>
+        <div class="brand-name">TCoaching Admin</div>
+      </a>
+      <div class="nav-actions">
+        <span class="availability-note">Interne dashboardweergave</span>
+        <a class="btn btn-ghost" href="index.html">Terug naar site</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <div class="container">
+      <div class="admin-header">
+        <div>
+          <div class="pill">Interne opvolging</div>
+          <h1>Dashboard aanvragen en websitegedrag</h1>
+          <p class="admin-status" data-admin-status>Dashboard laden...</p>
+        </div>
+        <div class="admin-toolbar">
+          <span class="admin-status">Laatste refresh: <strong data-admin-generated-at>...</strong></span>
+        </div>
+      </div>
+
+      <section class="admin-metrics">
+        <div class="admin-metric">
+          <strong data-admin-total-leads>0</strong>
+          <span>Totaal aantal aanvragen</span>
+        </div>
+        <div class="admin-metric">
+          <strong data-admin-leads-30>0</strong>
+          <span>Aanvragen laatste 30 dagen</span>
+        </div>
+        <div class="admin-metric">
+          <strong data-admin-pageviews-30>0</strong>
+          <span>Pageviews laatste 30 dagen</span>
+        </div>
+        <div class="admin-metric">
+          <strong data-admin-events-30>0</strong>
+          <span>Events laatste 30 dagen</span>
+        </div>
+        <div class="admin-metric">
+          <strong data-admin-cta-30>0</strong>
+          <span>CTA-kliks laatste 30 dagen</span>
+        </div>
+      </section>
+
+      <section class="admin-grid mt-24">
+        <article class="admin-card">
+          <h3>Recentste aanvragen</h3>
+          <p>De meest recente intake- en contactaanvragen, handig voor snelle opvolging.</p>
+          <div class="admin-list mt-16" data-admin-recent-contacts></div>
+        </article>
+        <article class="admin-table-card">
+          <h3>Populairste pagina's</h3>
+          <p>Welke pagina's de voorbije 30 dagen het meeste verkeer aantrekken.</p>
+          <div class="mt-16">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Pagina</th>
+                  <th>Bezoeken</th>
+                  <th>Laatst gezien</th>
+                </tr>
+              </thead>
+              <tbody data-admin-top-pages></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="admin-panels mt-24">
+        <article class="admin-table-card">
+          <h3>Top events</h3>
+          <p>CTA-kliks en formulierinteracties die echt gebruikt worden.</p>
+          <div class="mt-16">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Naam</th>
+                  <th>Aantal</th>
+                  <th>Laatst gezien</th>
+                </tr>
+              </thead>
+              <tbody data-admin-top-events></tbody>
+            </table>
+          </div>
+        </article>
+        <article class="admin-card">
+          <h3>Interpretatie</h3>
+          <p>Gebruik deze cijfers om CTA's, pagina-volgorde en intake-copy verder aan te scherpen.</p>
+          <div class="admin-list mt-16">
+            <div class="admin-list-item">
+              <strong>Veel pageviews, weinig CTA-kliks</strong>
+              <span>Dan moet de bovenste copy of eerste CTA waarschijnlijk scherper.</span>
+            </div>
+            <div class="admin-list-item">
+              <strong>Veel form starts, weinig succesvolle submits</strong>
+              <span>Dan is het formulier mogelijk te lang of te weinig helder.</span>
+            </div>
+            <div class="admin-list-item">
+              <strong>Terugkerende toppagina's</strong>
+              <span>Dat zijn de beste kandidaten voor extra testimonials, cases of video.</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
