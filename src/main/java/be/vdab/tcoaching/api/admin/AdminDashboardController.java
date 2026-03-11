@@ -1,4 +1,4 @@
-package be.vdab.tcoaching.api;
+package be.vdab.tcoaching.api.admin;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;

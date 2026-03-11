@@ -1,4 +1,4 @@
-package be.vdab.tcoaching.api;
+package be.vdab.tcoaching.api.common;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

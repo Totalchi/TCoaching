@@ -1,4 +1,4 @@
-package be.vdab.tcoaching.api;
+package be.vdab.tcoaching.api.tracking;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -1,7 +1,7 @@
 package be.vdab.tcoaching;
 
-import be.vdab.tcoaching.api.CaptchaVerificationService;
-import be.vdab.tcoaching.api.EmailNotificationService;
+import be.vdab.tcoaching.api.contact.CaptchaVerificationService;
+import be.vdab.tcoaching.api.contact.EmailNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,7 +169,7 @@ class WebsiteSecurityAndApiTests {
         mockMvc.perform(get("/api/admin/dashboard"))
                 .andExpect(status().isUnauthorized());
 
-        mockMvc.perform(get("/admin.html"))
+        mockMvc.perform(get("/admin"))
                 .andExpect(status().isUnauthorized());
     }
 

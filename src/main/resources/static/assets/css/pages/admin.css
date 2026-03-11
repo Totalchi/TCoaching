@@ -1,0 +1,67 @@
+.admin-shell {
+  padding: 48px 0 72px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.admin-metric,
+.admin-card,
+.admin-table-card {
+  padding: 24px;
+}
+
+.admin-metric strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  color: var(--accent);
+}
+
+.admin-metric span,
+.admin-status,
+.admin-list-item span {
+  color: var(--muted);
+}
+
+.admin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-list-item {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.admin-list-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+  vertical-align: top;
+}
+
+.admin-table th {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

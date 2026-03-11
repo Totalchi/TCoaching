@@ -1,0 +1,290 @@
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-300.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-600.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-300.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('../fonts/dm-sans-700.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-sans: 'DM Sans', sans-serif;
+  --bg: #0c0c0d;
+  --bg-alt: #141415;
+  --bg-soft: #1b1b1d;
+  --surface: rgba(21, 21, 23, 0.92);
+  --surface-strong: #1f1f22;
+  --surface-muted: #161618;
+  --text: #f4eee4;
+  --muted: rgba(244, 238, 228, 0.62);
+  --muted-strong: rgba(244, 238, 228, 0.78);
+  --accent: #c9a84c;
+  --accent-soft: rgba(201, 168, 76, 0.16);
+  --accent-line: rgba(201, 168, 76, 0.3);
+  --line: rgba(201, 168, 76, 0.16);
+  --line-strong: rgba(201, 168, 76, 0.28);
+  --shadow: 0 30px 70px rgba(0, 0, 0, 0.32);
+  --radius-lg: 34px;
+  --radius-md: 22px;
+  --radius-sm: 14px;
+  --content-width: 1220px;
+  --body-bg:
+    radial-gradient(circle at 10% 10%, rgba(201, 168, 76, 0.09), transparent 26%),
+    radial-gradient(circle at 85% 14%, rgba(201, 168, 76, 0.05), transparent 22%),
+    linear-gradient(180deg, #0a0a0b 0%, #0f0f10 36%, #0c0c0d 100%);
+  --grid-line: rgba(201, 168, 76, 0.03);
+  --body-glow:
+    radial-gradient(circle at 50% 0%, rgba(201, 168, 76, 0.08), transparent 36%),
+    radial-gradient(circle at 50% 100%, rgba(201, 168, 76, 0.04), transparent 28%);
+  --header-bg: linear-gradient(180deg, rgba(12, 12, 13, 0.9), rgba(12, 12, 13, 0.62));
+  --header-bg-solid: rgba(12, 12, 13, 0.92);
+  --card-highlight: linear-gradient(145deg, rgba(255, 255, 255, 0.03), transparent 38%);
+  --hero-visual-bg:
+    radial-gradient(circle at 50% 24%, rgba(201, 168, 76, 0.12), transparent 26%),
+    linear-gradient(160deg, #19191b 0%, #111113 64%, #0b0b0c 100%);
+  --hero-photo-bg:
+    radial-gradient(circle at 50% 76%, rgba(201, 168, 76, 0.12), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    linear-gradient(160deg, #222225 0%, #121214 62%, #0b0b0c 100%);
+  --page-visual-bg:
+    radial-gradient(circle at 76% 18%, rgba(201, 168, 76, 0.12), transparent 28%),
+    linear-gradient(145deg, #19191c 0%, #111114 64%, #0c0c0d 100%);
+  --placeholder-bg:
+    radial-gradient(circle at 24% 20%, rgba(201, 168, 76, 0.12), transparent 20%),
+    linear-gradient(150deg, #1d1d21 0%, #121214 62%, #0a0a0b 100%);
+  --placeholder-text: rgba(201, 168, 76, 0.48);
+  --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.08), rgba(18, 18, 20, 0.92));
+  --hero-photo-label: 'Authentieke coachfoto';
+  --select-menu-bg: #fff9f1;
+  --select-menu-text: #241e17;
+}
+
+[data-theme='light'] {
+  --bg: #f6f1e8;
+  --bg-alt: #efe6d8;
+  --bg-soft: #e7dbc9;
+  --surface: rgba(255, 250, 242, 0.92);
+  --surface-strong: #fff9f1;
+  --surface-muted: #f0e7da;
+  --text: #241e17;
+  --muted: rgba(36, 30, 23, 0.68);
+  --muted-strong: rgba(36, 30, 23, 0.82);
+  --accent-soft: rgba(181, 139, 38, 0.12);
+  --accent-line: rgba(181, 139, 38, 0.26);
+  --line: rgba(181, 139, 38, 0.16);
+  --line-strong: rgba(181, 139, 38, 0.28);
+  --shadow: 0 24px 60px rgba(56, 38, 11, 0.12);
+  --body-bg:
+    radial-gradient(circle at 12% 12%, rgba(201, 168, 76, 0.14), transparent 28%),
+    radial-gradient(circle at 84% 10%, rgba(201, 168, 76, 0.09), transparent 22%),
+    linear-gradient(180deg, #fbf7f0 0%, #f6f1e8 40%, #efe7db 100%);
+  --grid-line: rgba(181, 139, 38, 0.05);
+  --body-glow:
+    radial-gradient(circle at 50% 0%, rgba(201, 168, 76, 0.1), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(201, 168, 76, 0.06), transparent 28%);
+  --header-bg: linear-gradient(180deg, rgba(250, 245, 236, 0.94), rgba(250, 245, 236, 0.76));
+  --header-bg-solid: rgba(248, 241, 231, 0.96);
+  --card-highlight: linear-gradient(145deg, rgba(255, 255, 255, 0.52), transparent 42%);
+  --hero-visual-bg:
+    radial-gradient(circle at 50% 24%, rgba(201, 168, 76, 0.18), transparent 28%),
+    linear-gradient(160deg, #f8efe3 0%, #f0e4d3 64%, #e7d9c5 100%);
+  --hero-photo-bg:
+    radial-gradient(circle at 50% 76%, rgba(201, 168, 76, 0.15), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.52), transparent),
+    linear-gradient(160deg, #fff8ef 0%, #f3e8d8 62%, #eadbc9 100%);
+  --page-visual-bg:
+    radial-gradient(circle at 76% 18%, rgba(201, 168, 76, 0.16), transparent 28%),
+    linear-gradient(145deg, #f7eee3 0%, #f0e5d6 64%, #e8dbc9 100%);
+  --placeholder-bg:
+    radial-gradient(circle at 24% 20%, rgba(201, 168, 76, 0.16), transparent 20%),
+    linear-gradient(150deg, #fff8ef 0%, #f2e7d8 62%, #e9dccb 100%);
+  --placeholder-text: rgba(145, 108, 20, 0.62);
+  --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.1), rgba(255, 250, 242, 0.92));
+  --select-menu-bg: #fff9f1;
+  --select-menu-text: #241e17;
+}
+
+[data-lang='en'] {
+  --hero-photo-label: 'Authentic coach portrait';
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--body-bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -3;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--body-glow);
+  pointer-events: none;
+  z-index: -2;
+}
+
+body.is-loaded header,
+body.is-loaded main,
+body.is-loaded footer {
+  animation: fade-in 0.7s ease both;
+}
+
+body.has-custom-cursor,
+body.has-custom-cursor a,
+body.has-custom-cursor button,
+body.has-custom-cursor input,
+body.has-custom-cursor textarea,
+body.has-custom-cursor select,
+body.has-custom-cursor summary {
+  cursor: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.container {
+  width: 92%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transform: translate3d(-9999px, -9999px, 0);
+  z-index: 120;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  margin-left: -11px;
+  margin-top: -11px;
+  border: 1px solid rgba(201, 168, 76, 0.54);
+  border-radius: 999px;
+  transition: width 0.25s ease, height 0.25s ease, margin 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+}
+
+.cursor-ring.is-active {
+  width: 54px;
+  height: 54px;
+  margin-left: -23px;
+  margin-top: -23px;
+  border-color: rgba(201, 168, 76, 0.9);
+}
+
+.pointer-glow {
+  display: none;
+}

@@ -45,7 +45,6 @@ jobs:
     if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/master' &&
-      secrets.RAILWAY_TOKEN != '' &&
       vars.RAILWAY_PROJECT_ID != '' &&
       vars.RAILWAY_ENVIRONMENT_NAME != '' &&
       vars.RAILWAY_SERVICE_NAME != ''
@@ -74,6 +73,22 @@ jobs:
       - name: Build package
         shell: pwsh
         run: .\mvnw.cmd -q -DskipTests package
+
+      - name: Check Railway configuration
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:RAILWAY_TOKEN)) {
+            throw "Missing GitHub secret RAILWAY_TOKEN."
+          }
+          if ([string]::IsNullOrWhiteSpace($env:RAILWAY_PROJECT_ID)) {
+            throw "Missing GitHub variable RAILWAY_PROJECT_ID."
+          }
+          if ([string]::IsNullOrWhiteSpace($env:RAILWAY_ENVIRONMENT_NAME)) {
+            throw "Missing GitHub variable RAILWAY_ENVIRONMENT_NAME."
+          }
+          if ([string]::IsNullOrWhiteSpace($env:RAILWAY_SERVICE_NAME)) {
+            throw "Missing GitHub variable RAILWAY_SERVICE_NAME."
+          }
 
       - name: Install Railway CLI
         shell: pwsh

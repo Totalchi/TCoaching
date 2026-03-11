@@ -1,4 +1,4 @@
-package be.vdab.tcoaching.api;
+package be.vdab.tcoaching.api.contact;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

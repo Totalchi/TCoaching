@@ -1,4 +1,4 @@
-package be.vdab.tcoaching.api;
+package be.vdab.tcoaching.api.tracking;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

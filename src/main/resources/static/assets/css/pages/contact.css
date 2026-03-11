@@ -1,0 +1,241 @@
+.contact-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.contact-strip-item {
+  padding: 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(18, 18, 20, 0.88);
+}
+
+.contact-strip-item strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  margin-bottom: 6px;
+}
+
+.contact-strip-item span {
+  color: var(--muted);
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form label {
+  display: grid;
+  gap: 8px;
+}
+
+.form span {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 15px 17px;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.form select {
+  color-scheme: dark;
+}
+
+[data-theme='light'] .form select {
+  color-scheme: light;
+}
+
+.form select option,
+.form select optgroup {
+  background: var(--select-menu-bg);
+  color: var(--select-menu-text);
+}
+
+.form textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.form-status {
+  color: var(--muted);
+}
+
+.choice-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.choice-card {
+  position: relative;
+}
+
+.choice-card input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-card span {
+  display: block;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted-strong);
+  letter-spacing: normal;
+  text-transform: none;
+  font-size: 0.98rem;
+}
+
+.choice-card input:checked + span {
+  border-color: rgba(201, 168, 76, 0.58);
+  background: rgba(201, 168, 76, 0.09);
+  color: var(--text);
+}
+
+.booking-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.booking-choice-card {
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.booking-choice-card.featured {
+  border-color: var(--line-strong);
+  background: var(--choice-card-bg);
+}
+
+.booking-choice-card h3,
+.booking-guide h3 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  line-height: 1.05;
+  font-weight: 400;
+}
+
+.booking-choice-card p,
+.booking-guide p {
+  color: var(--muted);
+}
+
+.booking-choice-card .text-link {
+  margin-top: 18px;
+}
+
+.booking-guide {
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.process-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.process-step {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.process-step strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+}
+
+.process-step span {
+  color: var(--muted);
+}
+
+.field-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 80;
+}
+
+.modal-overlay.is-visible {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 560px;
+  padding: 34px;
+  background: #111113;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.modal h3 {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.04;
+}
+
+.modal p {
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.modal-close {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+}
