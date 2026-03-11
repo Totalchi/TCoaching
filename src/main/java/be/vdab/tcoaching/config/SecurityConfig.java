@@ -56,7 +56,7 @@ public class SecurityConfig {
             "font-src 'self' https://fonts.gstatic.com; " +
             "img-src 'self' data: https://challenges.cloudflare.com; " +
             "connect-src 'self' https://challenges.cloudflare.com; " +
-            "frame-src https://challenges.cloudflare.com; " +
+            "frame-src 'self' https://challenges.cloudflare.com https://calendly.com https://*.calendly.com https://app.acuityscheduling.com; " +
             "object-src 'none'; " +
             "base-uri 'self'; " +
             "form-action 'self'; " +

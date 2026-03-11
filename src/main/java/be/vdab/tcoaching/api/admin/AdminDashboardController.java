@@ -1,7 +1,11 @@
 package be.vdab.tcoaching.api.admin;
 
+import jakarta.validation.Valid;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +48,34 @@ public class AdminDashboardController {
             GROUP BY event_type, event_name
             ORDER BY total DESC, event_type ASC, event_name ASC
             LIMIT 10
+            """;
+    private static final String CONTACTS_SQL = """
+            SELECT id,
+                   name,
+                   email,
+                   COALESCE(status, 'new') AS status,
+                   COALESCE(request_type, '') AS request_type,
+                   COALESCE(topic, '') AS topic,
+                   COALESCE(page, '') AS page,
+                   COALESCE(phone, '') AS phone,
+                   COALESCE(preferred_time, '') AS preferred_time,
+                   COALESCE(goal, '') AS goal,
+                   COALESCE(message, '') AS message,
+                   COALESCE(admin_notes, '') AS admin_notes,
+                   created_at,
+                   updated_at
+            FROM contact_requests
+            WHERE deleted_at IS NULL
+            ORDER BY created_at DESC
+            LIMIT 40
+            """;
+    private static final String UPDATE_CONTACT_SQL = """
+            UPDATE contact_requests
+            SET status = COALESCE(?, status),
+                admin_notes = ?,
+                updated_at = CURRENT_TIMESTAMP,
+                deleted_at = CASE WHEN ? THEN CURRENT_TIMESTAMP ELSE deleted_at END
+            WHERE id = ?
             """;
 
     private final JdbcTemplate jdbcTemplate;
@@ -106,6 +138,45 @@ public class AdminDashboardController {
         return new DashboardResponse(generatedAt, overview, recentContacts, topPages, topEvents);
     }
 
+    @GetMapping("/contacts")
+    public List<ContactLead> getContacts() {
+        return jdbcTemplate.query(
+                CONTACTS_SQL,
+                (resultSet, rowNum) -> new ContactLead(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("email"),
+                        resultSet.getString("status"),
+                        resultSet.getString("request_type"),
+                        resultSet.getString("topic"),
+                        resultSet.getString("page"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("preferred_time"),
+                        resultSet.getString("goal"),
+                        resultSet.getString("message"),
+                        resultSet.getString("admin_notes"),
+                        resultSet.getTimestamp("created_at").toInstant(),
+                        resultSet.getTimestamp("updated_at").toInstant()
+                )
+        );
+    }
+
+    @PatchMapping("/contacts/{id}")
+    public void updateContact(
+            @PathVariable long id,
+            @Valid @RequestBody LeadUpdateRequest request
+    ) {
+        boolean archived = Boolean.TRUE.equals(request.archived())
+                || "archived".equals(request.status());
+        jdbcTemplate.update(
+                UPDATE_CONTACT_SQL,
+                archived ? "archived" : request.status(),
+                request.adminNotes(),
+                archived,
+                id
+        );
+    }
+
     private long queryForCount(String sql, Object... args) {
         Long value = jdbcTemplate.queryForObject(sql, Long.class, args);
         return value == null ? 0 : value;
@@ -137,6 +208,24 @@ public class AdminDashboardController {
             String topic,
             String page,
             Instant createdAt
+    ) {
+    }
+
+    public record ContactLead(
+            long id,
+            String name,
+            String email,
+            String status,
+            String requestType,
+            String topic,
+            String page,
+            String phone,
+            String preferredTime,
+            String goal,
+            String message,
+            String adminNotes,
+            Instant createdAt,
+            Instant updatedAt
     ) {
     }
 

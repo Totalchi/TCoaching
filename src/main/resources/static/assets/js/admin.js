@@ -8,7 +8,8 @@ const adminSelectors = {
   cta30: document.querySelector('[data-admin-cta-30]'),
   recentContacts: document.querySelector('[data-admin-recent-contacts]'),
   topPages: document.querySelector('[data-admin-top-pages]'),
-  topEvents: document.querySelector('[data-admin-top-events]')
+  topEvents: document.querySelector('[data-admin-top-events]'),
+  leads: document.querySelector('[data-admin-leads]')
 };
 
 const adminNumberFormat = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-GB' : 'nl-BE');
@@ -35,6 +36,28 @@ const appendCell = (row, value) => {
   const cell = document.createElement('td');
   cell.textContent = value;
   row.appendChild(cell);
+};
+
+const readCsrfToken = () => {
+  const token = document.cookie
+    .split('; ')
+    .find((value) => value.startsWith('XSRF-TOKEN='));
+  return token ? decodeURIComponent(token.split('=').slice(1).join('=')) : '';
+};
+
+const saveLead = async (id, payload) => {
+  const csrfToken = readCsrfToken();
+  const response = await fetch(`/api/admin/contacts/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(csrfToken ? { 'X-XSRF-TOKEN': csrfToken } : {})
+    },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok) {
+    throw new Error(`Lead update failed with status ${response.status}`);
+  }
 };
 
 const renderEmptyState = (container, message) => {
@@ -135,6 +158,172 @@ const renderTopEvents = (events) => {
   });
 };
 
+const renderLeads = (leads) => {
+  const container = adminSelectors.leads;
+  if (!container) {
+    return;
+  }
+
+  container.replaceChildren();
+  if (!leads.length) {
+    renderEmptyState(container, 'Nog geen leads beschikbaar.');
+    return;
+  }
+
+  leads.forEach((lead) => {
+    const card = document.createElement('article');
+    card.className = 'admin-lead';
+
+    const head = document.createElement('div');
+    head.className = 'admin-lead-head';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'admin-lead-title';
+    const title = document.createElement('strong');
+    title.textContent = lead.name || lead.email || `Lead #${lead.id}`;
+    const subtitle = document.createElement('small');
+    subtitle.textContent = `${lead.email || '-'}${lead.phone ? ` | ${lead.phone}` : ''}`;
+    titleWrap.append(title, subtitle);
+
+    const statusPill = document.createElement('span');
+    statusPill.className = 'admin-pill';
+    statusPill.textContent = lead.status || 'new';
+    head.append(titleWrap, statusPill);
+
+    const meta = document.createElement('div');
+    meta.className = 'admin-lead-meta';
+    [lead.requestType || 'intake', lead.topic || 'algemeen', lead.page || 'onbekend', `Aangemaakt ${formatAdminDate(lead.createdAt)}`]
+      .forEach((value) => {
+        const text = document.createElement('span');
+        text.textContent = value;
+        meta.appendChild(text);
+      });
+
+    const copy = document.createElement('div');
+    copy.className = 'admin-lead-copy';
+    if (lead.goal) {
+      const goal = document.createElement('span');
+      goal.textContent = `Doel: ${lead.goal}`;
+      copy.appendChild(goal);
+    }
+    if (lead.message) {
+      const message = document.createElement('span');
+      message.textContent = `Bericht: ${lead.message}`;
+      copy.appendChild(message);
+    }
+    if (lead.preferredTime) {
+      const timing = document.createElement('span');
+      timing.textContent = `Voorkeur: ${lead.preferredTime}`;
+      copy.appendChild(timing);
+    }
+
+    const editor = document.createElement('div');
+    editor.className = 'admin-lead-grid';
+
+    const statusLabel = document.createElement('label');
+    const statusText = document.createElement('span');
+    statusText.textContent = 'Status';
+    const statusSelect = document.createElement('select');
+    ['new', 'in_progress', 'completed', 'archived'].forEach((value) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+      if ((lead.status || 'new') === value) {
+        option.selected = true;
+      }
+      statusSelect.appendChild(option);
+    });
+    statusLabel.append(statusText, statusSelect);
+
+    const notesLabel = document.createElement('label');
+    const notesText = document.createElement('span');
+    notesText.textContent = 'Admin notities';
+    const notesField = document.createElement('textarea');
+    notesField.value = lead.adminNotes || '';
+    notesLabel.append(notesText, notesField);
+
+    editor.append(statusLabel, notesLabel);
+
+    const actions = document.createElement('div');
+    actions.className = 'admin-lead-actions';
+
+    const saveButton = document.createElement('button');
+    saveButton.type = 'button';
+    saveButton.className = 'admin-button primary';
+    saveButton.textContent = 'Opslaan';
+
+    const archiveButton = document.createElement('button');
+    archiveButton.type = 'button';
+    archiveButton.className = 'admin-button danger';
+    archiveButton.textContent = 'Archiveren';
+
+    const feedback = document.createElement('small');
+    feedback.textContent = `Laatst bijgewerkt ${formatAdminDate(lead.updatedAt)}`;
+
+    saveButton.addEventListener('click', async () => {
+      feedback.textContent = 'Opslaan...';
+      try {
+        await saveLead(lead.id, {
+          status: statusSelect.value,
+          adminNotes: notesField.value
+        });
+        feedback.textContent = 'Lead opgeslagen.';
+        statusPill.textContent = statusSelect.value;
+        loadAdminLeads();
+      } catch (error) {
+        feedback.textContent = 'Opslaan mislukt.';
+      }
+    });
+
+    archiveButton.addEventListener('click', async () => {
+      feedback.textContent = 'Archiveren...';
+      try {
+        await saveLead(lead.id, {
+          status: 'archived',
+          adminNotes: notesField.value,
+          archived: true
+        });
+        feedback.textContent = 'Lead gearchiveerd.';
+        loadAdminLeads();
+      } catch (error) {
+        feedback.textContent = 'Archiveren mislukt.';
+      }
+    });
+
+    actions.append(saveButton, archiveButton, feedback);
+    card.append(head, meta);
+    if (copy.childNodes.length) {
+      card.appendChild(copy);
+    }
+    card.append(editor, actions);
+    container.appendChild(card);
+  });
+};
+
+const loadAdminLeads = async () => {
+  if (!adminSelectors.leads) {
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/admin/contacts', {
+      headers: {
+        Accept: 'application/json'
+      },
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Contacts request failed with status ${response.status}`);
+    }
+
+    const payload = await response.json();
+    renderLeads(payload || []);
+  } catch (error) {
+    renderEmptyState(adminSelectors.leads, 'Leadopvolging kon niet geladen worden.');
+  }
+};
+
 const loadAdminDashboard = async () => {
   setAdminText(adminSelectors.status, 'Dashboard laden...');
 
@@ -174,4 +363,5 @@ const loadAdminDashboard = async () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadAdminDashboard();
+  loadAdminLeads();
 });

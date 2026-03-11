@@ -239,3 +239,38 @@
   border: 1px solid var(--line);
   background: transparent;
 }
+
+.booking-embed-shell,
+.booking-placeholder {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.booking-embed-shell {
+  overflow: hidden;
+  min-height: 720px;
+}
+
+.booking-embed-frame {
+  width: 100%;
+  min-height: 720px;
+  border: 0;
+  background: #fff;
+}
+
+.booking-placeholder {
+  display: grid;
+  gap: 8px;
+  padding: 26px;
+}
+
+.booking-placeholder strong {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.booking-placeholder span {
+  color: var(--muted);
+}

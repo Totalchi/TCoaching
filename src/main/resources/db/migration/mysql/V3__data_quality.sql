@@ -1,3 +1,20 @@
+-- Expands header-related columns and adds data constraints plus reporting indexes.
+CREATE TABLE IF NOT EXISTS analytics_events (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    path VARCHAR(200) NOT NULL,
+    title VARCHAR(200),
+    referrer VARCHAR(255),
+    lang VARCHAR(10),
+    event_type VARCHAR(40),
+    event_name VARCHAR(80),
+    event_value VARCHAR(255),
+    ip_address VARCHAR(45),
+    user_agent VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_analytics_events_created_at (created_at),
+    INDEX idx_analytics_events_type_name (event_type, event_name)
+);
+
 ALTER TABLE contact_requests
     MODIFY COLUMN preferred_time VARCHAR(80) NULL,
     MODIFY COLUMN goal VARCHAR(1000) NULL,

@@ -1,3 +1,18 @@
+-- Mirrors MySQL data hardening for H2 tests: wider header columns, constraints, and indexes.
+CREATE TABLE IF NOT EXISTS analytics_events (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    path VARCHAR(200) NOT NULL,
+    title VARCHAR(200),
+    referrer VARCHAR(255),
+    lang VARCHAR(10),
+    event_type VARCHAR(40),
+    event_name VARCHAR(80),
+    event_value VARCHAR(255),
+    ip_address VARCHAR(45),
+    user_agent VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 ALTER TABLE contact_requests ALTER COLUMN preferred_time SET DATA TYPE VARCHAR(80);
 ALTER TABLE contact_requests ALTER COLUMN goal SET DATA TYPE VARCHAR(1000);
 ALTER TABLE contact_requests ALTER COLUMN user_agent SET DATA TYPE VARCHAR(500);
