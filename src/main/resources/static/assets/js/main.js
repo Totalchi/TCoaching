@@ -475,6 +475,11 @@ const cacheLanguageDefaults = () => {
       el.dataset.contentNl = el.getAttribute('content') || '';
     }
   });
+  document.querySelectorAll('[data-alt-en]').forEach((el) => {
+    if (!el.dataset.altNl) {
+      el.dataset.altNl = el.getAttribute('alt') || '';
+    }
+  });
 
   document.querySelectorAll('[data-aria-label-en]').forEach((el) => {
     if (!el.dataset.ariaLabelNl) {
@@ -536,6 +541,12 @@ const applyContentLanguage = (lang) => {
     const nextValue = english ? el.dataset.contentEn : el.dataset.contentNl;
     if (typeof nextValue === 'string') {
       el.setAttribute('content', nextValue);
+    }
+  });
+  document.querySelectorAll('[data-alt-en]').forEach((el) => {
+    const nextValue = english ? el.dataset.altEn : el.dataset.altNl;
+    if (typeof nextValue === 'string') {
+      el.setAttribute('alt', nextValue);
     }
   });
 
