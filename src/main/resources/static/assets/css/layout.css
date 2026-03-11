@@ -84,7 +84,7 @@
 .hero-stats,
 .metrics-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 26px;
   margin-top: 56px;
   padding-top: 28px;
@@ -96,9 +96,10 @@
 .result-card strong {
   display: block;
   font-family: var(--font-serif);
-  font-size: 2.5rem;
-  line-height: 1;
+  font-size: 2.2rem;
+  line-height: 1.05;
   color: var(--accent);
+  overflow-wrap: anywhere;
 }
 
 .stat-block span,
@@ -107,9 +108,11 @@
   display: block;
   margin-top: 8px;
   font-size: 0.76rem;
+  line-height: 1.55;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
 .hero-visual,
