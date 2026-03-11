@@ -1171,17 +1171,26 @@ const wireForms = () => {
   });
 };
 
-const initStaticModeHints = () => {
-  if (apiConfig.enabled) {
-    return;
-  }
+  const initStaticModeHints = () => {
+    if (apiConfig.enabled) {
+      return;
+    }
 
-  document.documentElement.dataset.siteMode = apiConfig.mode;
-  document.querySelectorAll('[data-form-status]').forEach((element) => {
-    element.textContent = getStaticModeMessage();
-  });
-  document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
-      element.remove();
+    document.documentElement.dataset.siteMode = apiConfig.mode;
+    document.querySelectorAll('[data-contact-form]').forEach((form) => {
+      form.dataset.staticMode = 'true';
+      const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.setAttribute('aria-disabled', 'true');
+        submitButton.title = getStaticModeMessage();
+      }
+    });
+    document.querySelectorAll('[data-form-status]').forEach((element) => {
+      element.textContent = getStaticModeMessage();
+    });
+    document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
+        element.remove();
     });
 };
 

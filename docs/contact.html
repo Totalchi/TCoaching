@@ -75,6 +75,7 @@
           </div>
           <div class="hero-actions mt-24">
             <a class="btn btn-primary" href="#booking-form" data-track-click="contact_scroll_form" data-lang-en="Go to request">Ga naar aanvraag</a>
+            <a class="btn btn-secondary" href="#booking-direct" data-track-click="contact_direct_booking_jump" data-lang-en="Direct booking">Direct boeken</a>
           </div>
         </div>
         <div class="page-hero-visual reveal">
@@ -113,6 +114,36 @@
             <a class="text-link" href="#booking-form" data-track-click="contact_waitlist_jump" data-lang-en="Choose waiting list">Kies wachtlijst</a>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="section-tight section-border" id="booking-direct">
+      <div class="container editorial-grid">
+        <article class="booking-panel reveal">
+          <div class="section-label" data-lang-en="Direct booking">Direct boeken</div>
+          <h2 data-lang-en="Prefer to pick a slot yourself right away?">Kies je liever meteen zelf een tijdslot?</h2>
+          <p class="mt-16" data-lang-en="If a booking tool is configured, you can open it directly here. If not, the intake form below remains the main route.">
+            Als er een boekingstool geconfigureerd is, kan je die hier meteen openen. Zo niet, blijft het intakeformulier hieronder de hoofdroute.
+          </p>
+          <div class="hero-actions mt-24">
+            <a class="btn btn-primary" href="#booking-form" data-booking-link data-booking-fallback="true" data-track-click="contact_booking_fallback" data-lang-en="Request via form">Vraag aan via formulier</a>
+            <a class="btn btn-secondary" href="#" data-booking-link data-track-click="contact_booking_direct" hidden data-lang-en="Open booking tool">Open boekingstool</a>
+          </div>
+          <p class="form-status mt-16" data-booking-status data-lang-en="No booking tool is connected yet. Use the form below and you will receive a personal proposal.">
+            Er is nog geen boekingstool gekoppeld. Gebruik voorlopig het formulier hieronder en je krijgt een persoonlijk voorstel.
+          </p>
+        </article>
+        <article class="contact-panel reveal">
+          <div class="section-label" data-lang-en="Booking preview">Booking preview</div>
+          <h2 data-lang-en="Once a booking link is active, it can also appear inline here.">Zodra er een bookinglink actief is, kan die hier ook inline verschijnen.</h2>
+          <div class="booking-embed-shell mt-24" data-booking-embed-shell hidden>
+            <iframe class="booking-embed-frame" data-booking-embed title="Booking tool" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <div class="booking-placeholder mt-24" data-booking-placeholder>
+            <strong data-lang-en="No tool connected yet">Nog geen tool gekoppeld</strong>
+            <span data-lang-en="As soon as you add a Calendly or Acuity URL in the app config, the direct booking block becomes active here.">Zodra je een Calendly- of Acuity-URL in de app-config zet, wordt dit blok hier automatisch actief.</span>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -215,7 +246,7 @@
             </div>
             <div class="metric-card">
               <strong data-lang-en="Booking tool">Boekingstool</strong>
-              <span data-lang-en="Can later be connected directly to Calendly or Acuity">Later rechtstreeks te koppelen met Calendly of Acuity</span>
+              <span data-lang-en="Can now be connected directly to Calendly or Acuity through config">Nu rechtstreeks te koppelen met Calendly of Acuity via config</span>
             </div>
           </div>
         </article>

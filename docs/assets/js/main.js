@@ -447,6 +447,7 @@ let currentLang = 'nl';
 let currentTheme = 'light';
 let captchaEnabled = false;
 let captchaReady = false;
+let publicConfigCache = null;
 const intakeAutoPopupStorageKey = 'tcoaching.intakePopupAutoShown';
 
 const getTranslation = (lang, key) => {
@@ -829,38 +830,9 @@ const limitValue = (value, max) => {
 
 const getStaticModeMessage = () => {
   if (currentLang === 'en') {
-    return 'This shared version runs on GitHub Pages. Your mail app will open so you can send your request directly.';
+    return 'This shared static version cannot send requests directly. Use the live app version with backend support.';
   }
-  return 'Deze gedeelde versie draait op GitHub Pages. Je mailprogramma opent zodat je je aanvraag rechtstreeks kan versturen.';
-};
-
-const buildMailtoUrl = (payload) => {
-  const email = apiConfig.contactEmail;
-  if (!email) {
-    return null;
-  }
-
-  const subjectParts = [
-    payload.requestType || 'contact',
-    payload.name || 'website request'
-  ].filter(Boolean);
-
-  const bodyLines = [
-    `Name: ${payload.name || ''}`,
-    `Email: ${payload.email || ''}`,
-    `Phone: ${payload.phone || ''}`,
-    `Request type: ${payload.requestType || ''}`,
-    `Topic: ${payload.topic || ''}`,
-    `Preferred time: ${payload.time || ''}`,
-    `Goal: ${payload.goal || ''}`,
-    `Message: ${payload.message || ''}`,
-    `Page: ${payload.page || window.location.pathname || ''}`,
-    `Language: ${payload.lang || currentLang || ''}`
-  ];
-
-  const subject = encodeURIComponent(subjectParts.join(' | '));
-  const body = encodeURIComponent(bodyLines.join('\n'));
-  return `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
+  return 'Deze gedeelde statische versie kan geen aanvragen rechtstreeks versturen. Gebruik de live appversie met backend.';
 };
 
 const buildTrackingPayload = (overrides = {}) => {
@@ -920,6 +892,9 @@ const dispatchTrackingPayload = (payload, { keepalive = true, immediate = false 
 };
 
 const fetchPublicConfig = async () => {
+  if (publicConfigCache) {
+    return publicConfigCache;
+  }
   if (!apiConfig.enabled || !apiConfig.publicConfigEndpoint) {
     return null;
   }
@@ -928,7 +903,11 @@ const fetchPublicConfig = async () => {
     if (!response.ok) {
       return null;
     }
-    return response.json();
+    publicConfigCache = await response.json();
+    if (publicConfigCache && publicConfigCache.bookingUrl && !apiConfig.bookingUrl) {
+      apiConfig.bookingUrl = publicConfigCache.bookingUrl;
+    }
+    return publicConfigCache;
   } catch (error) {
     return null;
   }
@@ -999,6 +978,49 @@ const initCaptcha = async () => {
     });
     widget.dataset.captchaWidgetId = String(widgetId);
   });
+};
+
+const initBooking = async () => {
+  const config = await fetchPublicConfig();
+  const bookingUrl = trimValue((config && config.bookingUrl) || apiConfig.bookingUrl);
+  const directLink = document.querySelector('[data-booking-link]:not([data-booking-fallback])');
+  const fallbackLink = document.querySelector('[data-booking-link][data-booking-fallback]');
+  const status = document.querySelector('[data-booking-status]');
+  const embed = document.querySelector('[data-booking-embed]');
+  const embedShell = document.querySelector('[data-booking-embed-shell]');
+  const placeholder = document.querySelector('[data-booking-placeholder]');
+
+  if (!bookingUrl) {
+    if (directLink) {
+      directLink.hidden = true;
+    }
+    return;
+  }
+
+  if (directLink) {
+    directLink.hidden = false;
+    directLink.href = bookingUrl;
+    directLink.target = '_blank';
+    directLink.rel = 'noreferrer';
+  }
+
+  if (fallbackLink) {
+    fallbackLink.textContent = currentLang === 'en' ? 'Request via form' : 'Vraag aan via formulier';
+  }
+
+  if (status) {
+    status.textContent = currentLang === 'en'
+      ? 'A direct booking tool is active. You can open it immediately or still use the form below for a personal proposal.'
+      : 'Er is een directe boekingstool actief. Je kan die meteen openen of alsnog het formulier hieronder gebruiken voor een persoonlijk voorstel.';
+  }
+
+  if (embed && embedShell) {
+    embed.src = bookingUrl;
+    embedShell.hidden = false;
+  }
+  if (placeholder) {
+    placeholder.hidden = true;
+  }
 };
 
 const resetCaptcha = (form) => {
@@ -1119,13 +1141,7 @@ const wireForms = () => {
       }
 
       if (!apiConfig.enabled) {
-        const mailtoUrl = buildMailtoUrl(payload);
         setStatus(getStaticModeMessage());
-        if (mailtoUrl) {
-          window.location.href = mailtoUrl;
-        }
-        form.reset();
-        delete form.dataset.formStarted;
         return;
       }
 
@@ -1155,18 +1171,27 @@ const wireForms = () => {
   });
 };
 
-const initStaticModeHints = () => {
-  if (apiConfig.enabled) {
-    return;
-  }
+  const initStaticModeHints = () => {
+    if (apiConfig.enabled) {
+      return;
+    }
 
-  document.documentElement.dataset.siteMode = apiConfig.mode;
-  document.querySelectorAll('[data-form-status]').forEach((element) => {
-    element.textContent = getStaticModeMessage();
-  });
-  document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
-    element.remove();
-  });
+    document.documentElement.dataset.siteMode = apiConfig.mode;
+    document.querySelectorAll('[data-contact-form]').forEach((form) => {
+      form.dataset.staticMode = 'true';
+      const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.setAttribute('aria-disabled', 'true');
+        submitButton.title = getStaticModeMessage();
+      }
+    });
+    document.querySelectorAll('[data-form-status]').forEach((element) => {
+      element.textContent = getStaticModeMessage();
+    });
+    document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
+        element.remove();
+    });
 };
 
 const trackPageView = () => {
@@ -1204,6 +1229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initPopup();
   initTrackedClicks();
   initStaticModeHints();
+  await initBooking();
   await initCaptcha();
   trackPageView();
   wireForms();
