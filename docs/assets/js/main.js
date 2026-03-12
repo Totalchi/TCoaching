@@ -566,7 +566,7 @@ const applyContentLanguage = (lang) => {
 };
 
 const getThemeToggleLabel = () => {
-  return currentTheme === 'dark' ? '☀' : '☾';
+  return currentTheme === 'dark' ? '\u2600' : '\u263E';
 };
 
 const getThemeToggleAriaLabel = () => {
@@ -1379,5 +1379,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   trackPageView();
   wireForms();
 });
+
 
 

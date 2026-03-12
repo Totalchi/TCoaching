@@ -359,12 +359,18 @@
   padding: 10px 14px;
   border-radius: 999px;
   border: 1px solid rgba(201, 168, 76, 0.22);
-  background: rgba(12, 12, 13, 0.68);
+  background: var(--overlay-surface);
   backdrop-filter: blur(10px);
   font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(244, 238, 228, 0.86);
+  color: var(--text);
+}
+
+[data-theme='light'] .hero-photo-badge {
+  background: rgba(255, 249, 241, 0.88);
+  color: #2c2418;
+  border-color: rgba(181, 139, 38, 0.28);
 }
 
 .hero-side-copy {
@@ -717,7 +723,7 @@
 .approach {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: rgba(15, 15, 16, 0.88);
+  background: var(--surface);
 }
 
 .approach-inner {
@@ -1061,6 +1067,35 @@
     text-align: center;
   }
 
+  .hero-copy p,
+  .page-hero-copy p,
+  .section-copy,
+  .section-intro,
+  .service-card p,
+  .story-card p,
+  .trust-card p,
+  .case-card p,
+  .article-card p,
+  .pricing-card p,
+  .contact-panel p,
+  .lead-card p,
+  .booking-panel p,
+  .faq-body,
+  .page-summary,
+  .muted-label,
+  .marquee-item,
+  .footer p,
+  .footer a,
+  .footer small {
+    color: var(--muted-strong);
+  }
+
+  .stat-block span,
+  .metric-card span,
+  .result-card span {
+    color: var(--muted-strong);
+  }
+
   .section-title,
   .page-section-title {
     font-size: 3rem;
@@ -1250,7 +1285,8 @@
     width: 100%;
     min-height: 50px;
     padding: 0 18px;
-    letter-spacing: 0.16em;
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
   }
 
   .service-card,

@@ -37,7 +37,7 @@
 .admin-list-item {
   padding: 14px 16px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--panel-subtle-bg);
   border: 1px solid rgba(201, 168, 76, 0.08);
 }
 
@@ -77,7 +77,7 @@
   padding: 22px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(201, 168, 76, 0.12);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--panel-subtle-bg);
 }
 
 .admin-lead-head,
@@ -120,7 +120,7 @@
 .admin-lead-meta span,
 .admin-lead-copy,
 .admin-lead small {
-  color: var(--muted);
+  color: var(--muted-strong);
 }
 
 .admin-lead-copy {
@@ -152,7 +152,7 @@
   padding: 14px 16px;
   border-radius: 16px;
   border: 1px solid rgba(201, 168, 76, 0.18);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--field-bg);
   color: var(--text);
 }
 
@@ -185,6 +185,30 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-size: 0.72rem;
+}
+
+@media (max-width: 820px) {
+  .admin-shell {
+    padding: 32px 0 56px;
+  }
+
+  .admin-list-item,
+  .admin-lead,
+  .admin-metric,
+  .admin-card,
+  .admin-table-card {
+    padding: 20px;
+  }
+
+  .admin-lead-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-lead-head,
+  .admin-lead-meta,
+  .admin-lead-actions {
+    align-items: start;
+  }
 }
 
 .admin-button.primary {

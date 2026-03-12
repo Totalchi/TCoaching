@@ -8,7 +8,7 @@
   padding: 24px 26px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: rgba(18, 18, 20, 0.88);
+  background: var(--surface);
 }
 
 .contact-strip-item strong {
@@ -46,8 +46,14 @@
   padding: 15px 17px;
   border-radius: 16px;
   border: 1px solid rgba(201, 168, 76, 0.18);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--field-bg);
   color: var(--text);
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 
 .form select {
@@ -70,7 +76,7 @@
 }
 
 .form-status {
-  color: var(--muted);
+  color: var(--muted-strong);
 }
 
 .choice-grid {
@@ -94,7 +100,7 @@
   padding: 16px 18px;
   border-radius: 16px;
   border: 1px solid rgba(201, 168, 76, 0.18);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--field-bg);
   color: var(--muted-strong);
   letter-spacing: normal;
   text-transform: none;
@@ -198,7 +204,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.72);
+  background: var(--overlay-surface);
   z-index: 80;
 }
 
@@ -210,7 +216,7 @@
   width: 100%;
   max-width: 560px;
   padding: 34px;
-  background: #111113;
+  background: var(--surface-strong);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
@@ -238,13 +244,14 @@
   border-radius: 50%;
   border: 1px solid var(--line);
   background: transparent;
+  color: var(--text);
 }
 
 .booking-embed-shell,
 .booking-placeholder {
   border-radius: var(--radius-md);
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--field-bg);
 }
 
 .booking-embed-shell {

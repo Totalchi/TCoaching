@@ -264,7 +264,7 @@ nav {
     padding: 18px;
     border: 1px solid var(--line);
     border-radius: 24px;
-    background: var(--header-bg-solid);
+    background: var(--overlay-surface);
     box-shadow: var(--shadow);
   }
 
@@ -279,6 +279,7 @@ nav {
   }
 
   .nav-links a {
+    color: var(--muted-strong);
     padding: 12px 2px;
     border-bottom: 1px solid var(--line);
   }
@@ -309,9 +310,21 @@ nav {
   .availability-note {
     font-size: 0.68rem;
     letter-spacing: 0.1em;
+    color: var(--muted-strong);
   }
 
   .nav-actions .btn {
     width: 100%;
+  }
+
+  .toggle-chip,
+  .theme-toggle,
+  .nav-toggle {
+    color: var(--muted-strong);
+    background: var(--surface-muted);
+  }
+
+  .text-link {
+    font-size: 0.78rem;
   }
 }
