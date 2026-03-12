@@ -647,6 +647,11 @@
   background: var(--page-visual-bg);
 }
 
+.page-hero-visual > .portrait-photo-card {
+  width: 100%;
+  min-height: 100%;
+}
+
 .photo-stack,
 .portrait-placeholder {
   border-radius: calc(var(--radius-lg) - 10px);
@@ -679,7 +684,7 @@
   min-height: 320px;
   display: block;
   object-fit: cover;
-  object-position: center 36%;
+  object-position: center 34%;
   filter: saturate(0.94) contrast(1.03);
 }
 
@@ -1244,6 +1249,10 @@
     padding: 22px;
   }
 
+  .page-hero-visual > .portrait-photo-card {
+    min-height: 320px;
+  }
+
   .hero-photo {
     min-height: 300px;
   }
@@ -1361,7 +1370,7 @@
 
   .portrait-photo-card img {
     min-height: 240px;
-    object-position: center 30%;
+    object-position: center 28%;
   }
 
   .hero-home .hero-photo,
