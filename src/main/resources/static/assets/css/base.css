@@ -95,6 +95,8 @@
   --header-bg: linear-gradient(180deg, rgba(12, 12, 13, 0.9), rgba(12, 12, 13, 0.62));
   --header-bg-solid: rgba(12, 12, 13, 0.92);
   --card-highlight: linear-gradient(145deg, rgba(255, 255, 255, 0.03), transparent 38%);
+  --card-glow-x: 50%;
+  --card-glow-y: 50%;
   --hero-visual-bg:
     radial-gradient(circle at 50% 24%, rgba(201, 168, 76, 0.12), transparent 26%),
     linear-gradient(160deg, #19191b 0%, #111113 64%, #0b0b0c 100%);

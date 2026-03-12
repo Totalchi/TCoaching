@@ -834,6 +834,47 @@ const initPointerGlow = () => {
   });
 };
 
+const initCardSpotlights = () => {
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (reduceMotion || !finePointer) {
+    return;
+  }
+
+  const selector = [
+    '.portrait-panel',
+    '.video-frame',
+    '.side-panel',
+    '.story-card',
+    '.trust-card',
+    '.service-card',
+    '.case-card',
+    '.testimonial-card',
+    '.quote-card',
+    '.pricing-card',
+    '.contact-panel',
+    '.lead-card',
+    '.booking-panel',
+    '.article-card',
+    '.metric-card',
+    '.result-card',
+    '.admin-card',
+    '.admin-table-card',
+    '.admin-metric'
+  ].join(', ');
+
+  document.querySelectorAll(selector).forEach((card) => {
+    const setGlowPosition = (event) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--card-glow-x', `${event.clientX - rect.left}px`);
+      card.style.setProperty('--card-glow-y', `${event.clientY - rect.top}px`);
+    };
+
+    card.addEventListener('pointerenter', setGlowPosition);
+    card.addEventListener('pointermove', setGlowPosition);
+  });
+};
+
 const initPopup = () => {
   const overlay = document.querySelector('[data-intake-modal]');
   if (!overlay) {
@@ -1329,6 +1370,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initLangToggle();
   initReveal();
   initPointerGlow();
+  initCardSpotlights();
   initPopup();
   initTrackedClicks();
   initStaticModeHints();
