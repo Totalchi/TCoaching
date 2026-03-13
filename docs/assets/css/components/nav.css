@@ -1,4 +1,4 @@
-header {
+﻿header {
   position: sticky;
   top: 0;
   z-index: 40;
@@ -34,7 +34,7 @@ header.is-condensed {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.2rem;
   font-weight: 600;
   background: linear-gradient(135deg, var(--accent), #e5c76f);
@@ -43,7 +43,7 @@ header.is-condensed {
 }
 
 .brand-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.5rem;
   letter-spacing: 0.04em;
 }
@@ -73,6 +73,10 @@ nav {
 
 .nav-links a:hover,
 .nav-links a:focus {
+  color: var(--accent);
+}
+
+.nav-links a[aria-current='page'] {
   color: var(--accent);
 }
 
@@ -328,3 +332,4 @@ nav {
     font-size: 0.78rem;
   }
 }
+

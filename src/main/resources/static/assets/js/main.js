@@ -1,4 +1,4 @@
-const runtimeConfig = window.TCOACHING_CONFIG || {};
+﻿const runtimeConfig = window.TCOACHING_CONFIG || {};
 
 const normalizeBaseUrl = (value) => {
   if (!value) {
@@ -22,424 +22,72 @@ const apiConfig = {
   bookingUrl: runtimeConfig.bookingUrl || '',
   mode: runtimeConfig.mode || 'app'
 };
-const trackingWindowMs = 15 * 60 * 1000;
+const defaultTrackingWindowMs = 15 * 60 * 1000;
+const configuredTrackingWindowMs = Number(runtimeConfig.trackingWindowMs);
+const trackingWindowMs = Number.isFinite(configuredTrackingWindowMs) && configuredTrackingWindowMs > 0
+  ? configuredTrackingWindowMs
+  : defaultTrackingWindowMs;
+const autoPopupQuietWindowMs = 4000;
+const localFallbackStore = new Map();
+const sessionFallbackStore = new Map();
 
-const translations = {
+const resolveStorage = (storageName) => {
+  if (typeof window === 'undefined' || !window[storageName]) {
+    return null;
+  }
+  try {
+    const storage = window[storageName];
+    const probeKey = `tcoaching.${storageName}.probe`;
+    storage.setItem(probeKey, '1');
+    storage.removeItem(probeKey);
+    return storage;
+  } catch (error) {
+    return null;
+  }
+};
+
+const localStore = resolveStorage('localStorage');
+const sessionStore = resolveStorage('sessionStorage');
+
+const readStoredValue = (storage, fallback, key) => {
+  try {
+    if (storage) {
+      return storage.getItem(key);
+    }
+  } catch (error) {
+    // Fall through to in-memory fallback below.
+  }
+  return fallback.has(key) ? fallback.get(key) : null;
+};
+
+const writeStoredValue = (storage, fallback, key, value) => {
+  const normalized = String(value);
+  try {
+    if (storage) {
+      storage.setItem(key, normalized);
+      fallback.delete(key);
+      return;
+    }
+  } catch (error) {
+    // Fall through to in-memory fallback below.
+  }
+  fallback.set(key, normalized);
+};
+
+const runtimeMessages = {
   nl: {
-    'nav.home': 'Home overzicht',
-    'nav.life': 'Life Coaching trajecten',
-    'nav.pt': 'Personal Training sessies',
-    'nav.stress': 'Stress & Burnout hulp',
-    'nav.assertive': 'Assertiviteit training',
-    'nav.pricing': 'Prijzen en pakketten',
-    'nav.contact': 'Contact & afspraken',
-    'toggle.theme.light': 'Ochtendgloed',
-    'toggle.theme.dark': 'Maanlicht',
-    'lang.nl': 'Nederlands',
-    'lang.en': 'Engels',
-    'cta.intake': 'Plan gratis intakegesprek',
-    'cta.packages': 'Bekijk alle pakketten',
-    'cta.learn': 'Ontdek meer details',
-    'cta.book': 'Boek een sessie op maat',
-    'cta.contact': 'Neem direct contact op',
-    'cta.requestIntake': 'Vraag je intake aan',
-    'home.hero.title': 'Leven met richting, rust en krachtige actie',
-    'home.hero.subtitle': 'Life coaching en personal training voor beginners en groei. We bouwen aan gezonde routines, sterker zelfvertrouwen en keuzes die echt bij jou passen, zodat je elke week merkt dat je vooruitgaat.',
-    'home.hero.note': 'Focus op balans, energie en duurzame verandering die je ook volhoudt.',
-    'home.hero.card.title': 'Jouw volgende stap in groei',
-    'home.hero.card.line1': '1-op-1 begeleiding op maat, zonder ruis',
-    'home.hero.card.line2': 'Heldere doelen met een haalbaar plan per week',
-    'home.hero.card.line3': 'Warm, professioneel en resultaatgericht, met echte opvolging',
-    'pill.life': 'Life Coaching focus',
-    'pill.pt': 'Personal Training focus',
-    'pill.stress': 'Stress & Burnout steun',
-    'pill.assertive': 'Assertiviteit skills',
-    'pill.pricing': 'Prijzen overzicht',
-    'pill.contact': 'Contact & intake',
-    'photo.placeholder': 'Coachfoto komt hier',
-    'home.focus.title': 'Kernfocus van jouw traject',
-    'home.focus.life.title': 'Life Coaching met richting',
-    'home.focus.life.desc': 'Richting vinden, keuzes maken, mindset versterken en grenzen bewaken, stap voor stap.',
-    'home.focus.pt.title': 'Personal Training met vertrouwen',
-    'home.focus.pt.desc': 'Voor beginners en medium niveau met veilige, motiverende opbouw die je energie geeft.',
-    'home.focus.stress.title': 'Stress & Burnout herstel',
-    'home.focus.stress.desc': 'Rust, herstel en terug naar energie met heldere, haalbare stappen.',
-    'home.method.title': 'Werkwijze in drie fases',
-    'home.method.step1.title': 'Gratis intakegesprek',
-    'home.method.step1.desc': 'We luisteren, verkennen en bepalen samen jouw focus en behoeften.',
-    'home.method.step2.title': 'Persoonlijk plan op maat',
-    'home.method.step2.desc': 'Heldere doelen, acties en routines die werken voor jouw leven.',
-    'home.method.step3.title': 'Coaching met ritme en support',
-    'home.method.step3.desc': 'Consistentie, support en bijsturing wanneer nodig, met duidelijke check-ins.',
-    'home.results.title': 'Wat je mag verwachten in de praktijk',
-    'home.results.item1': 'Meer energie en mentale helderheid in je dagelijkse keuzes',
-    'home.results.item2': 'Gezonde routines die je volhoudt, ook in drukke weken',
-    'home.results.item3': 'Sterke grenzen en assertieve communicatie zonder schuldgevoel',
-    'home.results.item4': 'Zelfvertrouwen in lichaam, mindset en keuzes',
-    'home.banner.title': 'Klaar voor een gratis intakegesprek dat echt helderheid geeft?',
-    'home.banner.subtitle': 'Ontdek welke aanpak het beste bij jou past en wat nu het meest helpt.',
-    'home.banner.button': 'Plan je intake',
-    'home.form.title': 'Vraag je intake aan en start rustig',
-    'home.form.subtitle': 'Laat je gegevens achter en ik neem snel persoonlijk contact op.',
-    'home.hero.stat1.value': '1-op-1',
-    'home.hero.stat1.label': 'Begeleiding op maat',
-    'home.hero.stat2.value': '30 min',
-    'home.hero.stat2.label': 'Gratis intake',
-    'home.hero.stat3.value': 'Rust + actie',
-    'home.hero.stat3.label': 'Mentale en fysieke groei',
-    'home.services.title': 'Vier trajecten, elk met een eigen ritme',
-    'home.services.subtitle': 'Geen generieke sessies, maar begeleiding die past bij je vraag, energie en tempo.',
-    'home.services.life.point1': 'Richting en keuzes zonder te blijven twijfelen',
-    'home.services.life.point2': 'Grenzen, zelfbeeld en dagelijkse rust versterken',
-    'home.services.pt.point1': 'Veilige opbouw voor beginners en herstarters',
-    'home.services.pt.point2': 'Kracht, conditie en routines die je volhoudt',
-    'home.services.stress.point1': 'Herstel met ruimte, structuur en duidelijke grenzen',
-    'home.services.stress.point2': 'Terug naar helderheid zonder jezelf te forceren',
-    'home.services.assert.title': 'Assertiviteit in echte situaties',
-    'home.services.assert.desc': 'Leren spreken, kiezen en begrenzen zonder hard te worden.',
-    'home.services.assert.point1': 'Moeilijke gesprekken rustig en duidelijk voeren',
-    'home.services.assert.point2': 'Respectvol nee zeggen zonder schuldgevoel',
-    'home.proof.title': 'Wat professioneel samenwerken hier concreet betekent',
-    'home.proof.card1.title': 'Heldere intake en volgende stap',
-    'home.proof.card1.desc': 'Je krijgt snel zicht op wat nu prioriteit heeft, zonder vaag traject of verkooppraat.',
-    'home.proof.card2.title': 'Sessies die ook buiten de afspraak werken',
-    'home.proof.card2.desc': 'We vertalen inzichten naar routines, afspraken en gedrag dat in je week past.',
-    'home.proof.card3.title': 'Warmte zonder vrijblijvendheid',
-    'home.proof.card3.desc': 'Menselijk contact, duidelijke feedback en opvolging wanneer het moet schuiven.',
-    'home.testimonials.title': 'Waar mensen meestal het verschil voelen',
-    'home.testimonial1.quote': 'Ik voelde voor het eerst dat er rust én richting tegelijk mogelijk waren.',
-    'home.testimonial1.name': 'Cliënt life coaching',
-    'home.testimonial1.meta': 'Meer focus, minder overthinking',
-    'home.testimonial2.quote': 'De training was haalbaar, duidelijk en gaf me opnieuw vertrouwen in mijn lichaam.',
-    'home.testimonial2.name': 'Cliënt personal training',
-    'home.testimonial2.meta': 'Veilige herstart met structuur',
-    'home.testimonial3.quote': 'Ik heb geleerd grenzen uit te spreken zonder conflict te zoeken of mezelf kwijt te raken.',
-    'home.testimonial3.name': 'Cliënt assertiviteit',
-    'home.testimonial3.meta': 'Sterker communiceren op werk en thuis',
-    'home.faq.title': 'Praktische vragen die vaak terugkomen',
-    'home.faq1.q': 'Is een intake echt vrijblijvend?',
-    'home.faq1.a': 'Ja. De intake dient om je vraag helder te krijgen en te bekijken of er een goede match is. Je hangt nergens aan vast.',
-    'home.faq2.q': 'Kan ik coaching en training combineren?',
-    'home.faq2.a': 'Ja. Voor veel trajecten werkt de combinatie van mindset, beweging en structuur net het sterkst, zolang het haalbaar blijft.',
-    'home.faq3.q': 'Voor welk niveau is personal training bedoeld?',
-    'home.faq3.a': 'Vooral voor beginners en mensen die opnieuw willen starten. Techniek, veiligheid en vertrouwen komen altijd eerst.',
-    'home.faq4.q': 'Hoe snel krijg ik antwoord na een aanvraag?',
-    'home.faq4.a': 'Op werkdagen volgt normaal binnen 24 uur een persoonlijk antwoord om een intake of vervolgstap af te stemmen.',
-    'home.cta.title': 'Klaar om je eerste stap professioneel en rustig te zetten?',
-    'home.cta.subtitle': 'Plan een gratis intake, vertel waar je vastloopt en we bekijken samen wat op dit moment het meeste oplevert.',
-    'home.cta.button': 'Plan je gratis intake',
-    'home.form.note.title': 'Wat je na je aanvraag mag verwachten',
-    'home.form.note.subtitle': 'Je krijgt een persoonlijk antwoord, geen automatische funnel. Eerst helderheid, dan pas een trajectvoorstel.',
-    'life.hero.title': 'Life Coaching met richting',
-    'life.hero.subtitle': 'Voor mensen die richting zoeken, patronen willen doorbreken en hun leven bewust willen vormgeven, met realistische stappen en ondersteuning.',
-    'life.who.title': 'Voor wie is dit geschikt?',
-    'life.who.item1': 'Je wil keuzes maken die bij je waarden passen en dat ook durven uitspreken.',
-    'life.who.item2': 'Je zoekt meer rust en focus in je leven, zonder jezelf te verliezen.',
-    'life.who.item3': 'Je wil sterker worden in grenzen, zelfbeeld en dagelijkse zelfzorg.',
-    'life.offer.title': 'Wat je krijgt in het traject',
-    'life.offer.card1.title': 'Diepgaande gesprekken met richting',
-    'life.offer.card1.desc': 'Samen brengen we helderheid in je doelen, blokkades en keuzes die je tegenhouden.',
-    'life.offer.card2.title': 'Actiegerichte stappen en ritme',
-    'life.offer.card2.desc': 'Concreet plan met routines, accountability en haalbare weekdoelen.',
-    'life.offer.card3.title': 'Zachte kracht en vertrouwen',
-    'life.offer.card3.desc': 'Warmte en professionaliteit die je vooruit helpen, ook als het even schuurt.',
-    'life.cta.title': 'Start met een intakegesprek op jouw tempo',
-    'life.cta.subtitle': 'Je zit nergens aan vast, we ontdekken samen wat past en wat je nu nodig hebt.',
-    'life.cta.button': 'Plan je intake',
-    'pt.hero.title': 'Personal Training met begeleiding',
-    'pt.hero.subtitle': 'Voor beginners en medium niveau die gezonder willen leven met veilige, motiverende training, begeleiding en plezier.',
-    'pt.focus.title': 'Focus van de trainingen en coaching',
-    'pt.focus.item1': 'Techniek en blessurepreventie zodat je veilig groeit',
-    'pt.focus.item2': 'Opbouw van kracht en conditie met realistische progressie',
-    'pt.focus.item3': 'Voeding en lifestyle routines die je echt volhoudt',
-    'pt.program.title': 'Zo pakken we het aan, stap voor stap',
-    'pt.program.desc': 'Persoonlijke sessies met duidelijke progressie, afgestemd op jouw tempo, doelen en agenda.',
-    'pt.cta.title': 'Klaar voor de eerste stap met begeleiding?',
-    'pt.cta.subtitle': 'Plan een gratis intake en ontdek jouw startpunt plus een helder plan.',
-    'stress.hero.title': 'Stress & Burnout begeleiding met herstel',
-    'stress.hero.subtitle': 'Rust in je hoofd, energie in je dag en weer grip op je leven met duidelijke grenzen.',
-    'stress.signals.title': 'Herkenbare signalen en alarmbellen',
-    'stress.signals.item1': 'Altijd moe of een opgejaagd gevoel, zelfs na rust',
-    'stress.signals.item2': 'Slecht slapen, piekeren en wakker worden zonder herstel',
-    'stress.signals.item3': 'Geen ruimte voor jezelf, herstel en echte pauzes',
-    'stress.support.title': 'Begeleiding met structuur en zachte opbouw',
-    'stress.support.desc': 'We werken aan herstel, grenzen, rustmomenten en een realistisch plan dat je kan volhouden.',
-    'stress.cta.title': 'Pak stress aan met een helder plan dat rust brengt',
-    'assert.hero.title': 'Assertiviteit met zelfvertrouwen',
-    'assert.hero.subtitle': 'Leren nee zeggen, helder communiceren en jezelf serieus nemen in elke situatie.',
-    'assert.learn.title': 'Wat je leert en oefent',
-    'assert.learn.item1': 'Grenzen aangeven zonder schuldgevoel en met respect',
-    'assert.learn.item2': 'Zichtbaar en duidelijk communiceren, ook onder druk',
-    'assert.learn.item3': 'Zelfvertrouwen in moeilijke gesprekken en lastige keuzes',
-    'assert.practice.title': 'Praktisch, toepasbaar en nuchter',
-    'assert.practice.desc': 'Oefeningen en reflectie die je direct kan inzetten in werk, relaties en dagelijks leven.',
-    'pricing.hero.title': 'Prijspakketten met begeleiding',
-    'pricing.hero.subtitle': 'Transparante pakketten met focus op resultaat, begeleiding en haalbare stappen.',
-    'pricing.card1.title': 'Start traject',
-    'pricing.card1.price': 'EUR 249',
-    'pricing.card1.desc': '2 sessies per maand + kort opvolgmoment om bij te sturen.',
-    'pricing.card1.item1': 'Persoonlijk plan met weekfocus',
-    'pricing.card1.item2': 'WhatsApp support voor vragen onderweg',
-    'pricing.card2.title': 'Focus traject',
-    'pricing.card2.price': 'EUR 389',
-    'pricing.card2.desc': '4 sessies per maand + tussentijdse coaching en feedback.',
-    'pricing.card2.item1': 'Doelen per week met check-ins',
-    'pricing.card2.item2': 'Voeding, mindset en herstelroutines',
-    'pricing.card3.title': 'Momentum traject',
-    'pricing.card3.price': 'EUR 529',
-    'pricing.card3.desc': '6 sessies per maand + intensieve opvolging en planning.',
-    'pricing.card3.item1': 'Diepgaande trajecten met verdieping',
-    'pricing.card3.item2': 'Prioriteit in planning en contact',
-    'pricing.intake.title': 'Gratis intakegesprek van 30 min',
-    'pricing.intake.price': 'Gratis kennismaking',
-    'pricing.intake.desc': '30 minuten kennismaken en bepalen wat bij je past en wat nu helpt.',
-    'pricing.note': 'Pakketten zijn combineerbaar met personal training of life coaching, afgestemd op je doel.',
-    'pricing.cta': 'Plan je intake',
-    'contact.hero.title': 'Contact & afspraken met persoonlijke opvolging',
-    'contact.hero.subtitle': 'Vraag je gesprek aan en zet de eerste stap naar verandering met duidelijke afspraken.',
-    'contact.info.title': 'Contactgegevens en bereikbaarheid',
-    'contact.info.desc': 'Ik reageer binnen 24 uur op werkdagen en denk graag met je mee.',
-    'contact.info.emailLabel': 'Emailadres',
-    'contact.info.phoneLabel': 'Telefoonnummer',
-    'contact.info.locationLabel': 'Locatie en regio',
-    'contact.form.title': 'Boek je intake en plan een moment',
-    'contact.form.subtitle': 'Vul het formulier in, dan plannen we samen een moment dat past bij je agenda.',
-    'form.name': 'Volledige naam',
-    'form.email': 'Emailadres',
-    'form.phone': 'Telefoonnummer',
-    'form.topic': 'Focusgebied',
-    'form.goal': 'Jouw doel of uitdaging',
-    'form.time': 'Gewenste tijdstippen en dagen',
-    'form.message': 'Extra info of context',
-    'form.submit': 'Verstuur je aanvraag',
-    'form.statusIdle': 'We behandelen je aanvraag persoonlijk en met zorg.',
-    'form.statusSending': 'Even wachten, je aanvraag wordt veilig verstuurd.',
-    'form.statusSuccess': 'Dank je, je aanvraag is verstuurd en je hoort snel van mij.',
-    'form.statusError': 'Er ging iets mis. Probeer opnieuw of mail direct naar ons.',
-    'form.statusCaptcha': 'Bevestig de captcha om je aanvraag te versturen.',
-    'form.statusConfigMissing': 'Formulier is tijdelijk niet beschikbaar. Probeer later opnieuw of stuur een mail.',
-    'option.life': 'Life coaching traject',
-    'option.pt': 'Personal training sessies',
-    'option.stress': 'Stress & burnout herstel',
-    'option.assertive': 'Assertiviteit training',
-    'option.other': 'Andere vraag of onderwerp',
-    'popup.title': 'Gratis intakegesprek plannen?',
-    'popup.subtitle': 'Vraag een kennismaking aan en ontdek jouw volgende stap met duidelijkheid.',
-    'popup.button': 'Ja, graag plannen',
-    'footer.tagline': 'Warm, professioneel en doelgericht coachen met aandacht voor jouw tempo.',
-    'footer.servicesTitle': 'Diensten en trajecten',
-    'footer.linksTitle': 'Snelle links',
-    'footer.contactTitle': 'Contact en info',
-    'footer.locationTitle': 'Locatie en regio',
-    'footer.rights': 'Alle rechten voorbehouden. TCoaching.'
+    formStatusSending: 'Even wachten, je aanvraag wordt veilig verstuurd.',
+    formStatusSuccess: 'Dank je, je aanvraag is verstuurd en je hoort snel van mij.',
+    formStatusError: 'Er ging iets mis. Probeer opnieuw of mail direct naar ons.',
+    formStatusCaptcha: 'Bevestig de captcha om je aanvraag te versturen.',
+    formStatusConfigMissing: 'Formulier is tijdelijk niet beschikbaar. Probeer later opnieuw of stuur een mail.'
   },
   en: {
-    'nav.home': 'Home overview',
-    'nav.life': 'Life Coaching paths',
-    'nav.pt': 'Personal Training sessions',
-    'nav.stress': 'Stress & Burnout support',
-    'nav.assertive': 'Assertiveness training',
-    'nav.pricing': 'Pricing and packages',
-    'nav.contact': 'Contact & booking',
-    'toggle.theme.light': 'Sunrise glow',
-    'toggle.theme.dark': 'Moonlight',
-    'lang.nl': 'Dutch',
-    'lang.en': 'English',
-    'cta.intake': 'Book a free intake call',
-    'cta.packages': 'View all packages',
-    'cta.learn': 'Explore the details',
-    'cta.book': 'Book a tailored session',
-    'cta.contact': 'Get in touch now',
-    'cta.requestIntake': 'Request your intake',
-    'home.hero.title': 'Live with direction, calm, and purposeful action',
-    'home.hero.subtitle': 'Life coaching and personal training for beginners and growth. We build healthy routines, stronger confidence and choices that feel right, so you feel progress week after week.',
-    'home.hero.note': 'Focused on balance, energy, and sustainable change you can keep.',
-    'home.hero.card.title': 'Your next step in growth',
-    'home.hero.card.line1': '1-on-1 coaching tailored to you, without noise',
-    'home.hero.card.line2': 'Clear goals with a realistic weekly plan',
-    'home.hero.card.line3': 'Warm, professional, and results driven with true follow up',
-    'pill.life': 'Life Coaching focus',
-    'pill.pt': 'Personal Training focus',
-    'pill.stress': 'Stress & Burnout support',
-    'pill.assertive': 'Assertiveness skills',
-    'pill.pricing': 'Pricing overview',
-    'pill.contact': 'Contact & intake',
-    'photo.placeholder': 'Coach photo goes here',
-    'home.focus.title': 'Core focus of your journey',
-    'home.focus.life.title': 'Life Coaching with direction',
-    'home.focus.life.desc': 'Find direction, make choices, strengthen mindset and boundaries, step by step.',
-    'home.focus.pt.title': 'Personal Training with confidence',
-    'home.focus.pt.desc': 'For beginners and medium level with safe, motivating progress that builds energy.',
-    'home.focus.stress.title': 'Stress & Burnout recovery',
-    'home.focus.stress.desc': 'Recover, restore energy, and regain clarity with practical steps.',
-    'home.method.title': 'How it works in three phases',
-    'home.method.step1.title': 'Free intake call',
-    'home.method.step1.desc': 'We listen, explore, and define your focus and needs together.',
-    'home.method.step2.title': 'Personal plan made for you',
-    'home.method.step2.desc': 'Clear goals, actions, and routines that fit your real life.',
-    'home.method.step3.title': 'Coaching rhythm and support',
-    'home.method.step3.desc': 'Consistency, support, and adjustments when needed, with clear check ins.',
-    'home.results.title': 'What to expect in practice',
-    'home.results.item1': 'More energy and mental clarity in daily choices',
-    'home.results.item2': 'Healthy routines you can keep, even in busy weeks',
-    'home.results.item3': 'Strong boundaries and assertive communication without guilt',
-    'home.results.item4': 'Confidence in body, mindset, and decisions',
-    'home.banner.title': 'Ready for a free intake call that brings clarity?',
-    'home.banner.subtitle': 'Discover which approach fits you best and what helps right now.',
-    'home.banner.button': 'Plan your intake',
-    'home.form.title': 'Request your intake and start calmly',
-    'home.form.subtitle': 'Leave your details and I will personally follow up soon.',
-    'home.hero.stat1.value': '1-on-1',
-    'home.hero.stat1.label': 'Tailored guidance',
-    'home.hero.stat2.value': '30 min',
-    'home.hero.stat2.label': 'Free intake',
-    'home.hero.stat3.value': 'Calm + action',
-    'home.hero.stat3.label': 'Mental and physical growth',
-    'home.services.title': 'Four tracks, each with its own rhythm',
-    'home.services.subtitle': 'No generic sessions, but guidance that fits your question, energy, and pace.',
-    'home.services.life.point1': 'Find direction and make choices without endless doubt',
-    'home.services.life.point2': 'Strengthen boundaries, self image, and daily calm',
-    'home.services.pt.point1': 'Safe progression for beginners and people restarting',
-    'home.services.pt.point2': 'Build strength, fitness, and routines you can sustain',
-    'home.services.stress.point1': 'Recover with space, structure, and clear boundaries',
-    'home.services.stress.point2': 'Return to clarity without forcing yourself',
-    'home.services.assert.title': 'Assertiveness in real situations',
-    'home.services.assert.desc': 'Learn to speak up, choose, and set limits without becoming hard.',
-    'home.services.assert.point1': 'Handle difficult conversations calmly and clearly',
-    'home.services.assert.point2': 'Say no respectfully without guilt',
-    'home.proof.title': 'What working professionally together means here',
-    'home.proof.card1.title': 'Clear intake and next step',
-    'home.proof.card1.desc': 'You quickly see what matters most now, without vague pathways or sales talk.',
-    'home.proof.card2.title': 'Sessions that work beyond the appointment',
-    'home.proof.card2.desc': 'We turn insight into routines, agreements, and behaviour that fit your week.',
-    'home.proof.card3.title': 'Warmth without vagueness',
-    'home.proof.card3.desc': 'Human contact, clear feedback, and follow up when something needs to move.',
-    'home.testimonials.title': 'Where people usually feel the difference',
-    'home.testimonial1.quote': 'For the first time I felt that calm and direction could exist together.',
-    'home.testimonial1.name': 'Life coaching client',
-    'home.testimonial1.meta': 'More focus, less overthinking',
-    'home.testimonial2.quote': 'The training felt doable, clear, and gave me confidence in my body again.',
-    'home.testimonial2.name': 'Personal training client',
-    'home.testimonial2.meta': 'Safe restart with structure',
-    'home.testimonial3.quote': 'I learned to express boundaries without seeking conflict or losing myself.',
-    'home.testimonial3.name': 'Assertiveness client',
-    'home.testimonial3.meta': 'Stronger communication at work and at home',
-    'home.faq.title': 'Practical questions that come up often',
-    'home.faq1.q': 'Is the intake really without obligation?',
-    'home.faq1.a': 'Yes. The intake is there to clarify your question and check whether the fit is right. You are not committed to anything.',
-    'home.faq2.q': 'Can I combine coaching and training?',
-    'home.faq2.a': 'Yes. For many people, mindset, movement, and structure work best together, as long as the pace stays realistic.',
-    'home.faq3.q': 'What level is personal training for?',
-    'home.faq3.a': 'Mostly for beginners and people starting again. Technique, safety, and confidence always come first.',
-    'home.faq4.q': 'How quickly will I get a reply after applying?',
-    'home.faq4.a': 'On working days you will normally receive a personal reply within 24 hours to plan the next step.',
-    'home.cta.title': 'Ready to take your first step in a calm, professional way?',
-    'home.cta.subtitle': 'Book a free intake, share where you are stuck, and we will look at what creates the most value right now.',
-    'home.cta.button': 'Plan your free intake',
-    'home.form.note.title': 'What to expect after your request',
-    'home.form.note.subtitle': 'You receive a personal reply, not an automated funnel. First clarity, then a tailored proposal.',
-    'life.hero.title': 'Life Coaching with direction',
-    'life.hero.subtitle': 'For people who want direction, want to break patterns, and design life with intention, supported by realistic steps.',
-    'life.who.title': 'Is this a good fit for you?',
-    'life.who.item1': 'You want choices that match your values and the courage to voice them.',
-    'life.who.item2': 'You want more calm and focus without losing yourself.',
-    'life.who.item3': 'You want stronger boundaries, self image, and daily self care.',
-    'life.offer.title': 'What you get in the journey',
-    'life.offer.card1.title': 'Deep conversations with direction',
-    'life.offer.card1.desc': 'We bring clarity to your goals, blockers, and the choices holding you back.',
-    'life.offer.card2.title': 'Action steps and rhythm',
-    'life.offer.card2.desc': 'Concrete plan with routines, accountability, and weekly goals.',
-    'life.offer.card3.title': 'Gentle strength and trust',
-    'life.offer.card3.desc': 'Warmth and professionalism that move you forward, even when it is hard.',
-    'life.cta.title': 'Start with an intake call at your pace',
-    'life.cta.subtitle': 'No commitment, just clarity about what fits and what you need now.',
-    'life.cta.button': 'Plan your intake',
-    'pt.hero.title': 'Personal Training with guidance',
-    'pt.hero.subtitle': 'For beginners and medium level who want to get healthier with safe, motivating training, guidance, and fun.',
-    'pt.focus.title': 'Training and coaching focus',
-    'pt.focus.item1': 'Technique and injury prevention so you grow safely',
-    'pt.focus.item2': 'Build strength and conditioning with realistic progress',
-    'pt.focus.item3': 'Nutrition and lifestyle routines you can truly keep',
-    'pt.program.title': 'How we work, step by step',
-    'pt.program.desc': 'Personal sessions with clear progress, adapted to your pace, goals, and schedule.',
-    'pt.cta.title': 'Ready for the first step with guidance?',
-    'pt.cta.subtitle': 'Book a free intake and discover your starting point plus a clear plan.',
-    'stress.hero.title': 'Stress & Burnout recovery coaching',
-    'stress.hero.subtitle': 'Calm in your mind, energy in your day, and control in your life with clear boundaries.',
-    'stress.signals.title': 'Recognizable signals and warning signs',
-    'stress.signals.item1': 'Always tired or rushed, even after rest',
-    'stress.signals.item2': 'Poor sleep, worrying, and waking up without recovery',
-    'stress.signals.item3': 'No space for yourself, recovery, or real pauses',
-    'stress.support.title': 'Structured guidance with gentle buildup',
-    'stress.support.desc': 'We work on recovery, boundaries, rest moments, and a realistic plan you can keep.',
-    'stress.cta.title': 'Tackle stress with a clear plan that brings calm',
-    'assert.hero.title': 'Assertiveness with confidence',
-    'assert.hero.subtitle': 'Learn to say no, communicate clearly, and take yourself seriously in every situation.',
-    'assert.learn.title': 'What you learn and practice',
-    'assert.learn.item1': 'Set boundaries without guilt and with respect',
-    'assert.learn.item2': 'Communicate clearly and visibly, even under pressure',
-    'assert.learn.item3': 'Confidence in difficult conversations and tough choices',
-    'assert.practice.title': 'Practical, usable, and grounded',
-    'assert.practice.desc': 'Exercises and reflection you can apply immediately at work, in relationships, and in daily life.',
-    'pricing.hero.title': 'Pricing packages with guidance',
-    'pricing.hero.subtitle': 'Transparent packages focused on results, guidance, and realistic steps.',
-    'pricing.card1.title': 'Start track',
-    'pricing.card1.price': 'EUR 249',
-    'pricing.card1.desc': '2 sessions per month + a short check in to adjust.',
-    'pricing.card1.item1': 'Personal plan with weekly focus',
-    'pricing.card1.item2': 'WhatsApp support for questions on the go',
-    'pricing.card2.title': 'Focus track',
-    'pricing.card2.price': 'EUR 389',
-    'pricing.card2.desc': '4 sessions per month + in between coaching and feedback.',
-    'pricing.card2.item1': 'Weekly goals with check ins',
-    'pricing.card2.item2': 'Nutrition, mindset, and recovery routines',
-    'pricing.card3.title': 'Momentum track',
-    'pricing.card3.price': 'EUR 529',
-    'pricing.card3.desc': '6 sessions per month + intensive follow up and planning.',
-    'pricing.card3.item1': 'Deep coaching tracks with extra depth',
-    'pricing.card3.item2': 'Priority in planning and contact',
-    'pricing.intake.title': 'Free 30 min intake call',
-    'pricing.intake.price': 'Free intro',
-    'pricing.intake.desc': '30 minutes to meet, explore fit, and define what helps now.',
-    'pricing.note': 'Packages can combine personal training and life coaching, aligned with your goal.',
-    'pricing.cta': 'Plan your intake',
-    'contact.hero.title': 'Contact & booking with personal follow up',
-    'contact.hero.subtitle': 'Request a conversation and take the first step to change with clear agreements.',
-    'contact.info.title': 'Contact details and availability',
-    'contact.info.desc': 'I reply within 24 hours on working days and gladly think with you.',
-    'contact.info.emailLabel': 'Email address',
-    'contact.info.phoneLabel': 'Phone number',
-    'contact.info.locationLabel': 'Location and area',
-    'contact.form.title': 'Book your intake and plan a moment',
-    'contact.form.subtitle': 'Fill in the form and we will schedule a moment that fits your agenda.',
-    'form.name': 'Full name',
-    'form.email': 'Email address',
-    'form.phone': 'Phone number',
-    'form.topic': 'Focus area',
-    'form.goal': 'Your goal or challenge',
-    'form.time': 'Preferred times and days',
-    'form.message': 'Extra info or context',
-    'form.submit': 'Send your request',
-    'form.statusIdle': 'We handle your request personally and with care.',
-    'form.statusSending': 'One moment, your request is being sent securely.',
-    'form.statusSuccess': 'Thank you, your request was sent and you will hear from me soon.',
-    'form.statusError': 'Something went wrong. Please try again or email us directly.',
-    'form.statusCaptcha': 'Please complete the captcha to send your request.',
-    'form.statusConfigMissing': 'The form is temporarily unavailable. Please try again later or send an email.',
-    'option.life': 'Life coaching track',
-    'option.pt': 'Personal training sessions',
-    'option.stress': 'Stress & burnout recovery',
-    'option.assertive': 'Assertiveness training',
-    'option.other': 'Other question or topic',
-    'popup.title': 'Plan a free intake call?',
-    'popup.subtitle': 'Request a quick introduction and discover your next step with clarity.',
-    'popup.button': 'Yes, plan it',
-    'footer.tagline': 'Warm, professional, and goal oriented coaching with attention to your pace.',
-    'footer.servicesTitle': 'Services and tracks',
-    'footer.linksTitle': 'Quick links',
-    'footer.contactTitle': 'Contact and info',
-    'footer.locationTitle': 'Location and area',
-    'footer.rights': 'All rights reserved. TCoaching.'
+    formStatusSending: 'One moment, your request is being sent securely.',
+    formStatusSuccess: 'Thank you, your request was sent and you will hear from me soon.',
+    formStatusError: 'Something went wrong. Please try again or email us directly.',
+    formStatusCaptcha: 'Please complete the captcha to send your request.',
+    formStatusConfigMissing: 'The form is temporarily unavailable. Please try again later or send an email.'
   }
 };
 
@@ -448,15 +96,21 @@ let currentTheme = 'light';
 let captchaEnabled = false;
 let captchaReady = false;
 let publicConfigCache = null;
+let lastUserActivityAt = Date.now();
+// Preferences should persist across visits when storage is available.
+// Deduplication and popup timing only need to survive the current tab session.
 const intakeAutoPopupStorageKey = 'tcoaching.intakePopupAutoShown';
 
-const getTranslation = (lang, key) => {
-  if (!translations[lang] || !translations[lang][key]) {
-    return null;
+const getRuntimeMessage = (key, lang = currentLang || 'nl') => {
+  if (runtimeMessages[lang] && runtimeMessages[lang][key]) {
+    return runtimeMessages[lang][key];
   }
-  return translations[lang][key];
+  return runtimeMessages.nl[key] || null;
 };
 
+// i18n boundary:
+// - Page copy and SEO-sensitive metadata live in HTML via data-lang-* / data-*-en attributes.
+// - Runtime-only status text lives in runtimeMessages when it has no HTML source node.
 const cacheLanguageDefaults = () => {
   document.querySelectorAll('[data-lang-en]').forEach((el) => {
     if (!el.dataset.langNl) {
@@ -494,29 +148,26 @@ const cacheLanguageDefaults = () => {
   });
 };
 
-const applyTranslations = (lang) => {
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const key = el.dataset.i18n;
-    const value = getTranslation(lang, key);
-    if (value) {
-      el.textContent = value;
-    }
-  });
+const syncDocumentMetadata = () => {
+  const titleElement = document.querySelector('title');
+  if (!titleElement) {
+    return;
+  }
 
-  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-    const key = el.dataset.i18nPlaceholder;
-    const value = getTranslation(lang, key);
-    if (value) {
-      el.setAttribute('placeholder', value);
-    }
-  });
+  const nextTitle = titleElement.textContent.trim();
+  if (nextTitle) {
+    document.title = nextTitle;
+  }
+};
 
-  document.querySelectorAll('[data-i18n-value]').forEach((el) => {
-    const key = el.dataset.i18nValue;
-    const value = getTranslation(lang, key);
-    if (value) {
-      el.setAttribute('value', value);
-    }
+const syncStaticModeMessageElements = () => {
+  if (apiConfig.enabled) {
+    return;
+  }
+
+  const staticModeMessage = getStaticModeMessage();
+  document.querySelectorAll('[data-form-status], [data-static-mode-hint]').forEach((element) => {
+    element.textContent = staticModeMessage;
   });
 };
 
@@ -604,6 +255,45 @@ const getMobileMenuLabel = (expanded) => {
   return expanded ? 'Sluit menu' : 'Menu';
 };
 
+const normalizePageHref = (href) => {
+  if (!href) {
+    return null;
+  }
+
+  const normalized = href.split('#')[0].split('?')[0].replace(/^\.\//, '');
+  if (!normalized || normalized === '/') {
+    return 'index.html';
+  }
+  if (/^(mailto:|tel:|https?:)/i.test(normalized)) {
+    return null;
+  }
+  return normalized;
+};
+
+const getCurrentPageHref = () => {
+  const pathname = window.location.pathname || '/';
+  if (!pathname || pathname.endsWith('/')) {
+    return 'index.html';
+  }
+
+  const filename = pathname.split('/').pop();
+  return filename || 'index.html';
+};
+
+const updateCurrentNavState = () => {
+  const currentPageHref = getCurrentPageHref();
+  document.querySelectorAll('header nav a[aria-current]').forEach((link) => {
+    link.removeAttribute('aria-current');
+  });
+
+  document.querySelectorAll('header nav a[href]').forEach((link) => {
+    const normalizedHref = normalizePageHref(link.getAttribute('href'));
+    if (normalizedHref === currentPageHref) {
+      link.setAttribute('aria-current', 'page');
+    }
+  });
+};
+
 const syncMobileNavUi = () => {
   const button = document.querySelector('[data-nav-toggle]');
   const nav = document.querySelector('[data-nav]');
@@ -618,11 +308,12 @@ const syncMobileNavUi = () => {
 
 const setLanguage = (lang) => {
   currentLang = lang;
-  localStorage.setItem('siteLang', lang);
+  writeStoredValue(localStore, localFallbackStore, 'siteLang', lang);
   document.documentElement.lang = lang;
   document.documentElement.dataset.lang = lang;
   applyContentLanguage(lang);
-  applyTranslations(lang);
+  syncDocumentMetadata();
+  syncStaticModeMessageElements();
   updateThemeLabel();
   syncMobileNavUi();
   document.querySelectorAll('[data-lang-button]').forEach((btn) => {
@@ -631,7 +322,7 @@ const setLanguage = (lang) => {
 };
 
 const getInitialLang = () => {
-  const stored = localStorage.getItem('siteLang');
+  const stored = readStoredValue(localStore, localFallbackStore, 'siteLang');
   if (stored) {
     return stored;
   }
@@ -643,14 +334,14 @@ const getInitialLang = () => {
 
 const setTheme = (theme) => {
   currentTheme = theme;
-  localStorage.setItem('siteTheme', theme);
+  writeStoredValue(localStore, localFallbackStore, 'siteTheme', theme);
   document.documentElement.dataset.theme = theme;
   updateThemeLabel();
   updateThemeColor();
 };
 
 const getInitialTheme = () => {
-  const stored = localStorage.getItem('siteTheme');
+  const stored = readStoredValue(localStore, localFallbackStore, 'siteTheme');
   if (stored) {
     return stored;
   }
@@ -841,27 +532,7 @@ const initCardSpotlights = () => {
     return;
   }
 
-  const selector = [
-    '.portrait-panel',
-    '.video-frame',
-    '.side-panel',
-    '.story-card',
-    '.trust-card',
-    '.service-card',
-    '.case-card',
-    '.testimonial-card',
-    '.quote-card',
-    '.pricing-card',
-    '.contact-panel',
-    '.lead-card',
-    '.booking-panel',
-    '.article-card',
-    '.metric-card',
-    '.result-card',
-    '.admin-card',
-    '.admin-table-card',
-    '.admin-metric'
-  ].join(', ');
+  const selector = '.card-surface, .admin-card, .admin-table-card, .admin-metric';
 
   document.querySelectorAll(selector).forEach((card) => {
     const setGlowPosition = (event) => {
@@ -883,7 +554,18 @@ const initPopup = () => {
   const closeButtons = overlay.querySelectorAll('[data-close-intake]');
   const openButtons = document.querySelectorAll('[data-open-intake]');
   let autoOpened = false;
-  const hasSeenAutoPopup = () => localStorage.getItem(intakeAutoPopupStorageKey) === 'true';
+  const hasSeenAutoPopup = () => readStoredValue(localStore, localFallbackStore, intakeAutoPopupStorageKey) === 'true';
+  const markUserActivity = () => {
+    lastUserActivityAt = Date.now();
+  };
+  const hasFocusedFormField = () =>
+    Boolean(document.querySelector('[data-contact-form] input:focus, [data-contact-form] select:focus, [data-contact-form] textarea:focus'));
+  const shouldAutoOpen = () => {
+    if (Date.now() - lastUserActivityAt < autoPopupQuietWindowMs) {
+      return false;
+    }
+    return !hasFocusedFormField();
+  };
 
   const closeModal = () => {
     overlay.classList.remove('is-visible');
@@ -893,8 +575,21 @@ const initPopup = () => {
     overlay.classList.add('is-visible');
     autoOpened = true;
     if (source === 'auto') {
-      localStorage.setItem(intakeAutoPopupStorageKey, 'true');
+      writeStoredValue(localStore, localFallbackStore, intakeAutoPopupStorageKey, 'true');
     }
+  };
+
+  const scheduleAutoOpen = (delayMs) => {
+    window.setTimeout(() => {
+      if (autoOpened || hasSeenAutoPopup()) {
+        return;
+      }
+      if (shouldAutoOpen()) {
+        openModal('auto');
+        return;
+      }
+      scheduleAutoOpen(autoPopupQuietWindowMs);
+    }, delayMs);
   };
 
   closeButtons.forEach((btn) => btn.addEventListener('click', closeModal));
@@ -915,11 +610,13 @@ const initPopup = () => {
     })
   );
 
-  setTimeout(() => {
-    if (!autoOpened && !hasSeenAutoPopup()) {
-      openModal('auto');
-    }
-  }, 8000);
+  window.addEventListener('scroll', markUserActivity, { passive: true });
+  window.addEventListener('pointerdown', markUserActivity, { passive: true });
+  window.addEventListener('touchstart', markUserActivity, { passive: true });
+  document.addEventListener('keydown', markUserActivity);
+  document.addEventListener('input', markUserActivity);
+
+  scheduleAutoOpen(8000);
 };
 
 const initHeaderState = () => {
@@ -931,10 +628,15 @@ const initHeaderState = () => {
   const mobileLayout = window.matchMedia && window.matchMedia('(max-width: 820px)');
   let ticking = false;
 
+  const syncHeaderHeight = () => {
+    document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+  };
+
   const syncHeaderState = () => {
     ticking = false;
     const shouldCondense = !(mobileLayout && mobileLayout.matches) && window.scrollY > 56;
     header.classList.toggle('is-condensed', shouldCondense);
+    syncHeaderHeight();
   };
 
   const queueSync = () => {
@@ -947,6 +649,10 @@ const initHeaderState = () => {
 
   syncHeaderState();
   window.addEventListener('scroll', queueSync, { passive: true });
+  window.addEventListener('resize', syncHeaderState, { passive: true });
+  if (typeof ResizeObserver === 'function') {
+    new ResizeObserver(syncHeaderState).observe(header);
+  }
   if (mobileLayout) {
     if (typeof mobileLayout.addEventListener === 'function') {
       mobileLayout.addEventListener('change', syncHeaderState);
@@ -1253,21 +959,21 @@ const wireForms = () => {
         if (!status) {
           return;
         }
-        const value = getTranslation(currentLang, key);
+        const value = getRuntimeMessage(key);
         status.textContent = value || '';
       };
 
-      setStatus('form.statusSending');
+      setStatus('formStatusSending');
 
       if (captchaEnabled) {
         if (!captchaReady) {
-          setStatus('form.statusConfigMissing');
+          setStatus('formStatusConfigMissing');
           return;
         }
         const tokenField = form.querySelector('[data-captcha-token]');
         const token = tokenField ? trimValue(tokenField.value) : null;
         if (!token) {
-          setStatus('form.statusCaptcha');
+          setStatus('formStatusCaptcha');
           resetCaptcha(form);
           return;
         }
@@ -1275,7 +981,7 @@ const wireForms = () => {
 
       const payload = buildContactPayload(form);
       if (payload.website) {
-        setStatus('form.statusSuccess');
+        setStatus('formStatusSuccess');
         form.reset();
         if (captchaEnabled) {
           resetCaptcha(form);
@@ -1290,7 +996,7 @@ const wireForms = () => {
 
       try {
         await sendJson(apiConfig.contactEndpoint, payload);
-        setStatus('form.statusSuccess');
+        setStatus('formStatusSuccess');
         dispatchTrackingPayload(
           buildTrackingPayload({
             eventType: 'form_submit_success',
@@ -1305,7 +1011,7 @@ const wireForms = () => {
           resetCaptcha(form);
         }
       } catch (error) {
-        setStatus('form.statusError');
+        setStatus('formStatusError');
         if (captchaEnabled) {
           resetCaptcha(form);
         }
@@ -1314,27 +1020,42 @@ const wireForms = () => {
   });
 };
 
-  const initStaticModeHints = () => {
-    if (apiConfig.enabled) {
-      return;
+const initStaticModeHints = () => {
+  if (apiConfig.enabled) {
+    return;
+  }
+
+  const staticModeMessage = getStaticModeMessage();
+
+  document.documentElement.dataset.siteMode = apiConfig.mode;
+  document.querySelectorAll('[data-contact-form]').forEach((form) => {
+    form.dataset.staticMode = 'true';
+    const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+    const statusElement = form.querySelector('[data-form-status]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.setAttribute('aria-disabled', 'true');
+      submitButton.title = staticModeMessage;
     }
 
-    document.documentElement.dataset.siteMode = apiConfig.mode;
-    document.querySelectorAll('[data-contact-form]').forEach((form) => {
-      form.dataset.staticMode = 'true';
-      const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+    if (!statusElement && !form.querySelector('[data-static-mode-hint]')) {
+      const hint = document.createElement('p');
+      hint.className = 'form-status';
+      hint.setAttribute('data-static-mode-hint', '');
+      hint.textContent = staticModeMessage;
       if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.setAttribute('aria-disabled', 'true');
-        submitButton.title = getStaticModeMessage();
+        submitButton.insertAdjacentElement('afterend', hint);
+      } else {
+        form.append(hint);
       }
-    });
-    document.querySelectorAll('[data-form-status]').forEach((element) => {
-      element.textContent = getStaticModeMessage();
-    });
-    document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
-        element.remove();
-    });
+    }
+  });
+  document.querySelectorAll('[data-form-status]').forEach((element) => {
+    element.textContent = staticModeMessage;
+  });
+  document.querySelectorAll('[data-captcha-widget]').forEach((element) => {
+    element.remove();
+  });
 };
 
 const trackPageView = () => {
@@ -1345,14 +1066,14 @@ const trackPageView = () => {
 
   try {
     const storageKey = `pageview:${payload.path}`;
-    const previous = Number(sessionStorage.getItem(storageKey) || 0);
+    const previous = Number(readStoredValue(sessionStore, sessionFallbackStore, storageKey) || 0);
     const now = Date.now();
     if (previous && now - previous < trackingWindowMs) {
       return;
     }
-    sessionStorage.setItem(storageKey, String(now));
+    writeStoredValue(sessionStore, sessionFallbackStore, storageKey, String(now));
   } catch (error) {
-    // Ignore storage access failures and continue with best-effort tracking.
+    // Ignore timestamp read failures and continue with best-effort tracking.
   }
 
   dispatchTrackingPayload(payload, { keepalive: true, immediate: false });
@@ -1365,6 +1086,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setTheme(currentTheme);
   setLanguage(currentLang);
   initMobileNav();
+  updateCurrentNavState();
   initHeaderState();
   initThemeToggle();
   initLangToggle();

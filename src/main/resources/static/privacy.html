@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="nl" data-theme="dark">
 <head>
   <meta charset="utf-8" />
@@ -12,30 +12,60 @@
 </head>
 <body>
   <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html"><div class="brand-mark">TC</div><div class="brand-name">TCoaching</div></a>
-      <nav aria-label="Hoofdnavigatie" data-aria-label-en="Main navigation">
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="about.html" data-lang-en="About">Over mij</a>
-          <a href="prijzen.html" data-lang-en="Pricing">Prijzen</a>
-          <a href="contact.html" data-lang-en="Contact">Contact</a>
-          <a href="privacy.html">Privacy</a>
-        </div>
-        <div class="nav-actions">
-          <div class="utility-controls">
-            <div class="toggle-group" role="group" aria-label="Taalwissel" data-aria-label-en="Language switch">
-              <button class="toggle-chip" type="button" data-lang-button data-lang="nl">NL</button>
-              <button class="toggle-chip" type="button" data-lang-button data-lang="en">EN</button>
-            </div>
-            <button class="theme-toggle" type="button" data-theme-toggle><span data-theme-label>☀</span></button>
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">TC</div>
+      <div class="brand-name">TCoaching</div>
+    </a>
+    <nav aria-label="Hoofdnavigatie" data-aria-label-en="Main navigation">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html" data-lang-en="About">Over mij</a>
+        <a href="life-coaching.html">Life Coaching</a>
+        <a href="personal-training.html">Personal Training</a>
+        <a href="stress-burnout.html">Stress &amp; Burnout</a>
+        <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+        <a href="prijzen.html" data-lang-en="Pricing">Prijzen</a>
+        <a href="inzichten.html" data-lang-en="Insights">Inzichten</a>
+        <a href="contact.html" data-lang-en="Contact">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+      <div class="nav-actions">
+        <div class="utility-controls">
+          <div class="toggle-group" role="group" aria-label="Taalwissel" data-aria-label-en="Language switch">
+            <button class="toggle-chip" type="button" data-lang-button data-lang="nl">NL</button>
+            <button class="toggle-chip" type="button" data-lang-button data-lang="en">EN</button>
           </div>
-          <span class="availability-note">AVG / GDPR</span>
-          <a class="btn btn-primary" href="contact.html" data-lang-en="Contact us">Contact opnemen</a>
+          <button class="theme-toggle" type="button" data-theme-toggle>
+            <span data-theme-label>&#9728;</span>
+          </button>
         </div>
-      </nav>
-    </div>
-  </header>
+        <span class="availability-note" data-lang-en="2 intake spots this month">2 intakeplaatsen deze maand</span>
+        <button class="btn btn-primary" type="button" data-open-intake data-track-click="nav_intake_privacy" data-lang-en="Book free intake">Plan gratis intake</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <main>
     <section class="page-hero">
       <div class="container page-hero-grid">
@@ -50,7 +80,7 @@
     </section>
     <section class="section">
       <div class="container editorial-grid">
-        <article class="story-card reveal">
+        <article class="story-card reveal card-surface">
           <div class="section-label" data-lang-en="Which data">Welke gegevens</div>
           <h2 data-lang-en="Data that you enter yourself in forms.">Gegevens die je zelf invult in formulieren.</h2>
           <ul class="bullet-list mt-24">
@@ -59,7 +89,7 @@
             <li data-lang-en="Preferred times and chosen focus area">Gewenste tijdstippen en gekozen focusdomein</li>
           </ul>
         </article>
-        <article class="story-card reveal">
+        <article class="story-card reveal card-surface">
           <div class="section-label" data-lang-en="Why">Waarom</div>
           <h2 data-lang-en="Only to respond personally to your request.">Alleen om persoonlijk op je aanvraag te reageren.</h2>
           <ul class="bullet-list mt-24">
@@ -72,12 +102,12 @@
     </section>
     <section class="section section-border">
       <div class="container do-dont-grid">
-        <article class="story-card reveal">
+        <article class="story-card reveal card-surface">
           <div class="section-label" data-lang-en="Retention">Bewaring</div>
           <h2 data-lang-en="Data is not kept longer than necessary.">Gegevens worden niet langer bewaard dan nodig.</h2>
           <p class="mt-16" data-lang-en="For a live version, it is best to add a concrete retention period here for intake requests, emails, and possible lead magnets.">Voor een liveversie vul je hier best nog een concrete bewaartermijn in voor intakeaanvragen, mails en eventuele lead magnets.</p>
         </article>
-        <article class="story-card reveal">
+        <article class="story-card reveal card-surface">
           <div class="section-label" data-lang-en="Your rights">Jouw rechten</div>
           <h2 data-lang-en="You can request access, correction, or deletion.">Je kan inzage, correctie of verwijdering vragen.</h2>
           <p class="mt-16" data-lang-en="Use the contact address on this site for that. For a final version, also add the formal controller and company details here.">Gebruik daarvoor het contactadres op deze site. Voor een definitieve versie voeg je hier ook de formele verantwoordelijke en ondernemingsgegevens toe.</p>
@@ -86,13 +116,85 @@
     </section>
   </main>
   <footer class="footer">
-    <div class="container footer-grid">
-      <div><div class="brand mb-10"><div class="brand-mark">TC</div><div class="brand-name">TCoaching</div></div><p data-lang-en="Clear privacy information strengthens trust and professionalism.">Duidelijke privacy-informatie versterkt vertrouwen en professionaliteit.</p></div>
-      <div><h4 data-lang-en="Links">Links</h4><div class="list"><a href="index.html">Home</a><a href="about.html" data-lang-en="About">Over mij</a><a href="contact.html" data-lang-en="Contact">Contact</a><a href="privacy.html">Privacy</a></div></div>
-      <div><h4>Contact</h4><p>Email: hello@tcoaching.be</p><p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p></div>
-      <div><h4 data-lang-en="Note">Opmerking</h4><p data-lang-en="Finish this page once your official company and processing details are definitive.">Werk deze pagina af zodra je offici&euml;le ondernemings- en verwerkingsgegevens vastliggen.</p></div>
+  <div class="container footer-grid">
+    <div>
+      <div class="brand mb-10">
+        <div class="brand-mark">TC</div>
+        <div class="brand-name">TCoaching</div>
+      </div>
+      <p data-lang-en="Warm, professional, and goal oriented coaching with attention to your pace.">Warm, professioneel en doelgericht coachen met aandacht voor jouw tempo.</p>
     </div>
-  </footer>
+    <div>
+      <h4 data-lang-en="Pages">Pagina's</h4>
+      <div class="list">
+        <a href="index.html">Home</a>
+        <a href="about.html" data-lang-en="About">Over mij</a>
+        <a href="inzichten.html" data-lang-en="Insights">Inzichten</a>
+        <a href="prijzen.html" data-lang-en="Pricing">Prijzen</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+    <div>
+      <h4 data-lang-en="Journeys">Trajecten</h4>
+      <div class="list">
+        <a href="life-coaching.html">Life Coaching</a>
+        <a href="personal-training.html">Personal Training</a>
+        <a href="stress-burnout.html">Stress &amp; Burnout</a>
+        <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+      </div>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>Email: hello@tcoaching.be</p>
+      <p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p>
+      <p data-lang-en="Region: Antwerp">Regio: Antwerpen</p>
+    </div>
+  </div>
+  <div class="container mt-24">
+    <small data-lang-en="All rights reserved. TCoaching.">Alle rechten voorbehouden. TCoaching.</small>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

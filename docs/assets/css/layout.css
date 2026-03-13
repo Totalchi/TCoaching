@@ -1,4 +1,4 @@
-.section {
+﻿.section {
   padding: 112px 0;
 }
 
@@ -50,7 +50,7 @@
 
 .hero-copy h1,
 .page-hero-copy h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 6.2rem;
   line-height: 0.96;
   font-weight: 400;
@@ -95,11 +95,12 @@
 .metric-card strong,
 .result-card strong {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 2.2rem;
   line-height: 1.05;
   color: var(--accent);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .stat-block span,
@@ -115,27 +116,12 @@
   overflow-wrap: anywhere;
 }
 
-.hero-visual,
-.portrait-panel,
-.video-frame,
-.side-panel,
-.story-card,
-.trust-card,
-.service-card,
-.case-card,
-.testimonial-card,
-.quote-card,
-.pricing-card,
-.contact-panel,
-.lead-card,
-.booking-panel,
-.article-card,
-.metric-card,
-.result-card,
+.card-surface,
 .admin-card,
 .admin-table-card,
-.admin-metric,
-.faq-item {
+.admin-metric {
+  --card-glow-x: 50%;
+  --card-glow-y: 50%;
   position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -145,23 +131,7 @@
   transition: border-color 0.28s ease, transform 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
 }
 
-.hero-visual::before,
-.portrait-panel::before,
-.video-frame::before,
-.side-panel::before,
-.story-card::before,
-.trust-card::before,
-.service-card::before,
-.case-card::before,
-.testimonial-card::before,
-.quote-card::before,
-.pricing-card::before,
-.contact-panel::before,
-.lead-card::before,
-.booking-panel::before,
-.article-card::before,
-.metric-card::before,
-.result-card::before,
+.card-surface::before,
 .admin-card::before,
 .admin-table-card::before,
 .admin-metric::before {
@@ -172,22 +142,7 @@
   pointer-events: none;
 }
 
-.portrait-panel::after,
-.video-frame::after,
-.side-panel::after,
-.story-card::after,
-.trust-card::after,
-.service-card::after,
-.case-card::after,
-.testimonial-card::after,
-.quote-card::after,
-.pricing-card::after,
-.contact-panel::after,
-.lead-card::after,
-.booking-panel::after,
-.article-card::after,
-.metric-card::after,
-.result-card::after,
+.card-surface::after,
 .admin-card::after,
 .admin-table-card::after,
 .admin-metric::after {
@@ -203,38 +158,8 @@
   z-index: 0;
 }
 
-.portrait-panel:hover,
-.portrait-panel:focus-within,
-.video-frame:hover,
-.video-frame:focus-within,
-.side-panel:hover,
-.side-panel:focus-within,
-.story-card:hover,
-.story-card:focus-within,
-.trust-card:hover,
-.trust-card:focus-within,
-.service-card:hover,
-.service-card:focus-within,
-.case-card:hover,
-.case-card:focus-within,
-.testimonial-card:hover,
-.testimonial-card:focus-within,
-.quote-card:hover,
-.quote-card:focus-within,
-.pricing-card:hover,
-.pricing-card:focus-within,
-.contact-panel:hover,
-.contact-panel:focus-within,
-.lead-card:hover,
-.lead-card:focus-within,
-.booking-panel:hover,
-.booking-panel:focus-within,
-.article-card:hover,
-.article-card:focus-within,
-.metric-card:hover,
-.metric-card:focus-within,
-.result-card:hover,
-.result-card:focus-within,
+.card-surface:hover,
+.card-surface:focus-within,
 .admin-card:hover,
 .admin-card:focus-within,
 .admin-table-card:hover,
@@ -246,38 +171,8 @@
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.38);
 }
 
-.portrait-panel:hover::after,
-.portrait-panel:focus-within::after,
-.video-frame:hover::after,
-.video-frame:focus-within::after,
-.side-panel:hover::after,
-.side-panel:focus-within::after,
-.story-card:hover::after,
-.story-card:focus-within::after,
-.trust-card:hover::after,
-.trust-card:focus-within::after,
-.service-card:hover::after,
-.service-card:focus-within::after,
-.case-card:hover::after,
-.case-card:focus-within::after,
-.testimonial-card:hover::after,
-.testimonial-card:focus-within::after,
-.quote-card:hover::after,
-.quote-card:focus-within::after,
-.pricing-card:hover::after,
-.pricing-card:focus-within::after,
-.contact-panel:hover::after,
-.contact-panel:focus-within::after,
-.lead-card:hover::after,
-.lead-card:focus-within::after,
-.booking-panel:hover::after,
-.booking-panel:focus-within::after,
-.article-card:hover::after,
-.article-card:focus-within::after,
-.metric-card:hover::after,
-.metric-card:focus-within::after,
-.result-card:hover::after,
-.result-card:focus-within::after,
+.card-surface:hover::after,
+.card-surface:focus-within::after,
 .admin-card:hover::after,
 .admin-card:focus-within::after,
 .admin-table-card:hover::after,
@@ -287,25 +182,10 @@
   opacity: 1;
 }
 
-.story-card > *,
-.trust-card > *,
-.service-card > *,
-.case-card > *,
-.testimonial-card > *,
-.quote-card > *,
-.pricing-card > *,
-.contact-panel > *,
-.lead-card > *,
-.booking-panel > *,
-.article-card > *,
-.metric-card > *,
-.result-card > *,
+.card-surface > *,
 .admin-card > *,
 .admin-table-card > *,
-.admin-metric > *,
-.portrait-panel > *,
-.video-frame > *,
-.side-panel > * {
+.admin-metric > * {
   position: relative;
   z-index: 1;
 }
@@ -386,7 +266,7 @@
 .lead-card h2,
 .booking-panel h2,
 .page-hero-copy h2 {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 2.1rem;
   line-height: 1.04;
   font-weight: 400;
@@ -402,7 +282,7 @@
 }
 
 .hero-home {
-  min-height: calc(100vh - 138px);
+  min-height: calc(100svh - var(--header-height));
   grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
   gap: 24px;
   align-items: end;
@@ -410,9 +290,14 @@
 }
 
 .hero-home .hero-copy {
-  justify-content: flex-end;
   max-width: 560px;
   padding-bottom: 16px;
+}
+
+@media (min-width: 1081px) {
+  .hero-home .hero-copy {
+    justify-content: flex-end;
+  }
 }
 
 .hero-home .hero-copy h1 {
@@ -445,6 +330,17 @@
 
 .hero-home .hero-visual::before {
   display: none;
+}
+
+.hero-home .hero-visual::after {
+  display: none;
+}
+
+.hero-home .hero-visual:hover,
+.hero-home .hero-visual:focus-within {
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .hero-home .hero-photo {
@@ -497,7 +393,7 @@
 
 .section-title,
 .page-section-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 4rem;
   line-height: 1.04;
   font-weight: 400;
@@ -533,7 +429,7 @@
 }
 
 .service-number {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 3.8rem;
   line-height: 0.9;
   color: rgba(201, 168, 76, 0.16);
@@ -545,7 +441,7 @@
 .case-card h3,
 .pricing-card h3,
 .article-card h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 2rem;
   font-weight: 400;
   line-height: 1.06;
@@ -648,8 +544,9 @@
 }
 
 .page-hero-visual > .portrait-photo-card {
-  width: 100%;
+  width: min(100%, 520px);
   min-height: 100%;
+  margin-left: auto;
 }
 
 .photo-stack,
@@ -668,7 +565,7 @@
 }
 
 .portrait-placeholder span {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1rem;
   color: var(--placeholder-text);
 }
@@ -751,7 +648,7 @@
 .case-card blockquote,
 .quote-card blockquote,
 .testimonial-card blockquote {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.55rem;
   line-height: 1.22;
 }
@@ -816,7 +713,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   color: var(--accent);
   text-align: center;
   padding: 24px;
@@ -864,13 +761,13 @@
 }
 
 .step-number {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.2rem;
   color: var(--accent);
 }
 
 .step h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.75rem;
   margin-bottom: 8px;
   font-weight: 400;
@@ -890,6 +787,11 @@
   transform: translateY(-10px);
 }
 
+.pricing-card.featured:hover,
+.pricing-card.featured:focus-within {
+  transform: translateY(-12px);
+}
+
 .pricing-badge {
   font-size: 0.72rem;
   letter-spacing: 0.18em;
@@ -898,7 +800,7 @@
 }
 
 .pricing-price {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 3rem;
   line-height: 0.92;
 }
@@ -915,7 +817,7 @@
   list-style: none;
   cursor: pointer;
   padding: 26px 58px 26px 26px;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.6rem;
   line-height: 1.12;
 }
@@ -980,13 +882,6 @@
   display: none;
 }
 
-.mt-12 { margin-top: 12px; }
-.mt-16 { margin-top: 16px; }
-.mt-18 { margin-top: 18px; }
-.mt-24 { margin-top: 24px; }
-.mt-32 { margin-top: 32px; }
-.mb-10 { margin-bottom: 10px; }
-
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -996,27 +891,6 @@
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 1080px) {
@@ -1035,7 +909,6 @@
   .testimonial-grid,
   .proof-strip,
   .results-grid,
-  .contact-strip,
   .admin-metrics {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1063,6 +936,10 @@
   .hero-home .hero-copy {
     max-width: none;
     padding-bottom: 0;
+  }
+
+  .hero-home .hero-copy h1 {
+    font-size: 5.2rem;
   }
 
   .hero-home .hero-photo,
@@ -1093,7 +970,6 @@
   .testimonial-grid,
   .proof-strip,
   .results-grid,
-  .contact-strip,
   .footer-grid,
   .admin-metrics {
     grid-template-columns: 1fr;
@@ -1414,8 +1290,18 @@
     display: none !important;
   }
 
+  body.is-loaded header,
+  body.is-loaded main,
+  body.is-loaded footer,
+  .marquee-track,
+  .circle-outer,
+  .circle-inner {
+    animation: none !important;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;
   }
 }
+
