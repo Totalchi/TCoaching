@@ -648,8 +648,9 @@
 }
 
 .page-hero-visual > .portrait-photo-card {
-  width: 100%;
+  width: min(100%, 520px);
   min-height: 100%;
+  margin-left: auto;
 }
 
 .photo-stack,
