@@ -89,17 +89,27 @@ function Add-SeoMetadata {
     $updated = $Content
     $updated = $updated -replace 'content="/assets/img/og-card\.svg"', "content=""$SiteBaseUrl/assets/img/og-card.svg"""
 
-    $languageLinks = @(
-        "<link rel=""canonical"" href=""$CanonicalUrl"" />"
+    $alternateLinks = @(
         "<link rel=""alternate"" hreflang=""nl"" href=""$NlUrl"" />"
         "<link rel=""alternate"" hreflang=""en"" href=""$EnUrl"" />"
         "<link rel=""alternate"" hreflang=""x-default"" href=""$NlUrl"" />"
     ) -join "`r`n  "
+    $canonicalAndAlternates = @(
+        "<link rel=""canonical"" href=""$CanonicalUrl"" />"
+        $alternateLinks
+    ) -join "`r`n  "
+
+    $updated = [regex]::Replace(
+        $updated,
+        '\s*<link\s+rel="alternate"\s+hreflang="(?:nl|en|x-default)"[^>]*>',
+        '',
+        $regexOptions
+    )
 
     if ($updated -match 'rel="canonical"') {
-        $updated = $updated -replace '(?i)(<link\s+rel="canonical"\s+href=")[^"]*(".*?>)', "`$1$CanonicalUrl`$2"
+        $updated = $updated -replace '(?i)<link\s+rel="canonical"\s+href="[^"]*"\s*/?>', $canonicalAndAlternates
     } else {
-        $updated = $updated -replace '(<meta name="theme-color"[^>]*>\s*)', "`$1  $languageLinks`r`n"
+        $updated = $updated -replace '(<meta name="theme-color"[^>]*>\s*)', "`$1  $canonicalAndAlternates`r`n"
     }
 
     $ogUrl = "<meta property=""og:url"" content=""$CanonicalUrl"" />"

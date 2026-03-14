@@ -851,19 +851,55 @@ const fetchPublicConfig = async () => {
   }
 };
 
-const loadScript = (src) =>
+const loadScript = (src, timeoutMs = 8000) =>
   new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) {
-      resolve();
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      if (existing.dataset.loadState === 'loaded') {
+        resolve();
+        return;
+      }
+      if (existing.dataset.loadState === 'failed') {
+        reject(new Error('Script load failed'));
+        return;
+      }
+      const handleExistingLoad = () => {
+        existing.dataset.loadState = 'loaded';
+        resolve();
+      };
+      const handleExistingError = () => {
+        existing.dataset.loadState = 'failed';
+        reject(new Error('Script load failed'));
+      };
+      existing.addEventListener('load', handleExistingLoad, { once: true });
+      existing.addEventListener('error', handleExistingError, { once: true });
+      window.setTimeout(() => {
+        existing.removeEventListener('load', handleExistingLoad);
+        existing.removeEventListener('error', handleExistingError);
+        reject(new Error('Script load timed out'));
+      }, timeoutMs);
       return;
     }
     const script = document.createElement('script');
     script.src = src;
     script.async = true;
     script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Script load failed'));
+    script.onload = () => {
+      script.dataset.loadState = 'loaded';
+      resolve();
+    };
+    script.onerror = () => {
+      script.dataset.loadState = 'failed';
+      reject(new Error('Script load failed'));
+    };
     document.head.appendChild(script);
+    window.setTimeout(() => {
+      if (script.dataset.loadState === 'loaded') {
+        return;
+      }
+      script.dataset.loadState = 'failed';
+      reject(new Error('Script load timed out'));
+    }, timeoutMs);
   });
 
 const initCaptcha = async () => {
@@ -1233,10 +1269,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   initPopup();
   initTrackedClicks();
   initStaticModeHints();
-  await initBooking();
-  await initCaptcha();
   trackPageView();
   wireForms();
+  initBooking().catch(() => {});
+  initCaptcha().catch(() => {});
 });
 
 
