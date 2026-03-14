@@ -10,6 +10,18 @@ $targetDir = Join-Path $repoRoot $OutputDir
 $layoutSyncScript = Join-Path $PSScriptRoot "sync-public-layout.ps1"
 $regexOptions = [System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Singleline
 
+function Normalize-DocumentContent {
+    param([string]$Content)
+
+    $doctypeMatches = [regex]::Matches($Content, '<!doctype html>', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+    if ($doctypeMatches.Count -le 1) {
+        return $Content
+    }
+
+    $lastDoctype = $doctypeMatches[$doctypeMatches.Count - 1]
+    return $Content.Substring($lastDoctype.Index)
+}
+
 function Set-AttributeFromEnglishData {
     param(
         [string]$Content,
@@ -169,11 +181,11 @@ foreach ($page in $publicPages) {
     $rootUrl = if ($page -eq "index.html") { "$siteBaseUrl/" } else { "$siteBaseUrl/$page" }
     $englishUrl = if ($page -eq "index.html") { "$siteBaseUrl/en/" } else { "$siteBaseUrl/en/$page" }
 
-    $rootContent = Get-Content -Raw -Path $sourcePagePath
+    $rootContent = Normalize-DocumentContent -Content (Get-Content -Raw -Path $sourcePagePath)
     $rootContent = Add-SeoMetadata -Content $rootContent -CanonicalUrl $rootUrl -NlUrl $rootUrl -EnUrl $englishUrl -SiteConfigPath "assets/js/site-config.js" -SiteBaseUrl $siteBaseUrl
     Set-Content -Path $rootPagePath -Value $rootContent -Encoding UTF8
 
-    $englishContent = Get-Content -Raw -Path $sourcePagePath
+    $englishContent = Normalize-DocumentContent -Content (Get-Content -Raw -Path $sourcePagePath)
     $englishContent = Convert-PageCopyToEnglish -Content $englishContent
     $englishContent = Update-RelativePathsForEnglish -Content $englishContent
     $englishContent = Add-SeoMetadata -Content $englishContent -CanonicalUrl $englishUrl -NlUrl $rootUrl -EnUrl $englishUrl -SiteConfigPath "../assets/js/site-config.js" -SiteBaseUrl $siteBaseUrl

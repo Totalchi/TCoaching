@@ -604,11 +604,21 @@ const initPopup = () => {
     }
   });
 
-  openButtons.forEach((btn) =>
+  openButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       openModal('manual');
-    })
-  );
+    });
+
+    if (!btn.matches('button, a, input, select, textarea')) {
+      btn.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+        event.preventDefault();
+        openModal('manual');
+      });
+    }
+  });
 
   window.addEventListener('scroll', markUserActivity, { passive: true });
   window.addEventListener('pointerdown', markUserActivity, { passive: true });
