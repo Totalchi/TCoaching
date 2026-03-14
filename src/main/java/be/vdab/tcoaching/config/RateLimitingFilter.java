@@ -1,5 +1,6 @@
 package be.vdab.tcoaching.config;
 
+import be.vdab.tcoaching.api.common.ClientIpResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,16 +25,20 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
     private final boolean enabled;
     private final int requestsPerMinute;
+    private final ClientIpResolver clientIpResolver;
 
     public RateLimitingFilter(
             @Value("${security.rate-limit.enabled:true}") boolean enabled,
-            @Value("${security.rate-limit.requests-per-minute:180}") int requestsPerMinute
+            @Value("${security.rate-limit.requests-per-minute:180}") int requestsPerMinute,
+            ClientIpResolver clientIpResolver
     ) {
         this.enabled = enabled;
         this.requestsPerMinute = Math.max(1, requestsPerMinute);
+        this.clientIpResolver = clientIpResolver;
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -67,14 +72,18 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     }
 
     private void maybeCleanup(long now) {
-        if (cleanupCounter.incrementAndGet() % CLEANUP_EVERY != 0) {
+        int current = cleanupCounter.incrementAndGet();
+        if (current < CLEANUP_EVERY) {
+            return;
+        }
+        if (!cleanupCounter.compareAndSet(current, 0)) {
             return;
         }
         counters.entrySet().removeIf(entry -> now - entry.getValue().getLastSeen() > CLEANUP_TTL_MILLIS);
     }
 
     private String resolveClientKey(HttpServletRequest request) {
-        return request.getRemoteAddr();
+        return clientIpResolver.resolve(request);
     }
 
     private static final class WindowCounter {

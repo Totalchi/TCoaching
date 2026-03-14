@@ -1,5 +1,6 @@
 package be.vdab.tcoaching.api.tracking;
 
+import be.vdab.tcoaching.util.NormalizedText;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,21 +15,13 @@ public record PageViewRequest(
         @Size(max = 255) String eventValue
 ) {
     public PageViewRequest {
-        path = normalize(path);
-        title = normalize(title);
-        referrer = normalize(referrer);
-        lang = normalize(lang);
-        eventType = normalize(eventType);
-        eventName = normalize(eventName);
-        eventValue = normalize(eventValue);
-    }
-
-    private static String normalize(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+        path = NormalizedText.normalizeToNull(path);
+        title = NormalizedText.normalizeToNull(title);
+        referrer = NormalizedText.normalizeToNull(referrer);
+        lang = NormalizedText.normalizeToNull(lang);
+        eventType = NormalizedText.normalizeToNull(eventType);
+        eventName = NormalizedText.normalizeToNull(eventName);
+        eventValue = NormalizedText.normalizeToNull(eventValue);
     }
 
     public boolean isPageView() {

@@ -1,19 +1,6 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+-- noinspection SqlDialectInspectionForFile
 -- Expands header-related columns and adds data constraints plus reporting indexes.
-CREATE TABLE IF NOT EXISTS analytics_events (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    path VARCHAR(200) NOT NULL,
-    title VARCHAR(200),
-    referrer VARCHAR(255),
-    lang VARCHAR(10),
-    event_type VARCHAR(40),
-    event_name VARCHAR(80),
-    event_value VARCHAR(255),
-    ip_address VARCHAR(45),
-    user_agent VARCHAR(255),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_analytics_events_created_at (created_at),
-    INDEX idx_analytics_events_type_name (event_type, event_name)
-);
 
 ALTER TABLE contact_requests
     MODIFY COLUMN preferred_time VARCHAR(80) NULL,
@@ -42,5 +29,52 @@ ALTER TABLE analytics_events
     MODIFY COLUMN referrer VARCHAR(500) NULL,
     MODIFY COLUMN user_agent VARCHAR(500) NULL,
     ADD CONSTRAINT chk_analytics_events_lang
-        CHECK (lang IS NULL OR lang IN ('nl', 'en')),
-    ADD INDEX idx_analytics_events_ip_address (ip_address);
+        CHECK (lang IS NULL OR lang IN ('nl', 'en'));
+
+SET @has_analytics_events_created_at_idx := (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'analytics_events'
+      AND INDEX_NAME = 'idx_analytics_events_created_at'
+);
+SET @create_analytics_events_created_at_idx := IF(
+    @has_analytics_events_created_at_idx = 0,
+    'ALTER TABLE analytics_events ADD INDEX idx_analytics_events_created_at (created_at)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @create_analytics_events_created_at_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_analytics_events_type_name_idx := (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'analytics_events'
+      AND INDEX_NAME = 'idx_analytics_events_type_name'
+);
+SET @create_analytics_events_type_name_idx := IF(
+    @has_analytics_events_type_name_idx = 0,
+    'ALTER TABLE analytics_events ADD INDEX idx_analytics_events_type_name (event_type, event_name)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @create_analytics_events_type_name_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @has_analytics_events_ip_address_idx := (
+    SELECT COUNT(*)
+    FROM INFORMATION_SCHEMA.STATISTICS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'analytics_events'
+      AND INDEX_NAME = 'idx_analytics_events_ip_address'
+);
+SET @create_analytics_events_ip_address_idx := IF(
+    @has_analytics_events_ip_address_idx = 0,
+    'ALTER TABLE analytics_events ADD INDEX idx_analytics_events_ip_address (ip_address)',
+    'SELECT 1'
+);
+PREPARE stmt FROM @create_analytics_events_ip_address_idx;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;

@@ -1,5 +1,6 @@
 package be.vdab.tcoaching.api.tracking;
 
+import be.vdab.tcoaching.api.common.ClientIpResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
 public class TrackingController {
+    private static final int HEADER_MAX_LENGTH = 500;
     private static final String INSERT_PAGE_VIEW_SQL = """
             INSERT INTO page_views
             (path, title, referrer, lang, ip_address, user_agent)
@@ -25,11 +28,14 @@ public class TrackingController {
             """;
 
     private final JdbcTemplate jdbcTemplate;
+    private final ClientIpResolver clientIpResolver;
 
     public TrackingController(
-            JdbcTemplate jdbcTemplate
+            JdbcTemplate jdbcTemplate,
+            ClientIpResolver clientIpResolver
     ) {
         this.jdbcTemplate = jdbcTemplate;
+        this.clientIpResolver = clientIpResolver;
     }
 
     @PostMapping(path = "/track", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -37,9 +43,9 @@ public class TrackingController {
             @Valid @RequestBody PageViewRequest request,
             HttpServletRequest httpRequest
     ) {
-        String ip = resolveClientIp(httpRequest);
-        String userAgent = limitHeader(httpRequest.getHeader("User-Agent"), 500);
-        String referrerHeader = limitHeader(httpRequest.getHeader("Referer"), 500);
+        String ip = clientIpResolver.resolve(httpRequest);
+        String userAgent = limitHeader(httpRequest.getHeader("User-Agent"));
+        String referrerHeader = limitHeader(httpRequest.getHeader("Referer"));
         String referrer = request.referrer() != null ? request.referrer() : referrerHeader;
 
         if (request.isPageView()) {
@@ -70,11 +76,7 @@ public class TrackingController {
         return ResponseEntity.noContent().build();
     }
 
-    private String resolveClientIp(HttpServletRequest request) {
-        return request.getRemoteAddr();
-    }
-
-    private String limitHeader(String value, int max) {
+    private String limitHeader(String value) {
         if (value == null) {
             return null;
         }
@@ -82,6 +84,6 @@ public class TrackingController {
         if (trimmed.isEmpty()) {
             return null;
         }
-        return trimmed.length() > max ? trimmed.substring(0, max) : trimmed;
+        return trimmed.length() > HEADER_MAX_LENGTH ? trimmed.substring(0, HEADER_MAX_LENGTH) : trimmed;
     }
 }

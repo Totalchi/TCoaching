@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl" data-theme="light">
+<html lang="nl" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -123,9 +123,22 @@
 
       <section class="mt-24">
         <article class="admin-table-card">
-          <h3>Leadopvolging</h3>
-          <p>Werk aanvragen bij met status, notities en archivering zodat je opvolging niet enkel in je inbox leeft.</p>
+          <div class="admin-panel-head">
+            <div>
+              <h3>Leadopvolging</h3>
+              <p>Werk aanvragen bij met status, notities en archivering zodat je opvolging niet enkel in je inbox leeft.</p>
+            </div>
+            <div class="admin-toolbar">
+              <button class="admin-button" type="button" data-admin-refresh>Herlaad</button>
+              <span class="admin-status" data-admin-leads-summary>Pagina 1</span>
+            </div>
+          </div>
           <div class="admin-lead-board mt-16" data-admin-leads></div>
+          <div class="admin-pagination mt-16">
+            <button class="admin-button" type="button" data-admin-prev>Vorige</button>
+            <span class="admin-status" data-admin-pagination-status>Leads laden...</span>
+            <button class="admin-button" type="button" data-admin-next>Volgende</button>
+          </div>
         </article>
       </section>
     </div>

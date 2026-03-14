@@ -1,6 +1,5 @@
-ALTER TABLE contact_requests
-    ADD COLUMN request_type VARCHAR(20);
-
+-- noinspection SqlNoDataSourceInspectionForFile
+-- noinspection SqlDialectInspectionForFile
 ALTER TABLE contact_requests
     ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'new';
 

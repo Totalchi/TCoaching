@@ -47,8 +47,6 @@ public class SecurityConfig {
     };
     private static final String DEFAULT_ADMIN_USERNAME = "admin";
     private static final String DEFAULT_ADMIN_PASSWORD = "change-me";
-    private static final String LEGACY_ADMIN_USERNAME = "tcoaching-admin";
-    private static final String LEGACY_ADMIN_PASSWORD = "Tc0ach!ng-2026";
     private static final String CONTENT_SECURITY_POLICY =
             "default-src 'self'; " +
             "script-src 'self' https://challenges.cloudflare.com; " +
@@ -91,8 +89,8 @@ public class SecurityConfig {
             return new InMemoryUserDetailsManager();
         }
 
-        boolean defaultUsername = DEFAULT_ADMIN_USERNAME.equals(username) || LEGACY_ADMIN_USERNAME.equals(username);
-        boolean defaultPassword = DEFAULT_ADMIN_PASSWORD.equals(password) || LEGACY_ADMIN_PASSWORD.equals(password);
+        boolean defaultUsername = DEFAULT_ADMIN_USERNAME.equals(username);
+        boolean defaultPassword = DEFAULT_ADMIN_PASSWORD.equals(password);
         if (requireNonDefault && (defaultUsername || defaultPassword)) {
             throw new IllegalStateException("Default admin credentials are not allowed.");
         }
@@ -109,10 +107,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    @SuppressWarnings("deprecation")
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             RateLimitingFilter rateLimitingFilter
-    ) throws Exception {
+    ) {
         boolean requireHttps = environment.acceptsProfiles(Profiles.of("prod"));
         if (requireHttps) {
             http.requiresChannel((channel) -> channel.anyRequest().requiresSecure());
@@ -149,7 +148,7 @@ public class SecurityConfig {
                         .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin"))
                         .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Resource-Policy", "same-origin"))
                         .addHeaderWriter(new StaticHeadersWriter("X-Permitted-Cross-Domain-Policies", "none"))
-                        .frameOptions((frame) -> frame.deny())
+                        .frameOptions(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig::deny)
                         .httpStrictTransportSecurity((hsts) -> hsts
                                 .includeSubDomains(true)
                                 .preload(true)

@@ -1,5 +1,6 @@
 package be.vdab.tcoaching.api.contact;
 
+import be.vdab.tcoaching.util.NormalizedText;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,25 +21,17 @@ public record ContactRequest(
         @Size(max = 2048) String captchaToken
 ) {
     public ContactRequest {
-        name = normalize(name);
-        email = normalize(email);
-        requestType = normalize(requestType);
-        phone = normalize(phone);
-        topic = normalize(topic);
-        time = normalize(time);
-        goal = normalize(goal);
-        message = normalize(message);
-        page = normalize(page);
-        lang = normalize(lang);
-        website = normalize(website);
-        captchaToken = normalize(captchaToken);
-    }
-
-    private static String normalize(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+        name = NormalizedText.normalizeToNull(name);
+        email = NormalizedText.normalizeToNull(email);
+        requestType = NormalizedText.normalizeToNull(requestType);
+        phone = NormalizedText.normalizeToNull(phone);
+        topic = NormalizedText.normalizeToNull(topic);
+        time = NormalizedText.normalizeToNull(time);
+        goal = NormalizedText.normalizeToNull(goal);
+        message = NormalizedText.normalizeToNull(message);
+        page = NormalizedText.normalizeToNull(page);
+        lang = NormalizedText.normalizeToNull(lang);
+        website = NormalizedText.normalizeToNull(website);
+        captchaToken = NormalizedText.normalizeToNull(captchaToken);
     }
 }

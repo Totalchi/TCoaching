@@ -10,6 +10,30 @@
   margin-bottom: 30px;
 }
 
+.admin-toolbar,
+.admin-panel-head,
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-toolbar {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.admin-panel-head {
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+}
+
+.admin-pagination {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
 .admin-metric,
 .admin-card,
 .admin-table-card {
@@ -18,7 +42,7 @@
 
 .admin-metric strong {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 2.1rem;
   color: var(--accent);
 }
@@ -99,7 +123,7 @@
 }
 
 .admin-lead-title strong {
-  font-family: var(--font-serif);
+  font-family: var(--font-serif), serif;
   font-size: 1.5rem;
   font-weight: 400;
 }
@@ -206,8 +230,12 @@
 
   .admin-lead-head,
   .admin-lead-meta,
-  .admin-lead-actions {
+  .admin-lead-actions,
+  .admin-panel-head,
+  .admin-pagination,
+  .admin-toolbar {
     align-items: start;
+    flex-direction: column;
   }
 }
 

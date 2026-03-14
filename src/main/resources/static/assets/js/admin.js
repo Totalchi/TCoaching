@@ -9,8 +9,21 @@ const adminSelectors = {
   recentContacts: document.querySelector('[data-admin-recent-contacts]'),
   topPages: document.querySelector('[data-admin-top-pages]'),
   topEvents: document.querySelector('[data-admin-top-events]'),
-  leads: document.querySelector('[data-admin-leads]')
+  leads: document.querySelector('[data-admin-leads]'),
+  leadsSummary: document.querySelector('[data-admin-leads-summary]'),
+  paginationStatus: document.querySelector('[data-admin-pagination-status]'),
+  prevButton: document.querySelector('[data-admin-prev]'),
+  nextButton: document.querySelector('[data-admin-next]'),
+  refreshButton: document.querySelector('[data-admin-refresh]')
 };
+
+const leadsPageState = {
+  offset: 0,
+  limit: 40,
+  total: 0,
+  hasMore: false
+};
+let csrfBootstrapPromise = null;
 
 const adminNumberFormat = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-GB' : 'nl-BE');
 const adminDateFormat = new Intl.DateTimeFormat(document.documentElement.lang === 'en' ? 'en-GB' : 'nl-BE', {
@@ -32,6 +45,10 @@ const setAdminText = (element, value) => {
   }
 };
 
+const setLeadsLoadingState = (message = 'Leadopvolging laden...') => {
+  renderEmptyState(adminSelectors.leads, message);
+};
+
 const appendCell = (row, value) => {
   const cell = document.createElement('td');
   cell.textContent = value;
@@ -45,8 +62,34 @@ const readCsrfToken = () => {
   return token ? decodeURIComponent(token.split('=').slice(1).join('=')) : '';
 };
 
+const ensureCsrfToken = async () => {
+  const existing = readCsrfToken();
+  if (existing) {
+    return existing;
+  }
+  if (!csrfBootstrapPromise) {
+    csrfBootstrapPromise = fetch('/api/admin/dashboard', {
+      headers: {
+        Accept: 'application/json'
+      },
+      cache: 'no-store'
+    }).finally(() => {
+      csrfBootstrapPromise = null;
+    });
+  }
+  const response = await csrfBootstrapPromise;
+  if (!response.ok) {
+    throw new Error(`CSRF bootstrap failed with status ${response.status}`);
+  }
+  const token = readCsrfToken();
+  if (!token) {
+    throw new Error('CSRF token unavailable');
+  }
+  return token;
+};
+
 const saveLead = async (id, payload) => {
-  const csrfToken = readCsrfToken();
+  const csrfToken = await ensureCsrfToken();
   const response = await fetch(`/api/admin/contacts/${id}`, {
     method: 'PATCH',
     headers: {
@@ -57,6 +100,20 @@ const saveLead = async (id, payload) => {
   });
   if (!response.ok) {
     throw new Error(`Lead update failed with status ${response.status}`);
+  }
+};
+
+const updatePaginationUi = () => {
+  const { offset, limit, total, hasMore } = leadsPageState;
+  const currentPage = Math.floor(offset / limit) + 1;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  setAdminText(adminSelectors.leadsSummary, `${Math.min(total, offset + 1)}-${Math.min(total, offset + limit)} van ${total}`);
+  setAdminText(adminSelectors.paginationStatus, `Pagina ${currentPage} van ${totalPages}`);
+  if (adminSelectors.prevButton) {
+    adminSelectors.prevButton.disabled = offset === 0;
+  }
+  if (adminSelectors.nextButton) {
+    adminSelectors.nextButton.disabled = !hasMore;
   }
 };
 
@@ -158,6 +215,23 @@ const renderTopEvents = (events) => {
   });
 };
 
+const removeLeadCard = (card) => {
+  if (!card || !adminSelectors.leads) {
+    return;
+  }
+  card.remove();
+  leadsPageState.total = Math.max(0, leadsPageState.total - 1);
+  if (!adminSelectors.leads.childElementCount) {
+    if (leadsPageState.offset > 0) {
+      leadsPageState.offset = Math.max(0, leadsPageState.offset - leadsPageState.limit);
+      loadAdminLeads(leadsPageState.offset);
+      return;
+    }
+    renderEmptyState(adminSelectors.leads, 'Nog geen leads beschikbaar.');
+  }
+  updatePaginationUi();
+};
+
 const renderLeads = (leads) => {
   const container = adminSelectors.leads;
   if (!container) {
@@ -173,6 +247,7 @@ const renderLeads = (leads) => {
   leads.forEach((lead) => {
     const card = document.createElement('article');
     card.className = 'admin-lead';
+    card.dataset.leadId = String(lead.id);
 
     const head = document.createElement('div');
     head.className = 'admin-lead-head';
@@ -262,6 +337,8 @@ const renderLeads = (leads) => {
 
     saveButton.addEventListener('click', async () => {
       feedback.textContent = 'Opslaan...';
+      saveButton.disabled = true;
+      archiveButton.disabled = true;
       try {
         await saveLead(lead.id, {
           status: statusSelect.value,
@@ -269,14 +346,26 @@ const renderLeads = (leads) => {
         });
         feedback.textContent = 'Lead opgeslagen.';
         statusPill.textContent = statusSelect.value;
-        loadAdminLeads();
+        lead.status = statusSelect.value;
+        lead.adminNotes = notesField.value;
+        lead.updatedAt = new Date().toISOString();
+        feedback.textContent = `Laatst bijgewerkt ${formatAdminDate(lead.updatedAt)}`;
       } catch (error) {
-        feedback.textContent = 'Opslaan mislukt.';
+        feedback.textContent = error.message.includes('403')
+          ? 'Opslaan mislukt: beveiligingstoken ontbreekt of is verlopen.'
+          : error.message.includes('404')
+            ? 'Lead niet gevonden.'
+            : 'Opslaan mislukt.';
+      } finally {
+        saveButton.disabled = false;
+        archiveButton.disabled = false;
       }
     });
 
     archiveButton.addEventListener('click', async () => {
       feedback.textContent = 'Archiveren...';
+      saveButton.disabled = true;
+      archiveButton.disabled = true;
       try {
         await saveLead(lead.id, {
           status: 'archived',
@@ -284,9 +373,16 @@ const renderLeads = (leads) => {
           archived: true
         });
         feedback.textContent = 'Lead gearchiveerd.';
-        loadAdminLeads();
+        removeLeadCard(card);
       } catch (error) {
-        feedback.textContent = 'Archiveren mislukt.';
+        feedback.textContent = error.message.includes('403')
+          ? 'Archiveren mislukt: beveiligingstoken ontbreekt of is verlopen.'
+          : error.message.includes('404')
+            ? 'Lead niet gevonden.'
+            : 'Archiveren mislukt.';
+      } finally {
+        saveButton.disabled = false;
+        archiveButton.disabled = false;
       }
     });
 
@@ -298,15 +394,26 @@ const renderLeads = (leads) => {
     card.append(editor, actions);
     container.appendChild(card);
   });
+
+  if (typeof window.TCoachingEnhanceCardSpotlights === 'function') {
+    window.TCoachingEnhanceCardSpotlights(container);
+  }
 };
 
 const loadAdminLeads = async () => {
+  return loadAdminLeadsAtOffset(leadsPageState.offset);
+};
+
+const loadAdminLeadsAtOffset = async (offset) => {
   if (!adminSelectors.leads) {
     return;
   }
 
+  leadsPageState.offset = Math.max(0, offset);
+  setLeadsLoadingState();
+
   try {
-    const response = await fetch('/api/admin/contacts', {
+    const response = await fetch(`/api/admin/contacts?offset=${leadsPageState.offset}&limit=${leadsPageState.limit}`, {
       headers: {
         Accept: 'application/json'
       },
@@ -314,13 +421,21 @@ const loadAdminLeads = async () => {
     });
 
     if (!response.ok) {
-      throw new Error(`Contacts request failed with status ${response.status}`);
+      renderEmptyState(adminSelectors.leads, 'Leadopvolging kon niet geladen worden.');
+      setAdminText(adminSelectors.paginationStatus, `Leadopvolging niet beschikbaar (${response.status}).`);
+      return;
     }
 
     const payload = await response.json();
-    renderLeads(payload || []);
+    leadsPageState.total = Number(payload.total || 0);
+    leadsPageState.limit = Number(payload.limit || leadsPageState.limit);
+    leadsPageState.offset = Number(payload.offset || 0);
+    leadsPageState.hasMore = Boolean(payload.hasMore);
+    renderLeads(payload.items || []);
+    updatePaginationUi();
   } catch (error) {
     renderEmptyState(adminSelectors.leads, 'Leadopvolging kon niet geladen worden.');
+    setAdminText(adminSelectors.paginationStatus, 'Leadopvolging niet beschikbaar.');
   }
 };
 
@@ -336,7 +451,11 @@ const loadAdminDashboard = async () => {
     });
 
     if (!response.ok) {
-      throw new Error(`Dashboard request failed with status ${response.status}`);
+      setAdminText(adminSelectors.status, `Dashboard kon niet geladen worden (${response.status}). Controleer je login of backendstatus.`);
+      renderEmptyState(adminSelectors.recentContacts, 'Geen gegevens beschikbaar.');
+      renderTopPages([]);
+      renderTopEvents([]);
+      return;
     }
 
     const payload = await response.json();
@@ -362,6 +481,27 @@ const loadAdminDashboard = async () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (adminSelectors.prevButton) {
+    adminSelectors.prevButton.addEventListener('click', () => {
+      if (leadsPageState.offset === 0) {
+        return;
+      }
+      loadAdminLeadsAtOffset(Math.max(0, leadsPageState.offset - leadsPageState.limit));
+    });
+  }
+  if (adminSelectors.nextButton) {
+    adminSelectors.nextButton.addEventListener('click', () => {
+      if (!leadsPageState.hasMore) {
+        return;
+      }
+      loadAdminLeadsAtOffset(leadsPageState.offset + leadsPageState.limit);
+    });
+  }
+  if (adminSelectors.refreshButton) {
+    adminSelectors.refreshButton.addEventListener('click', () => {
+      loadAdminLeadsAtOffset(leadsPageState.offset);
+    });
+  }
   loadAdminDashboard();
-  loadAdminLeads();
+  loadAdminLeadsAtOffset(0);
 });

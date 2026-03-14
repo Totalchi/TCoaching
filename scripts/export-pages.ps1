@@ -96,12 +96,16 @@ function Add-SeoMetadata {
         "<link rel=""alternate"" hreflang=""x-default"" href=""$NlUrl"" />"
     ) -join "`r`n  "
 
-    if ($updated -notmatch 'rel="canonical"') {
+    if ($updated -match 'rel="canonical"') {
+        $updated = $updated -replace '(?i)(<link\s+rel="canonical"\s+href=")[^"]*(".*?>)', "`$1$CanonicalUrl`$2"
+    } else {
         $updated = $updated -replace '(<meta name="theme-color"[^>]*>\s*)', "`$1  $languageLinks`r`n"
     }
 
-    if ($updated -notmatch 'property="og:url"') {
-        $ogUrl = "<meta property=""og:url"" content=""$CanonicalUrl"" />"
+    $ogUrl = "<meta property=""og:url"" content=""$CanonicalUrl"" />"
+    if ($updated -match 'property="og:url"') {
+        $updated = $updated -replace '(?i)(<meta\s+property="og:url"\s+content=")[^"]*(".*?>)', "`$1$CanonicalUrl`$2"
+    } else {
         $updated = $updated -replace '(<meta property="og:type"[^>]*>\s*)', "`$1  $ogUrl`r`n"
     }
 

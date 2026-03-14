@@ -1,17 +1,6 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+-- noinspection SqlDialectInspectionForFile
 -- Mirrors MySQL data hardening for H2 tests: wider header columns, constraints, and indexes.
-CREATE TABLE IF NOT EXISTS analytics_events (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    path VARCHAR(200) NOT NULL,
-    title VARCHAR(200),
-    referrer VARCHAR(255),
-    lang VARCHAR(10),
-    event_type VARCHAR(40),
-    event_name VARCHAR(80),
-    event_value VARCHAR(255),
-    ip_address VARCHAR(45),
-    user_agent VARCHAR(255),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
 
 ALTER TABLE contact_requests ALTER COLUMN preferred_time SET DATA TYPE VARCHAR(80);
 ALTER TABLE contact_requests ALTER COLUMN goal SET DATA TYPE VARCHAR(1000);
@@ -51,4 +40,6 @@ ALTER TABLE analytics_events
 CREATE INDEX IF NOT EXISTS idx_contact_requests_status_created_at ON contact_requests (status, created_at);
 CREATE INDEX IF NOT EXISTS idx_contact_requests_ip_address ON contact_requests (ip_address);
 CREATE INDEX IF NOT EXISTS idx_page_views_ip_address ON page_views (ip_address);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at ON analytics_events (created_at);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_type_name ON analytics_events (event_type, event_name);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_ip_address ON analytics_events (ip_address);

@@ -17,25 +17,19 @@ public class EmailNotificationService {
     private final String to;
     private final String from;
     private final String subject;
-    private final String username;
-    private final String password;
 
     public EmailNotificationService(
             JavaMailSender mailSender,
             @Value("${contact.notification.enabled:true}") boolean enabled,
             @Value("${contact.notification.to:}") String to,
             @Value("${contact.notification.from:}") String from,
-            @Value("${contact.notification.subject:New contact request}") String subject,
-            @Value("${spring.mail.username:}") String username,
-            @Value("${spring.mail.password:}") String password
+            @Value("${contact.notification.subject:New contact request}") String subject
     ) {
         this.mailSender = mailSender;
         this.enabled = enabled;
         this.to = to;
         this.from = from;
         this.subject = subject;
-        this.username = username;
-        this.password = password;
     }
 
     @Async("notificationTaskExecutor")
@@ -59,8 +53,6 @@ public class EmailNotificationService {
 
     private boolean isConfigured() {
         return enabled
-                && hasText(username)
-                && hasText(password)
                 && hasText(to)
                 && hasText(from);
     }

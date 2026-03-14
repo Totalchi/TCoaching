@@ -97,6 +97,7 @@ let captchaEnabled = false;
 let captchaReady = false;
 let publicConfigCache = null;
 let lastUserActivityAt = Date.now();
+const autoPopupMaxAttempts = 5;
 // Preferences should persist across visits when storage is available.
 // Deduplication and popup timing only need to survive the current tab session.
 const intakeAutoPopupStorageKey = 'tcoaching.intakePopupAutoShown';
@@ -345,6 +346,9 @@ const getInitialTheme = () => {
   if (stored) {
     return stored;
   }
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return 'light';
+  }
   return 'dark';
 };
 
@@ -514,27 +518,52 @@ const initPointerGlow = () => {
     ring.classList.toggle('is-active', active);
   };
 
+  const enhancePointerGlowTargets = (root = document) => {
+    const scope = root.querySelectorAll ? root : document;
+    scope.querySelectorAll('a, button, input, textarea, select, summary, label').forEach((element) => {
+      if (element.dataset.pointerGlowBound === 'true') {
+        return;
+      }
+      element.dataset.pointerGlowBound = 'true';
+      element.addEventListener('pointerenter', () => activateRing(true), { passive: true });
+      element.addEventListener('pointerleave', () => activateRing(false), { passive: true });
+    });
+  };
+
   window.addEventListener('pointermove', queueRender, { passive: true });
-  document.querySelectorAll('a, button, input, textarea, select, summary, label').forEach((element) => {
-    element.addEventListener('pointerenter', () => activateRing(true), { passive: true });
-    element.addEventListener('pointerleave', () => activateRing(false), { passive: true });
+  enhancePointerGlowTargets(document);
+  window.TCoachingEnhancePointerGlowTargets = enhancePointerGlowTargets;
+  const observer = new MutationObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.addedNodes.forEach((node) => {
+        if (!(node instanceof Element)) {
+          return;
+        }
+        if (node.matches('a, button, input, textarea, select, summary, label')) {
+          enhancePointerGlowTargets(node.parentElement || document);
+          return;
+        }
+        enhancePointerGlowTargets(node);
+      });
+    });
   });
+  observer.observe(document.body, { childList: true, subtree: true });
   window.addEventListener('pointerleave', () => {
     dot.style.transform = 'translate3d(-9999px, -9999px, 0)';
     ring.style.transform = 'translate3d(-9999px, -9999px, 0)';
   });
 };
 
-const initCardSpotlights = () => {
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (reduceMotion || !finePointer) {
-    return;
-  }
+const enhanceCardSpotlights = (root = document) => {
+  const scope = root.querySelectorAll ? root : document;
+  const selector = '.card-surface, .admin-card, .admin-table-card, .admin-metric, .admin-lead';
 
-  const selector = '.card-surface, .admin-card, .admin-table-card, .admin-metric';
+  scope.querySelectorAll(selector).forEach((card) => {
+    if (card.dataset.cardSpotlightBound === 'true') {
+      return;
+    }
+    card.dataset.cardSpotlightBound = 'true';
 
-  document.querySelectorAll(selector).forEach((card) => {
     const setGlowPosition = (event) => {
       const rect = card.getBoundingClientRect();
       card.style.setProperty('--card-glow-x', `${event.clientX - rect.left}px`);
@@ -546,14 +575,42 @@ const initCardSpotlights = () => {
   });
 };
 
-const initPopup = () => {
-  const overlay = document.querySelector('[data-intake-modal]');
-  if (!overlay) {
+const initCardSpotlights = () => {
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (reduceMotion || !finePointer) {
     return;
   }
-  const closeButtons = overlay.querySelectorAll('[data-close-intake]');
+
+  enhanceCardSpotlights(document);
+  window.TCoachingEnhanceCardSpotlights = enhanceCardSpotlights;
+
+  const observer = new MutationObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.addedNodes.forEach((node) => {
+        if (!(node instanceof Element)) {
+          return;
+        }
+        if (node.matches('.card-surface, .admin-card, .admin-table-card, .admin-metric, .admin-lead')) {
+          enhanceCardSpotlights(node.parentElement || document);
+          return;
+        }
+        enhanceCardSpotlights(node);
+      });
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+};
+
+const initPopup = () => {
+  const overlays = Array.from(document.querySelectorAll('[data-intake-modal]'));
+  if (!overlays.length) {
+    return;
+  }
   const openButtons = document.querySelectorAll('[data-open-intake]');
+  const defaultOverlay = overlays[0];
   let autoOpened = false;
+  let autoPopupAttempts = 0;
   const hasSeenAutoPopup = () => readStoredValue(localStore, localFallbackStore, intakeAutoPopupStorageKey) === 'true';
   const markUserActivity = () => {
     lastUserActivityAt = Date.now();
@@ -567,12 +624,25 @@ const initPopup = () => {
     return !hasFocusedFormField();
   };
 
-  const closeModal = () => {
+  const resolveOverlay = (trigger) => {
+    const target = trimValue(trigger?.dataset?.intakeTarget || '');
+    if (target) {
+      return overlays.find((overlay) =>
+        overlay.id === target
+        || overlay.dataset.intakeModal === target
+        || overlay.dataset.intakeId === target
+      ) || defaultOverlay;
+    }
+    return defaultOverlay;
+  };
+
+  const closeModal = (overlay) => {
     overlay.classList.remove('is-visible');
   };
 
-  const openModal = (source = 'manual') => {
+  const openModal = (overlay, source = 'manual') => {
     overlay.classList.add('is-visible');
+    renderAvailableCaptchaWidgets(overlay);
     autoOpened = true;
     if (source === 'auto') {
       writeStoredValue(localStore, localFallbackStore, intakeAutoPopupStorageKey, 'true');
@@ -584,29 +654,38 @@ const initPopup = () => {
       if (autoOpened || hasSeenAutoPopup()) {
         return;
       }
+      autoPopupAttempts += 1;
+      if (autoPopupAttempts > autoPopupMaxAttempts) {
+        return;
+      }
       if (shouldAutoOpen()) {
-        openModal('auto');
+        openModal(defaultOverlay, 'auto');
         return;
       }
       scheduleAutoOpen(autoPopupQuietWindowMs);
     }, delayMs);
   };
 
-  closeButtons.forEach((btn) => btn.addEventListener('click', closeModal));
-  overlay.addEventListener('click', (event) => {
-    if (event.target === overlay) {
-      closeModal();
-    }
+  overlays.forEach((overlay) => {
+    overlay.querySelectorAll('[data-close-intake]').forEach((button) => {
+      button.addEventListener('click', () => closeModal(overlay));
+    });
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) {
+        closeModal(overlay);
+      }
+    });
   });
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      closeModal();
+      overlays.forEach((overlay) => closeModal(overlay));
     }
   });
 
   openButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      openModal('manual');
+      openModal(resolveOverlay(btn), 'manual');
     });
 
     if (!btn.matches('button, a, input, select, textarea')) {
@@ -615,7 +694,7 @@ const initPopup = () => {
           return;
         }
         event.preventDefault();
-        openModal('manual');
+        openModal(resolveOverlay(btn), 'manual');
       });
     }
   });
@@ -813,29 +892,64 @@ const initCaptcha = async () => {
   }
 
   captchaReady = true;
+  document.documentElement.dataset.captchaSiteKey = config.captchaSiteKey;
+  renderAvailableCaptchaWidgets(document);
+};
 
-  document.querySelectorAll('[data-captcha-widget]').forEach((widget) => {
-    const form = widget.closest('form');
-    const tokenField = form ? form.querySelector('[data-captcha-token]') : null;
-    const widgetId = window.turnstile.render(widget, {
-      sitekey: config.captchaSiteKey,
-      callback: (token) => {
-        if (tokenField) {
-          tokenField.value = token;
-        }
-      },
-      'error-callback': () => {
-        if (tokenField) {
-          tokenField.value = '';
-        }
-      },
-      'expired-callback': () => {
-        if (tokenField) {
-          tokenField.value = '';
-        }
+const isCaptchaWidgetVisible = (widget) => {
+  if (!(widget instanceof HTMLElement)) {
+    return false;
+  }
+  if (widget.closest('[hidden]')) {
+    return false;
+  }
+  const overlay = widget.closest('[data-intake-modal]');
+  if (overlay && !overlay.classList.contains('is-visible')) {
+    return false;
+  }
+  return widget.getClientRects().length > 0;
+};
+
+const renderCaptchaWidget = (widget) => {
+  if (!captchaEnabled || !captchaReady || !window.turnstile || !widget || widget.dataset.captchaWidgetId) {
+    return;
+  }
+  if (!isCaptchaWidgetVisible(widget)) {
+    return;
+  }
+
+  const siteKey = trimValue(document.documentElement.dataset.captchaSiteKey || '');
+  if (!siteKey) {
+    return;
+  }
+
+  const form = widget.closest('form');
+  const tokenField = form ? form.querySelector('[data-captcha-token]') : null;
+  const widgetId = window.turnstile.render(widget, {
+    sitekey: siteKey,
+    callback: (token) => {
+      if (tokenField) {
+        tokenField.value = token;
       }
-    });
-    widget.dataset.captchaWidgetId = String(widgetId);
+    },
+    'error-callback': () => {
+      if (tokenField) {
+        tokenField.value = '';
+      }
+    },
+    'expired-callback': () => {
+      if (tokenField) {
+        tokenField.value = '';
+      }
+    }
+  });
+  widget.dataset.captchaWidgetId = String(widgetId);
+};
+
+const renderAvailableCaptchaWidgets = (root = document) => {
+  const scope = root.querySelectorAll ? root : document;
+  scope.querySelectorAll('[data-captcha-widget]').forEach((widget) => {
+    renderCaptchaWidget(widget);
   });
 };
 
@@ -898,14 +1012,26 @@ const buildContactPayload = (form) => {
   const payload = {};
 
   formData.forEach((value, key) => {
+    if (key === 'captchaToken') {
+      return;
+    }
     const normalized = trimValue(String(value));
     if (normalized) {
       payload[key] = normalized;
     }
   });
 
+  const captchaToken = trimValue(String(formData.get('captchaToken') || ''));
+  if (captchaToken) {
+    payload.captchaToken = captchaToken;
+  }
   payload.lang = currentLang;
   return payload;
+};
+
+const resetInteractiveForm = (form) => {
+  form.reset();
+  applyContentLanguage(currentLang);
 };
 
 const initTrackedClicks = () => {
@@ -980,6 +1106,7 @@ const wireForms = () => {
           setStatus('formStatusConfigMissing');
           return;
         }
+        renderAvailableCaptchaWidgets(form);
         const tokenField = form.querySelector('[data-captcha-token]');
         const token = tokenField ? trimValue(tokenField.value) : null;
         if (!token) {
@@ -992,7 +1119,7 @@ const wireForms = () => {
       const payload = buildContactPayload(form);
       if (payload.website) {
         setStatus('formStatusSuccess');
-        form.reset();
+        resetInteractiveForm(form);
         if (captchaEnabled) {
           resetCaptcha(form);
         }
@@ -1015,7 +1142,7 @@ const wireForms = () => {
           }),
           { keepalive: true, immediate: true }
         );
-        form.reset();
+        resetInteractiveForm(form);
         delete form.dataset.formStarted;
         if (captchaEnabled) {
           resetCaptcha(form);

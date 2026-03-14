@@ -1,5 +1,6 @@
 package be.vdab.tcoaching.api.admin;
 
+import be.vdab.tcoaching.util.NormalizedText;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -9,15 +10,7 @@ public record LeadUpdateRequest(
         Boolean archived
 ) {
     public LeadUpdateRequest {
-        status = normalize(status);
-        adminNotes = normalize(adminNotes);
-    }
-
-    private static String normalize(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
+        status = NormalizedText.normalizeToNull(status);
+        adminNotes = NormalizedText.normalizeToNull(adminNotes);
     }
 }
