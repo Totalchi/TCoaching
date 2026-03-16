@@ -457,12 +457,6 @@ nav {
     justify-content: center;
   }
 
-  .availability-note {
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    color: var(--muted-strong);
-  }
-
   .nav-actions .btn {
     width: 100%;
   }

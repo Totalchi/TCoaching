@@ -388,7 +388,7 @@
   align-items: end;
   justify-content: space-between;
   gap: 30px;
-  margin-bottom: 54px;
+  margin-bottom: 46px;
 }
 
 .section-title,
@@ -532,6 +532,7 @@
   border-left: 1px solid var(--line-strong);
   padding-left: 20px;
   color: var(--muted-strong);
+  max-width: 36rem;
 }
 
 .page-hero-visual {
@@ -885,13 +886,16 @@
 
 .footer {
   border-top: 1px solid var(--line);
-  padding: 34px 0 40px;
+  padding: 42px 0 52px;
+  background:
+    linear-gradient(180deg, rgba(255, 244, 214, 0.02), transparent 34%),
+    var(--bg);
 }
 
 .footer-grid {
   display: grid;
   grid-template-columns: 1.1fr 1fr 1fr 1fr;
-  gap: 22px;
+  gap: 28px;
 }
 
 .footer h4 {
@@ -899,7 +903,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .footer p,
@@ -908,8 +912,17 @@
   color: var(--muted);
 }
 
+.footer a {
+  transition: color 0.2s ease;
+}
+
+.footer a:hover,
+.footer a:focus {
+  color: var(--accent);
+}
+
 .footer .list {
-  gap: 8px;
+  gap: 10px;
 }
 
 .footer .list li,
