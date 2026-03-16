@@ -74,6 +74,26 @@
       "name": "contact.notification.subject",
       "type": "java.lang.String",
       "description": "Subject line for new contact notification emails."
+    },
+    {
+      "name": "spring.flyway.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable Flyway database migrations."
+    },
+    {
+      "name": "spring.flyway.baseline-on-migrate",
+      "type": "java.lang.Boolean",
+      "description": "Whether Flyway should baseline an existing schema when migrating."
+    },
+    {
+      "name": "spring.flyway.baseline-version",
+      "type": "java.lang.String",
+      "description": "Baseline version used by Flyway."
+    },
+    {
+      "name": "spring.flyway.locations",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Locations that Flyway scans for migration scripts."
     }
   ]
 }
