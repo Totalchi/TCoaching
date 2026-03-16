@@ -14,17 +14,56 @@
   <meta property="og:description" data-content-en="Learn to set clear boundaries without becoming harsh or losing yourself." content="Leer duidelijke grenzen aangeven zonder hard te worden of jezelf te verliezen." />
   <meta property="og:type" content="website" />
     <meta property="og:url" content="https://totalchi.github.io/TCoaching/assertiviteit.html" />
-<meta property="og:image" content="https://totalchi.github.io/TCoaching/assets/img/og-card.svg" />
+<meta property="og:image" content="/assets/img/og-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" data-content-en="TCoaching | Assertiveness" content="TCoaching | Assertiviteit" />
   <meta name="twitter:description" data-content-en="For difficult conversations, boundaries, and clear communication with respect." content="Voor moeilijke gesprekken, grenzen en duidelijke communicatie met respect." />
-  <meta name="twitter:image" content="https://totalchi.github.io/TCoaching/assets/img/og-card.svg" />
+  <meta name="twitter:image" content="/assets/img/og-card.png" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Assertiviteit",
+      "serviceType": "Assertiveness coaching",
+      "provider": {
+        "@id": "https://tcoaching.be/#business"
+      },
+      "url": "https://tcoaching.be/assertiviteit.html",
+      "description": "Assertiviteitstraining voor duidelijke grenzen, rustige communicatie en steviger staan in gesprekken.",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Antwerpen, Belgium"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://tcoaching.be/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Assertiviteit",
+          "item": "https://tcoaching.be/assertiviteit.html"
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+  <!--suppress HtmlUnknownAnchorTarget -->
+<!--suppress HtmlUnknownAnchorTarget -->
+<a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
 <header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
@@ -35,14 +74,17 @@
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="about.html" data-lang-en="About">Over mij</a>
-        <a href="life-coaching.html">Life Coaching</a>
-        <a href="personal-training.html">Personal Training</a>
-        <a href="stress-burnout.html">Stress &amp; Burnout</a>
-        <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+        <details class="nav-menu" data-nav-services>
+          <summary data-lang-en="Services">Trajecten</summary>
+          <div class="nav-dropdown-panel">
+            <a href="life-coaching.html">Life Coaching</a>
+            <a href="personal-training.html">Personal Training</a>
+            <a href="stress-burnout.html">Stress &amp; Burnout</a>
+            <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+          </div>
+        </details>
         <a href="prijzen.html" data-lang-en="Pricing">Prijzen</a>
-        <a href="inzichten.html" data-lang-en="Insights">Inzichten</a>
         <a href="contact.html" data-lang-en="Contact">Contact</a>
-        <a href="privacy.html">Privacy</a>
       </div>
       <div class="nav-actions">
         <div class="utility-controls">
@@ -54,7 +96,13 @@
             <span data-theme-label>&#9728;</span>
           </button>
         </div>
-        <span class="availability-note" data-lang-en="2 intake spots this month">2 intakeplaatsen deze maand</span>
+        <a class="account-link" href="login/" aria-label="Admin login" data-aria-label-en="Admin login">
+          <span class="account-link-icon" aria-hidden="true">
+            <span class="account-link-head"></span>
+            <span class="account-link-body"></span>
+          </span>
+          <span class="account-link-label">Login</span>
+        </a>
         <button class="btn btn-primary" type="button" data-open-intake data-track-click="nav_intake_assertive" data-lang-en="Book free intake">Plan gratis intake</button>
       </div>
     </nav>
@@ -118,7 +166,7 @@
   </div>
 </footer>
 
-<div class="modal-overlay" data-intake-modal><div class="modal" role="dialog" aria-modal="true" aria-labelledby="assertive-intake-title"><button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button><h3 id="assertive-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3><p data-lang-en="Briefly describe in which conversations or situations you want to stand stronger.">Vertel kort in welke gesprekken of situaties je sterker wil leren staan.</p><form class="form mt-24" data-contact-form="intake-popup-assertive"><input type="hidden" name="page" value="Assertiviteit Popup" /><input type="hidden" name="requestType" value="intake" /><label class="field-hidden" aria-hidden="true"><span>Website</span><input type="text" name="website" autocomplete="off" tabindex="-1" /></label><label><span data-lang-en="Name">Naam</span><input type="text" name="name" placeholder="Jouw naam" data-placeholder-en="Your name" required /></label><label><span>Email</span><input type="email" name="email" placeholder="jij@email.be" data-placeholder-en="you@email.com" required /></label><label><span data-lang-en="Your question">Jouw vraag</span><textarea name="goal" placeholder="Welke gesprekken of grenzen wil je aanpakken?" data-placeholder-en="Which conversations or boundaries do you want to work on?"></textarea></label><input type="hidden" name="captchaToken" data-captcha-token /><div class="captcha-widget" data-captcha-widget></div><button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button><p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p></form></div></div>
+<div class="modal-overlay" data-intake-modal><div class="modal" role="dialog" aria-modal="true" aria-labelledby="assertive-intake-title"><button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button><h3 id="assertive-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3><p data-lang-en="Briefly describe in which conversations or situations you want to stand stronger.">Vertel kort in welke gesprekken of situaties je sterker wil leren staan.</p><form class="form mt-24" data-contact-form="intake-popup-assertive"><input type="hidden" name="page" value="Assertiviteit Popup" /><input type="hidden" name="requestType" value="intake" /><label class="field-hidden" aria-hidden="true"><span>Website</span><input type="text" name="website" autocomplete="off" tabindex="-1" /></label><label><span data-lang-en="Name">Naam</span><input type="text" name="name" placeholder="Jouw naam" data-placeholder-en="Your name" required /></label><label><span>Email</span><input type="email" name="email" placeholder="jij@email.be" data-placeholder-en="you@email.com" required /></label><label><span data-lang-en="Your question">Jouw vraag</span><textarea name="goal" placeholder="Welke gesprekken of grenzen wil je aanpakken?" data-placeholder-en="Which conversations or boundaries do you want to work on?"></textarea></label><input type="hidden" name="captchaToken" data-captcha-token /><div class="captcha-widget" data-captcha-widget></div><button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button><p class="form-status" data-form-status data-lang-en="Your request will be handled personally.">Je aanvraag wordt persoonlijk behandeld.</p></form></div></div>
   <script src="assets/js/site-config.js"></script>
   <script src="assets/js/main.js"></script>
 </body>

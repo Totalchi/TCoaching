@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Account aanmaken</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/auth.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-eyebrow">TCoaching Client Portal</div>
+      <h1>Maak je account aan</h1>
+      <p class="auth-copy">Na registratie ontvang je een verificatiemail. Pas daarna wordt je portaal actief.</p>
+
+      <div class="auth-message" data-client-auth-message></div>
+
+      <form class="auth-form" data-client-register-form>
+        <div class="auth-grid two-cols">
+          <label class="auth-field">
+            <span>Voornaam</span>
+            <input type="text" name="firstName" autocomplete="given-name" required />
+          </label>
+
+          <label class="auth-field">
+            <span>Familienaam</span>
+            <input type="text" name="lastName" autocomplete="family-name" />
+          </label>
+        </div>
+
+        <div class="auth-grid two-cols">
+          <label class="auth-field">
+            <span>E-mailadres</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+
+          <label class="auth-field">
+            <span>Telefoon</span>
+            <input type="tel" name="phone" autocomplete="tel" />
+          </label>
+        </div>
+
+        <div class="auth-grid two-cols">
+          <label class="auth-field">
+            <span>Wachtwoord</span>
+            <input type="password" name="password" minlength="8" autocomplete="new-password" required />
+          </label>
+
+          <label class="auth-field">
+            <span>Taal</span>
+            <select name="lang" class="auth-field input" aria-label="Taal">
+              <option value="nl">Nederlands</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="auth-actions">
+          <button class="auth-button" type="submit">Account aanmaken</button>
+          <a class="auth-button secondary" href="/inloggen.html">Ik heb al een account</a>
+        </div>
+      </form>
+
+      <p class="auth-meta">
+        <a href="/">Terug naar home</a>
+      </p>
+    </section>
+  </main>
+  <script src="/assets/js/client-auth.js"></script>
+</body>
+</html>

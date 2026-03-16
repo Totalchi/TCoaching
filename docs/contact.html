@@ -14,11 +14,11 @@
   <meta property="og:description" data-content-en="Plan an intake call and receive a quick personal reply, or join the waiting list if this month is full." content="Plan een intakegesprek en krijg snel een persoonlijk antwoord, of kom op de wachtlijst als deze maand vol zit." />
   <meta property="og:type" content="website" />
     <meta property="og:url" content="https://totalchi.github.io/TCoaching/contact.html" />
-<meta property="og:image" content="https://totalchi.github.io/TCoaching/assets/img/og-card.svg" />
+<meta property="og:image" content="/assets/img/og-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" data-content-en="TCoaching | Contact" content="TCoaching | Contact" />
   <meta name="twitter:description" data-content-en="Use the intake as a first step toward more calm, direction, or structure." content="Gebruik de intake als eerste stap naar meer rust, richting of structuur." />
-  <meta name="twitter:image" content="https://totalchi.github.io/TCoaching/assets/img/og-card.svg" />
+  <meta name="twitter:image" content="/assets/img/og-card.png" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="assets/css/styles.css" />
@@ -32,7 +32,9 @@
       "areaServed": "Antwerpen"
     }
   </script>
-  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+  <!--suppress HtmlUnknownAnchorTarget -->
+<!--suppress HtmlUnknownAnchorTarget -->
+<a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
 <header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
@@ -43,14 +45,17 @@
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="about.html" data-lang-en="About">Over mij</a>
-        <a href="life-coaching.html">Life Coaching</a>
-        <a href="personal-training.html">Personal Training</a>
-        <a href="stress-burnout.html">Stress &amp; Burnout</a>
-        <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+        <details class="nav-menu" data-nav-services>
+          <summary data-lang-en="Services">Trajecten</summary>
+          <div class="nav-dropdown-panel">
+            <a href="life-coaching.html">Life Coaching</a>
+            <a href="personal-training.html">Personal Training</a>
+            <a href="stress-burnout.html">Stress &amp; Burnout</a>
+            <a href="assertiviteit.html" data-lang-en="Assertiveness">Assertiviteit</a>
+          </div>
+        </details>
         <a href="prijzen.html" data-lang-en="Pricing">Prijzen</a>
-        <a href="inzichten.html" data-lang-en="Insights">Inzichten</a>
         <a href="contact.html" data-lang-en="Contact">Contact</a>
-        <a href="privacy.html">Privacy</a>
       </div>
       <div class="nav-actions">
         <div class="utility-controls">
@@ -62,7 +67,13 @@
             <span data-theme-label>&#9728;</span>
           </button>
         </div>
-        <span class="availability-note" data-lang-en="2 intake spots this month">2 intakeplaatsen deze maand</span>
+        <a class="account-link" href="login/" aria-label="Admin login" data-aria-label-en="Admin login">
+          <span class="account-link-icon" aria-hidden="true">
+            <span class="account-link-head"></span>
+            <span class="account-link-body"></span>
+          </span>
+          <span class="account-link-label">Login</span>
+        </a>
         <button class="btn btn-primary" type="button" data-open-intake data-track-click="nav_intake_contact" data-lang-en="Book free intake">Plan gratis intake</button>
       </div>
     </nav>
@@ -78,8 +89,8 @@
           <p data-lang-en="This page is for ambitious professionals, self-employed people, and people starting over who feel their energy, boundaries, or rhythm need clarity again and who want to take a next step without hassle.">
             Deze pagina is bedoeld voor ambitieuze professionals, zelfstandigen en herstarters die voelen dat hun energie, grenzen of ritme opnieuw helder moeten worden en die een volgende stap willen zetten zonder gedoe.
           </p>
-          <div class="page-summary" data-lang-en="There are currently 2 intake spots available this month. If the month is full, you can immediately join the waiting list.">
-            Er zijn momenteel 2 intakeplaatsen deze maand. Zit die maand vol, dan kan je je meteen op de wachtlijst laten zetten.
+          <div class="page-summary" data-lang-en="You normally receive a personal reply within 24 hours on working days. If planning is full, you can immediately choose the waiting list.">
+            Je krijgt op werkdagen normaal binnen 24 uur een persoonlijk antwoord. Zit de planning vol, dan kan je meteen voor de wachtlijst kiezen.
           </div>
           <div class="hero-actions mt-24">
             <a class="btn btn-primary" href="#booking-form" data-track-click="contact_scroll_form" data-lang-en="Go to request">Ga naar aanvraag</a>
@@ -217,7 +228,7 @@
             <input type="hidden" name="captchaToken" data-captcha-token />
             <div class="captcha-widget" data-captcha-widget></div>
             <button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button>
-            <p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p>
+            <p class="form-status" data-form-status data-lang-en="Your request will be handled personally.">Je aanvraag wordt persoonlijk behandeld.</p>
           </form>
         </article>
 
@@ -362,7 +373,7 @@
         <input type="hidden" name="captchaToken" data-captcha-token />
         <div class="captcha-widget" data-captcha-widget></div>
         <button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button>
-        <p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p>
+        <p class="form-status" data-form-status data-lang-en="Your request will be handled personally.">Je aanvraag wordt persoonlijk behandeld.</p>
       </form>
     </div>
   </div>

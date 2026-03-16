@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Klantenportaal</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/portal.css" />
+</head>
+<body class="portal-page">
+  <main class="portal-shell">
+    <header class="portal-header">
+      <div>
+        <div class="portal-eyebrow">TCoaching Client Portal</div>
+        <h1 data-portal-welcome>Welkom terug</h1>
+        <p class="portal-copy" data-portal-subcopy>Je persoonlijke afspraken, planning en opvolging.</p>
+      </div>
+      <div class="portal-actions">
+        <a class="portal-button" href="/">Terug naar site</a>
+        <button class="portal-button primary" type="button" data-portal-logout>Afmelden</button>
+      </div>
+    </header>
+
+    <div class="portal-status" data-portal-status></div>
+
+    <section class="portal-grid metrics">
+      <article class="portal-card">
+        <h2>Volgende afspraak</h2>
+        <p class="portal-copy" data-metric-next-appointment>Nog niet geladen</p>
+      </article>
+      <article class="portal-card">
+        <h2>Openstaande facturen</h2>
+        <p class="portal-copy" data-metric-invoices>0</p>
+      </article>
+      <article class="portal-card">
+        <h2>Ongelezen coachberichten</h2>
+        <p class="portal-copy" data-metric-messages>0</p>
+      </article>
+      <article class="portal-card">
+        <h2>Actief plan</h2>
+        <p class="portal-copy" data-metric-plan>Nog niet geladen</p>
+      </article>
+    </section>
+
+    <section class="portal-grid main">
+      <div class="portal-grid">
+        <article class="portal-card">
+          <h2>Afspraken</h2>
+          <p class="portal-muted">Je aankomende en recente sessies.</p>
+          <div class="portal-list" data-portal-appointments></div>
+        </article>
+
+        <article class="portal-card">
+          <h2>Trainingsplan</h2>
+          <p class="portal-muted">Werk je items af en hou je voortgang bij.</p>
+          <div data-portal-training-plan></div>
+        </article>
+      </div>
+
+      <div class="portal-grid">
+        <article class="portal-card">
+          <h2>Facturen</h2>
+          <p class="portal-muted">Overzicht van je huidige en eerdere facturen.</p>
+          <div class="portal-list" data-portal-invoices></div>
+        </article>
+
+        <article class="portal-card">
+          <h2>Berichten</h2>
+          <p class="portal-muted">Laat snel iets weten aan je coach.</p>
+          <div class="portal-messages" data-portal-messages></div>
+          <form class="portal-form" data-portal-message-form>
+            <label for="portal-message-input" class="portal-muted">Nieuw bericht</label>
+            <textarea id="portal-message-input" name="body" data-portal-message-input placeholder="Typ hier je update of vraag"></textarea>
+            <button class="portal-button primary" type="submit">Bericht sturen</button>
+          </form>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="/assets/js/client-portal.js"></script>
+</body>
+</html>

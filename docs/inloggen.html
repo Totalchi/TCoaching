@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Client login</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/auth.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-eyebrow">TCoaching Client Portal</div>
+      <h1>Inloggen op je portaal</h1>
+      <p class="auth-copy">Bekijk je afspraken, trainingsplan, facturen en berichten op een plek.</p>
+
+      <div class="auth-message" data-client-auth-message></div>
+
+      <form class="auth-form" data-client-login-form>
+        <label class="auth-field">
+          <span>E-mailadres</span>
+          <input type="email" name="email" autocomplete="username" required />
+        </label>
+
+        <label class="auth-field">
+          <span>Wachtwoord</span>
+          <input type="password" name="password" autocomplete="current-password" required />
+        </label>
+
+        <div class="auth-actions">
+          <button class="auth-button" type="submit">Inloggen</button>
+          <a class="auth-button secondary" href="/registreer.html">Account aanmaken</a>
+        </div>
+      </form>
+
+      <p class="auth-note">
+        Nog geen toegang of wachtwoord vergeten?
+        <a href="/wachtwoord-reset.html">Vraag een resetlink aan</a>.
+      </p>
+
+      <p class="auth-meta">
+        <a href="/">Terug naar home</a>
+      </p>
+    </section>
+  </main>
+  <script src="/assets/js/client-auth.js"></script>
+</body>
+</html>

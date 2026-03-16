@@ -1,0 +1,233 @@
+:root {
+  color-scheme: light;
+  --portal-bg: #f4efe7;
+  --portal-panel: #fffaf5;
+  --portal-ink: #1f2933;
+  --portal-muted: #5f6c7b;
+  --portal-line: #ddd0c2;
+  --portal-accent: #8d5c2d;
+  --portal-accent-soft: rgba(141, 92, 45, 0.1);
+  --portal-success: #205b2b;
+  --portal-success-bg: #e7f3e8;
+  --portal-danger: #7e2f1f;
+  --portal-danger-bg: #f8e8e2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.portal-page {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--portal-ink);
+  background:
+    radial-gradient(circle at top, rgba(141, 92, 45, 0.12), transparent 28rem),
+    linear-gradient(180deg, #fbf7f2 0%, var(--portal-bg) 100%);
+}
+
+.portal-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.portal-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.portal-eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--portal-accent-soft);
+  color: var(--portal-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.portal-header h1 {
+  margin: 0 0 8px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+}
+
+.portal-copy,
+.portal-muted {
+  margin: 0;
+  color: var(--portal-muted);
+  line-height: 1.6;
+}
+
+.portal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.portal-button {
+  border: 1px solid var(--portal-line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: #fff;
+  color: var(--portal-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.portal-button.primary {
+  border-color: var(--portal-accent);
+  background: var(--portal-accent);
+  color: #fff;
+}
+
+.portal-button:hover,
+.portal-button:focus-visible {
+  outline: 2px solid rgba(141, 92, 45, 0.2);
+  outline-offset: 3px;
+}
+
+.portal-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.portal-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.portal-grid.metrics {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 20px;
+}
+
+.portal-grid.main {
+  grid-template-columns: 1.4fr 1fr;
+}
+
+@media (max-width: 900px) {
+  .portal-grid.main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.portal-card {
+  border: 1px solid var(--portal-line);
+  border-radius: 24px;
+  background: var(--portal-panel);
+  box-shadow: 0 16px 40px rgba(31, 41, 51, 0.06);
+  padding: 24px;
+}
+
+.portal-card h2,
+.portal-card h3 {
+  margin: 0 0 10px;
+}
+
+.portal-status {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  display: none;
+  font-weight: 600;
+}
+
+.portal-status.visible {
+  display: block;
+}
+
+.portal-status.error {
+  background: var(--portal-danger-bg);
+  color: var(--portal-danger);
+}
+
+.portal-status.success {
+  background: var(--portal-success-bg);
+  color: var(--portal-success);
+}
+
+.portal-list,
+.portal-messages,
+.portal-plan-items {
+  display: grid;
+  gap: 12px;
+}
+
+.portal-item,
+.portal-message,
+.portal-plan-item {
+  padding: 14px 16px;
+  border: 1px solid var(--portal-line);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.portal-item strong,
+.portal-message strong,
+.portal-plan-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.portal-meta {
+  color: var(--portal-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.portal-empty {
+  color: var(--portal-muted);
+  padding: 16px;
+  border: 1px dashed var(--portal-line);
+  border-radius: 18px;
+}
+
+.portal-form {
+  display: grid;
+  gap: 12px;
+}
+
+.portal-form textarea {
+  min-height: 140px;
+  padding: 14px 16px;
+  border: 1px solid var(--portal-line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--portal-ink);
+  font: inherit;
+  resize: vertical;
+}
+
+.portal-form textarea:focus {
+  outline: 2px solid rgba(141, 92, 45, 0.2);
+  outline-offset: 3px;
+}
+
+.portal-plan-item label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.portal-plan-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--portal-accent);
+  margin-top: 2px;
+}
+
+.portal-plan-item.is-complete {
+  background: #f7fbf7;
+}

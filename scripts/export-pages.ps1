@@ -209,12 +209,14 @@ foreach ($page in $publicPages) {
 
     $rootContent = Normalize-DocumentContent -Content (Get-Content -Raw -Path $sourcePagePath)
     $rootContent = Add-SeoMetadata -Content $rootContent -CanonicalUrl $rootUrl -NlUrl $rootUrl -EnUrl $englishUrl -SiteConfigPath "assets/js/site-config.js" -SiteBaseUrl $siteBaseUrl
+    $rootContent = $rootContent -replace 'href="/login"', 'href="login/"'
     Set-Content -Path $rootPagePath -Value $rootContent -Encoding UTF8
 
     $englishContent = Normalize-DocumentContent -Content (Get-Content -Raw -Path $sourcePagePath)
     $englishContent = Convert-PageCopyToEnglish -Content $englishContent
     $englishContent = Update-RelativePathsForEnglish -Content $englishContent
     $englishContent = Add-SeoMetadata -Content $englishContent -CanonicalUrl $englishUrl -NlUrl $rootUrl -EnUrl $englishUrl -SiteConfigPath "../assets/js/site-config.js" -SiteBaseUrl $siteBaseUrl
+    $englishContent = $englishContent -replace 'href="/login"', 'href="../login/"'
     Set-Content -Path $englishPagePath -Value $englishContent -Encoding UTF8
 }
 
@@ -242,6 +244,44 @@ $manifest = @"
 }
 "@
 Set-Content -Path (Join-Path $targetDir "site.webmanifest") -Value $manifest -Encoding UTF8
+
+$loginDir = Join-Path $targetDir "login"
+New-Item -ItemType Directory -Path $loginDir -Force | Out-Null
+$loginPage = @"
+<!doctype html>
+<html lang="nl" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Login</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  <main class="section">
+    <div class="container" style="max-width: 720px;">
+      <div class="story-card card-surface" style="padding: 40px;">
+        <div class="section-label">Login</div>
+        <h1 style="margin-top: 20px;">Inloggen werkt alleen op de volledige app</h1>
+        <p style="margin-top: 18px;">
+          Deze GitHub Pages-versie is een statische preview van de publieke website.
+          De admin- en portaal-login hebben een Spring Boot backend nodig en zijn hier dus niet actief.
+        </p>
+        <p style="margin-top: 12px;" lang="en">
+          This GitHub Pages version is a static preview of the public site.
+          Admin and portal sign-in require the Spring Boot backend and are not available here.
+        </p>
+        <div class="hero-actions" style="margin-top: 28px;">
+          <a class="btn btn-primary" href="../index.html">Terug naar home</a>
+          <a class="btn btn-secondary" href="../contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+"@
+Set-Content -Path (Join-Path $loginDir "index.html") -Value $loginPage -Encoding UTF8
 
 $today = Get-Date -Format "yyyy-MM-dd"
 $sitemapItems = foreach ($page in $publicPages) {

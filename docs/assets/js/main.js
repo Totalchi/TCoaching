@@ -82,14 +82,16 @@ const runtimeMessages = {
     formStatusSuccess: 'Dank je, je aanvraag is verstuurd en je hoort snel van mij.',
     formStatusError: 'Er ging iets mis. Probeer opnieuw of mail direct naar ons.',
     formStatusCaptcha: 'Bevestig de captcha om je aanvraag te versturen.',
-    formStatusConfigMissing: 'Formulier is tijdelijk niet beschikbaar. Probeer later opnieuw of stuur een mail.'
+    formStatusConfigMissing: 'Formulier is tijdelijk niet beschikbaar. Probeer later opnieuw of stuur een mail.',
+    formSubmitBusyLabel: 'Versturen...'
   },
   en: {
     formStatusSending: 'One moment, your request is being sent securely.',
     formStatusSuccess: 'Thank you, your request was sent and you will hear from me soon.',
     formStatusError: 'Something went wrong. Please try again or email us directly.',
     formStatusCaptcha: 'Please complete the captcha to send your request.',
-    formStatusConfigMissing: 'The form is temporarily unavailable. Please try again later or send an email.'
+    formStatusConfigMissing: 'The form is temporarily unavailable. Please try again later or send an email.',
+    formSubmitBusyLabel: 'Sending...'
   }
 };
 
@@ -285,8 +287,18 @@ const getCurrentPageHref = () => {
 
 const updateCurrentNavState = () => {
   const currentPageHref = getCurrentPageHref();
+  const servicePages = new Set([
+    'life-coaching.html',
+    'personal-training.html',
+    'stress-burnout.html',
+    'assertiviteit.html'
+  ]);
+
   document.querySelectorAll('header nav a[aria-current]').forEach((link) => {
     link.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('[data-nav-services]').forEach((menu) => {
+    menu.classList.remove('is-active');
   });
 
   document.querySelectorAll('header nav a[href]').forEach((link) => {
@@ -295,6 +307,12 @@ const updateCurrentNavState = () => {
       link.setAttribute('aria-current', 'page');
     }
   });
+
+  if (servicePages.has(currentPageHref)) {
+    document.querySelectorAll('[data-nav-services]').forEach((menu) => {
+      menu.classList.add('is-active');
+    });
+  }
 };
 
 const syncMobileNavUi = () => {
@@ -1180,6 +1198,10 @@ const wireForms = () => {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const status = form.querySelector('[data-form-status]');
+      const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+      if (submitButton && !submitButton.dataset.submitOriginalLabel) {
+        submitButton.dataset.submitOriginalLabel = submitButton.textContent;
+      }
       const setStatus = (key) => {
         if (!status) {
           return;
@@ -1187,12 +1209,24 @@ const wireForms = () => {
         const value = getRuntimeMessage(key);
         status.textContent = value || '';
       };
+      const setSubmitState = (busy) => {
+        if (!submitButton) {
+          return;
+        }
+        submitButton.disabled = busy;
+        submitButton.setAttribute('aria-disabled', String(busy));
+        submitButton.textContent = busy
+          ? (getRuntimeMessage('formSubmitBusyLabel') || submitButton.textContent)
+          : (submitButton.dataset.submitOriginalLabel || submitButton.textContent);
+      };
 
+      setSubmitState(true);
       setStatus('formStatusSending');
 
       if (captchaEnabled) {
         if (!captchaReady) {
           setStatus('formStatusConfigMissing');
+          setSubmitState(false);
           return;
         }
         renderAvailableCaptchaWidgets(form);
@@ -1201,6 +1235,7 @@ const wireForms = () => {
         if (!token) {
           setStatus('formStatusCaptcha');
           resetCaptcha(form);
+          setSubmitState(false);
           return;
         }
       }
@@ -1217,6 +1252,7 @@ const wireForms = () => {
 
       if (!apiConfig.enabled) {
         setStatus(getStaticModeMessage());
+        setSubmitState(false);
         return;
       }
 
@@ -1241,6 +1277,8 @@ const wireForms = () => {
         if (captchaEnabled) {
           resetCaptcha(form);
         }
+      } finally {
+        setSubmitState(false);
       }
     });
   });

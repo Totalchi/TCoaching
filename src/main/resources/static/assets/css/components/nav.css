@@ -52,7 +52,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 26px;
+  gap: 34px;
   flex: 1;
 }
 
@@ -145,16 +145,18 @@ nav {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
+  margin-left: 12px;
 }
 
 .account-link {
-  width: 46px;
-  height: 46px;
+  min-height: 46px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  gap: 10px;
+  padding: 0 16px 0 14px;
+  border-radius: 999px;
   border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--muted-strong);
@@ -174,6 +176,13 @@ nav {
   width: 16px;
   height: 18px;
   display: inline-block;
+}
+
+.account-link-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .account-link-head,
@@ -256,19 +265,6 @@ nav {
   font-size: 1rem;
   line-height: 1;
   letter-spacing: 0;
-}
-
-.availability-note {
-  font-size: 0.74rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-@media (max-width: 1240px) {
-  .availability-note {
-    display: none;
-  }
 }
 
 .nav-toggle {
@@ -444,7 +440,7 @@ nav {
 
   .account-link {
     width: 100%;
-    border-radius: 999px;
+    justify-content: center;
   }
 
   .utility-controls {
