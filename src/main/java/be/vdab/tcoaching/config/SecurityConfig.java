@@ -3,7 +3,9 @@ package be.vdab.tcoaching.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
@@ -77,11 +79,11 @@ public class SecurityConfig {
 
     @Bean
     UserDetailsService userDetailsService(
-            @Value("${security.admin.username}") String username,
-            @Value("${security.admin.password}") String password,
             @Value("${security.admin.require-non-default:false}") boolean requireNonDefault,
             PasswordEncoder passwordEncoder
     ) {
+        String username = resolveFirstNonBlankProperty("security.admin.username", "ADMIN_USER");
+        String password = resolveFirstNonBlankProperty("security.admin.password", "ADMIN_PASSWORD");
         boolean hasUsername = username != null && !username.isBlank();
         boolean hasPassword = password != null && !password.isBlank();
         if (!hasUsername || !hasPassword) {
@@ -157,5 +159,39 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    private String resolveFirstNonBlankProperty(String... keys) {
+        if (environment instanceof ConfigurableEnvironment configurableEnvironment) {
+            for (PropertySource<?> propertySource : configurableEnvironment.getPropertySources()) {
+                for (String key : keys) {
+                    String value = asConfiguredValue(propertySource.getProperty(key));
+                    if (value != null) {
+                        return value;
+                    }
+                }
+            }
+        }
+        for (String key : keys) {
+            String value = asConfiguredValue(environment.getProperty(key));
+            if (value != null) {
+                return value;
+            }
+        }
+        return "";
+    }
+
+    private String asConfiguredValue(Object candidate) {
+        if (candidate == null) {
+            return null;
+        }
+        String value = String.valueOf(candidate);
+        if (value.isBlank()) {
+            return null;
+        }
+        if (value.contains("${")) {
+            return null;
+        }
+        return value;
     }
 }
