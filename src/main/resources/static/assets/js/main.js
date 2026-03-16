@@ -287,8 +287,18 @@ const getCurrentPageHref = () => {
 
 const updateCurrentNavState = () => {
   const currentPageHref = getCurrentPageHref();
+  const servicePages = new Set([
+    'life-coaching.html',
+    'personal-training.html',
+    'stress-burnout.html',
+    'assertiviteit.html'
+  ]);
+
   document.querySelectorAll('header nav a[aria-current]').forEach((link) => {
     link.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('[data-nav-services]').forEach((menu) => {
+    menu.classList.remove('is-active');
   });
 
   document.querySelectorAll('header nav a[href]').forEach((link) => {
@@ -297,6 +307,12 @@ const updateCurrentNavState = () => {
       link.setAttribute('aria-current', 'page');
     }
   });
+
+  if (servicePages.has(currentPageHref)) {
+    document.querySelectorAll('[data-nav-services]').forEach((menu) => {
+      menu.classList.add('is-active');
+    });
+  }
 };
 
 const syncMobileNavUi = () => {
