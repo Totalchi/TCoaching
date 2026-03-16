@@ -112,52 +112,52 @@
 }
 
 [data-theme='light'] {
-  --bg: #f6f1e8;
-  --bg-alt: #efe6d8;
-  --bg-soft: #e7dbc9;
-  --surface: rgba(255, 250, 242, 0.92);
-  --surface-strong: #fff9f1;
-  --surface-muted: #f0e7da;
+  --bg: #f1ebe0;
+  --bg-alt: #e8dece;
+  --bg-soft: #ddd0bc;
+  --surface: rgba(246, 239, 229, 0.92);
+  --surface-strong: #f7f0e5;
+  --surface-muted: #ebe0d0;
   --text: #241e17;
   --muted: rgba(36, 30, 23, 0.68);
   --muted-strong: rgba(36, 30, 23, 0.82);
-  --accent-soft: rgba(181, 139, 38, 0.12);
-  --accent-line: rgba(181, 139, 38, 0.26);
-  --line: rgba(181, 139, 38, 0.16);
-  --line-strong: rgba(181, 139, 38, 0.28);
-  --shadow: 0 24px 60px rgba(56, 38, 11, 0.12);
+  --accent-soft: rgba(181, 139, 38, 0.1);
+  --accent-line: rgba(181, 139, 38, 0.22);
+  --line: rgba(181, 139, 38, 0.14);
+  --line-strong: rgba(181, 139, 38, 0.24);
+  --shadow: 0 24px 60px rgba(56, 38, 11, 0.1);
   --body-bg:
-    radial-gradient(circle at 12% 12%, rgba(201, 168, 76, 0.14), transparent 28%),
-    radial-gradient(circle at 84% 10%, rgba(201, 168, 76, 0.09), transparent 22%),
-    linear-gradient(180deg, #fbf7f0 0%, #f6f1e8 40%, #efe7db 100%);
-  --grid-line: rgba(181, 139, 38, 0.05);
+    radial-gradient(circle at 12% 12%, rgba(201, 168, 76, 0.1), transparent 28%),
+    radial-gradient(circle at 84% 10%, rgba(201, 168, 76, 0.06), transparent 22%),
+    linear-gradient(180deg, #f5efe5 0%, #f1ebe0 40%, #e7dece 100%);
+  --grid-line: rgba(181, 139, 38, 0.04);
   --body-glow:
-    radial-gradient(circle at 50% 0%, rgba(201, 168, 76, 0.1), transparent 38%),
-    radial-gradient(circle at 50% 100%, rgba(201, 168, 76, 0.06), transparent 28%);
-  --header-bg: linear-gradient(180deg, rgba(250, 245, 236, 0.94), rgba(250, 245, 236, 0.76));
-  --header-bg-solid: rgba(248, 241, 231, 0.96);
-  --card-highlight: linear-gradient(145deg, rgba(255, 255, 255, 0.52), transparent 42%);
+    radial-gradient(circle at 50% 0%, rgba(201, 168, 76, 0.07), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(201, 168, 76, 0.04), transparent 28%);
+  --header-bg: linear-gradient(180deg, rgba(243, 235, 224, 0.94), rgba(243, 235, 224, 0.78));
+  --header-bg-solid: rgba(240, 231, 219, 0.96);
+  --card-highlight: linear-gradient(145deg, rgba(255, 255, 255, 0.36), transparent 42%);
   --hero-visual-bg:
-    radial-gradient(circle at 50% 24%, rgba(201, 168, 76, 0.18), transparent 28%),
-    linear-gradient(160deg, #f8efe3 0%, #f0e4d3 64%, #e7d9c5 100%);
+    radial-gradient(circle at 50% 24%, rgba(201, 168, 76, 0.12), transparent 28%),
+    linear-gradient(160deg, #f0e6d8 0%, #e8dbc8 64%, #deceba 100%);
   --hero-photo-bg:
-    radial-gradient(circle at 50% 76%, rgba(201, 168, 76, 0.15), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.52), transparent),
-    linear-gradient(160deg, #fff8ef 0%, #f3e8d8 62%, #eadbc9 100%);
+    radial-gradient(circle at 50% 76%, rgba(201, 168, 76, 0.1), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent),
+    linear-gradient(160deg, #f7eee1 0%, #ece0cf 62%, #e1d2bf 100%);
   --page-visual-bg:
-    radial-gradient(circle at 76% 18%, rgba(201, 168, 76, 0.16), transparent 28%),
-    linear-gradient(145deg, #f7eee3 0%, #f0e5d6 64%, #e8dbc9 100%);
+    radial-gradient(circle at 76% 18%, rgba(201, 168, 76, 0.12), transparent 28%),
+    linear-gradient(145deg, #f1e7d9 0%, #e8dcc9 64%, #dfd0be 100%);
   --placeholder-bg:
-    radial-gradient(circle at 24% 20%, rgba(201, 168, 76, 0.16), transparent 20%),
-    linear-gradient(150deg, #fff8ef 0%, #f2e7d8 62%, #e9dccb 100%);
+    radial-gradient(circle at 24% 20%, rgba(201, 168, 76, 0.12), transparent 20%),
+    linear-gradient(150deg, #f7eee1 0%, #ebdfcf 62%, #e0d2c0 100%);
   --placeholder-text: rgba(145, 108, 20, 0.62);
-  --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.1), rgba(255, 250, 242, 0.92));
-  --select-menu-bg: #fff9f1;
+  --choice-card-bg: linear-gradient(180deg, rgba(201, 168, 76, 0.07), rgba(246, 239, 229, 0.92));
+  --select-menu-bg: #f7f0e5;
   --select-menu-text: #241e17;
-  --field-bg: rgba(255, 250, 242, 0.9);
-  --field-bg-strong: rgba(255, 250, 242, 0.96);
-  --panel-subtle-bg: rgba(255, 249, 241, 0.84);
-  --overlay-surface: rgba(255, 249, 241, 0.9);
+  --field-bg: rgba(246, 239, 229, 0.9);
+  --field-bg-strong: rgba(246, 239, 229, 0.96);
+  --panel-subtle-bg: rgba(245, 238, 228, 0.84);
+  --overlay-surface: rgba(245, 238, 228, 0.9);
 }
 
 html {
@@ -355,15 +355,15 @@ textarea {
   }
 
   [data-theme='light'] {
-    --surface: rgba(255, 250, 242, 0.98);
-    --surface-muted: #f4ebde;
+    --surface: rgba(246, 239, 229, 0.98);
+    --surface-muted: #eee2d2;
     --muted: rgba(36, 30, 23, 0.78);
     --muted-strong: rgba(36, 30, 23, 0.92);
-    --line: rgba(181, 139, 38, 0.22);
-    --line-strong: rgba(181, 139, 38, 0.34);
-    --field-bg: rgba(255, 250, 242, 0.94);
-    --field-bg-strong: rgba(255, 250, 242, 0.98);
-    --panel-subtle-bg: rgba(255, 249, 241, 0.9);
-    --overlay-surface: rgba(255, 249, 241, 0.94);
+    --line: rgba(181, 139, 38, 0.18);
+    --line-strong: rgba(181, 139, 38, 0.28);
+    --field-bg: rgba(246, 239, 229, 0.94);
+    --field-bg-strong: rgba(246, 239, 229, 0.98);
+    --panel-subtle-bg: rgba(245, 238, 228, 0.9);
+    --overlay-surface: rgba(245, 238, 228, 0.94);
   }
 }

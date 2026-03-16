@@ -67,6 +67,13 @@ function Normalize-LayoutWhitespace {
     return $normalized.TrimEnd() + "`r`n"
 }
 
+function Normalize-SuppressComments {
+    param([string]$Content)
+
+    $pattern = '(?:(?:<!--suppress HtmlUnknownAnchorTarget -->)\r?\n){2,}'
+    return [regex]::Replace($Content, $pattern, "<!--suppress HtmlUnknownAnchorTarget -->`r`n")
+}
+
 foreach ($page in $publicPages) {
     $pagePath = Join-Path $staticDir $page
     if (-not (Test-Path $pagePath)) {
@@ -82,6 +89,7 @@ foreach ($page in $publicPages) {
     $updated = [regex]::Replace($content, '(?:<a\b[^>]*class="skip-link"[^>]*>.*?</a>\s*)?<header>.*?</header>', $headerMarkup, $regexOptions)
     $updated = [regex]::Replace($updated, '<footer\b[^>]*class="footer"[^>]*>.*?</footer>', $footerMarkup, $regexOptions)
     $updated = Normalize-LayoutWhitespace -Content $updated
+    $updated = Normalize-SuppressComments -Content $updated
 
     Set-Content -Path $pagePath -Value $updated -Encoding UTF8
 }
