@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Wachtwoord reset</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/auth.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card" data-reset-page>
+      <div class="auth-eyebrow">TCoaching Client Portal</div>
+      <h1>Wachtwoord resetten</h1>
+      <p class="auth-copy">Vraag een resetlink aan of kies meteen een nieuw wachtwoord als je via mail bent doorverwezen.</p>
+
+      <div class="auth-message" data-client-auth-message></div>
+
+      <form class="auth-form" data-reset-request-form>
+        <label class="auth-field">
+          <span>E-mailadres</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <div class="auth-actions">
+          <button class="auth-button" type="submit">Resetlink sturen</button>
+        </div>
+      </form>
+
+      <form class="auth-form" data-reset-confirm-form hidden>
+        <input type="hidden" name="token" value="" />
+        <label class="auth-field">
+          <span>Nieuw wachtwoord</span>
+          <input type="password" name="password" minlength="8" autocomplete="new-password" required />
+        </label>
+        <label class="auth-field">
+          <span>Herhaal nieuw wachtwoord</span>
+          <input type="password" name="passwordRepeat" minlength="8" autocomplete="new-password" required />
+        </label>
+        <div class="auth-actions">
+          <button class="auth-button" type="submit">Wachtwoord opslaan</button>
+        </div>
+      </form>
+
+      <p class="auth-meta">
+        <a href="/inloggen.html">Terug naar login</a>
+      </p>
+    </section>
+  </main>
+  <script src="/assets/js/client-auth.js"></script>
+</body>
+</html>

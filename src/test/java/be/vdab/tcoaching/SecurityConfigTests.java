@@ -1,10 +1,12 @@
 package be.vdab.tcoaching;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SecurityConfigTests extends AbstractWebMvcTest {
@@ -26,16 +28,37 @@ class SecurityConfigTests extends AbstractWebMvcTest {
 
     @Test
     void adminRoutesRequireAuthentication() throws Exception {
-        mockMvc.perform(get("/api/admin/dashboard"))
+        mockMvc.perform(get("/api/admin/dashboard").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/admin"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void clientPortalRoutesRequireClientAuthentication() throws Exception {
+        mockMvc.perform(get("/api/client/dashboard").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/portaal.html"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/inloggen.html"));
     }
 
     @Test
     void unknownProtectedRouteRequiresAuthentication() throws Exception {
         mockMvc.perform(get("/internal"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void loginPageIsPublic() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/inloggen.html"))
+                .andExpect(status().isOk());
     }
 }

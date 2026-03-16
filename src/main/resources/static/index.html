@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="nl" data-theme="dark">
 <head>
   <meta charset="utf-8" />
@@ -11,14 +11,76 @@
   <meta property="og:description" data-content-en="A premium coaching experience for people carrying a lot and wanting to feel calm, direction, and rhythm again." content="Een premium coachingervaring voor mensen die veel dragen en opnieuw rust, richting en ritme willen voelen." />
   <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tcoaching.be/" />
-<meta property="og:image" content="/assets/img/og-card.svg" />
+<meta property="og:image" content="/assets/img/og-card.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" data-content-en="TCoaching | Coaching for ambitious professionals and people starting over" content="TCoaching | Coaching voor ambitieuze professionals en herstarters" />
   <meta name="twitter:description" data-content-en="Life coaching, personal training, stress recovery, and assertiveness for people who carry a lot and want direction again." content="Life coaching, personal training, stressherstel en assertiviteit voor mensen die veel dragen en terug richting willen." />
-  <meta name="twitter:image" content="/assets/img/og-card.svg" />
+  <meta name="twitter:image" content="/assets/img/og-card.png" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="site.webmanifest" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "@id": "https://tcoaching.be/#business",
+      "name": "TCoaching",
+      "url": "https://tcoaching.be/",
+      "image": "https://tcoaching.be/assets/img/og-card.png",
+      "description": "TCoaching begeleidt ambitieuze professionals, zelfstandigen en herstarters in life coaching, personal training, stressherstel en assertiviteit.",
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Antwerpen, Belgium"
+      },
+      "priceRange": "EUR 0 - EUR 389+",
+      "serviceType": [
+        "Life coaching",
+        "Personal training",
+        "Stress and burnout coaching",
+        "Assertiveness coaching"
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is de intake echt vrijblijvend?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. De intake is er om te verkennen, niet om je in een traject te duwen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Werk je met iedereen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nee. Deze site kiest bewust voor een duidelijke niche en een traject dat inhoudelijk moet passen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kan coaching en training gecombineerd worden?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Voor sommige trajecten is net die combinatie van mindset, beweging en structuur heel sterk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hoe snel hoor ik iets na mijn aanvraag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Op werkdagen normaal binnen 24 uur, met een persoonlijk antwoord en een concreet voorstel."
+          }
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
@@ -51,7 +113,7 @@
             <span data-theme-label>&#9728;</span>
           </button>
         </div>
-        <span class="availability-note" data-lang-en="2 intake spots this month">2 intakeplaatsen deze maand</span>
+        <span class="availability-note" data-lang-en="Personal reply on working days">Persoonlijk antwoord op werkdagen</span>
         <button class="btn btn-primary" type="button" data-open-intake data-track-click="nav_intake_home" data-lang-en="Book free intake">Plan gratis intake</button>
       </div>
     </nav>
@@ -75,7 +137,7 @@
           </div>
           <div class="hero-stats">
             <div class="stat-block">
-              <strong>1-op-1</strong>
+              <strong data-lang-en="1-on-1">1-op-1</strong>
               <span data-lang-en="Personal guidance">Persoonlijke begeleiding</span>
             </div>
             <div class="stat-block">
@@ -90,7 +152,7 @@
         </div>
         <aside class="hero-visual reveal card-surface">
           <div class="hero-photo">
-            <img src="assets/img/coach-hero.png" alt="Portret van de coach" data-alt-en="Portrait of the coach" />
+            <img src="assets/img/coach-hero.png" alt="Portret van de coach" data-alt-en="Portrait of the coach" width="1024" height="1536" />
             <div class="hero-photo-badge" data-lang-en="Authentic coaching, calm authority">Authentieke coaching, rustige autoriteit</div>
           </div>
         </aside>
@@ -374,7 +436,7 @@
             <input type="hidden" name="captchaToken" data-captcha-token />
             <div class="captcha-widget" data-captcha-widget></div>
             <button class="btn btn-primary" type="submit" data-lang-en="Request the mini training">Vraag de mini-training aan</button>
-            <p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p>
+            <p class="form-status" data-form-status data-lang-en="Your request will be handled personally.">Je aanvraag wordt persoonlijk behandeld.</p>
           </form>
         </article>
         <article class="contact-panel reveal card-surface">
@@ -503,7 +565,7 @@
         <input type="hidden" name="captchaToken" data-captcha-token />
         <div class="captcha-widget" data-captcha-widget></div>
         <button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button>
-        <p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p>
+        <p class="form-status" data-form-status data-lang-en="Your request will be handled personally.">Je aanvraag wordt persoonlijk behandeld.</p>
       </form>
     </div>
   </div>

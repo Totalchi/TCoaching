@@ -1,14 +1,17 @@
 package be.vdab.tcoaching.config;
 
+import be.vdab.tcoaching.api.client.PortalUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 class SecurityConfigCredentialResolutionTests {
 
@@ -28,13 +31,16 @@ class SecurityConfigCredentialResolutionTests {
                 "ADMIN_PASSWORD", "coaching"
         )));
 
-        SecurityConfig securityConfig = new SecurityConfig(environment);
-        InMemoryUserDetailsManager manager =
-                (InMemoryUserDetailsManager) securityConfig.userDetailsService(false, securityConfig.passwordEncoder());
+        PortalUserDetailsService service = new PortalUserDetailsService(
+                mock(JdbcTemplate.class),
+                PasswordEncoderFactories.createDelegatingPasswordEncoder(),
+                environment,
+                false
+        );
 
-        UserDetails user = manager.loadUserByUsername("Totalchi");
+        UserDetails user = service.loadUserByUsername("Totalchi");
 
         assertThat(user.getUsername()).isEqualTo("Totalchi");
-        assertThat(securityConfig.passwordEncoder().matches("coaching", user.getPassword())).isTrue();
+        assertThat(PasswordEncoderFactories.createDelegatingPasswordEncoder().matches("coaching", user.getPassword())).isTrue();
     }
 }

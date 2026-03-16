@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCoaching | Admin Login</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/auth.css" />
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-eyebrow">TCoaching Admin</div>
+      <h1>Inloggen op het dashboard</h1>
+      <p class="auth-copy">Gebruik de admin-gebruikersnaam en het wachtwoord uit je lokale configuratie.</p>
+
+      <div class="auth-message error" th:if="${param.error}">
+        De combinatie van gebruikersnaam en wachtwoord klopt niet.
+      </div>
+      <div class="auth-message success" th:if="${param.logout}">
+        Je bent afgemeld.
+      </div>
+
+      <form class="auth-form" method="post" action="/login">
+        <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <label class="auth-field">
+          <span>Gebruikersnaam</span>
+          <input type="text" name="username" autocomplete="username" required autofocus />
+        </label>
+
+        <label class="auth-field">
+          <span>Wachtwoord</span>
+          <input type="password" name="password" autocomplete="current-password" required />
+        </label>
+
+        <button class="auth-button" type="submit">Inloggen</button>
+      </form>
+
+      <p class="auth-meta">
+        <a href="/">Terug naar home</a>
+      </p>
+    </section>
+  </main>
+</body>
+</html>
