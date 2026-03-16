@@ -24,7 +24,8 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <header>
+  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+<header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">TC</div>
@@ -60,45 +61,7 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <main>
+<main id="main-content">
     <section class="page-hero">
       <div class="container page-hero-grid">
         <div class="page-hero-copy reveal">
@@ -107,7 +70,12 @@
           <p data-lang-en="This journey is meant for people who carry a lot, think a lot, and at the same time feel their life could become sharper, calmer, and more honest.">Dit traject is bedoeld voor mensen die veel dragen, veel nadenken en tegelijk voelen dat hun leven scherper, rustiger en eerlijker mag aanvoelen.</p>
           <div class="page-summary" data-lang-en="No vague &#39;we will see&#39;. We start from your patterns, choices, values, and boundaries.">Geen vaag "we zien wel". We starten vanuit jouw patronen, keuzes, waarden en grenzen.</div>
         </div>
-        <div class="page-hero-visual reveal"><div class="portrait-placeholder"><span data-lang-en="Your own visual for life coaching">Eigen beeld voor life coaching</span></div></div>
+        <div class="page-hero-visual reveal">
+          <figure class="photo-stack portrait-photo-card">
+            <img src="assets/img/coach-about-sea.png" alt="Portret van de coach in een rustige, professionele setting" data-alt-en="Portrait of the coach in a calm, professional setting" />
+            <figcaption class="portrait-photo-caption" data-lang-en="Calm, clarity, and personal guidance">Rust, helderheid en persoonlijke begeleiding</figcaption>
+          </figure>
+        </div>
       </div>
     </section>
     <section class="section">
@@ -186,8 +154,14 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Email: hello@tcoaching.be</p>
-      <p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p>
+      <p data-contact-email-container hidden>
+        <span>Email: </span>
+        <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+      </p>
+      <p data-contact-phone-container hidden>
+        <span data-lang-en="Phone: ">Telefoon: </span>
+        <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+      </p>
       <p data-lang-en="Region: Antwerp">Regio: Antwerpen</p>
     </div>
   </div>
@@ -196,45 +170,7 @@
   </div>
 </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="modal-overlay" data-intake-modal>
+<div class="modal-overlay" data-intake-modal>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="life-intake-title">
       <button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button>
       <h3 id="life-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3>
@@ -257,46 +193,5 @@
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

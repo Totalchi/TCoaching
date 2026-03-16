@@ -9,7 +9,9 @@
 window.TCOACHING_CONFIG = {
   configVersion: 1,
   apiEnabled: false,
-  contactEmail: 'hello@tcoaching.be',
+  contactEmail: "",
+  contactPhoneDisplay: "",
+  contactPhoneHref: "",
   bookingUrl: '',
   trackingWindowMs: 900000,
   mode: 'github-pages'

@@ -215,6 +215,25 @@ body.is-loaded footer {
   animation: fade-in 0.7s ease both;
 }
 
+.skip-link {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 220;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--overlay-surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .mt-12 { margin-top: 12px; }
 .mt-16 { margin-top: 16px; }
 .mt-18 { margin-top: 18px; }

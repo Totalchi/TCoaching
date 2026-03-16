@@ -24,7 +24,8 @@
   <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 <body>
-  <header>
+  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Skip to content</a>
+<header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">TC</div>
@@ -60,46 +61,7 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <main>
+<main id="main-content">
     <section class="page-hero">
       <div class="container page-hero-grid">
         <div class="page-hero-copy reveal">
@@ -275,8 +237,14 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Email: hello@tcoaching.be</p>
-      <p data-lang-en="Phone: +32 478 00 00 00">Phone: +32 478 00 00 00</p>
+      <p data-contact-email-container hidden>
+        <span>Email: </span>
+        <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+      </p>
+      <p data-contact-phone-container hidden>
+        <span data-lang-en="Phone: ">Phone: </span>
+        <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+      </p>
       <p data-lang-en="Region: Antwerp">Region: Antwerp</p>
     </div>
   </div>
@@ -285,46 +253,7 @@
   </div>
 </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="modal-overlay" data-intake-modal>
+<div class="modal-overlay" data-intake-modal>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-intake-title">
       <button class="modal-close" type="button" data-close-intake aria-label="Close" data-aria-label-en="Close">&times;</button>
       <h3 id="about-intake-title" data-lang-en="Book a free intake call">Book a free intake call</h3>
@@ -360,46 +289,5 @@
   <script src="../assets/js/main.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

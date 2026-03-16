@@ -22,6 +22,13 @@ function Normalize-DocumentContent {
     return $Content.Substring($lastDoctype.Index)
 }
 
+function ConvertTo-JsLiteral {
+    param([AllowNull()][string]$Value)
+
+    $normalized = if ($null -eq $Value) { "" } else { $Value }
+    return $normalized | ConvertTo-Json -Compress
+}
+
 function Set-AttributeFromEnglishData {
     param(
         [string]$Content,
@@ -147,6 +154,9 @@ Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $targetDir 
 $owner = if ($env:GITHUB_REPOSITORY_OWNER) { $env:GITHUB_REPOSITORY_OWNER.ToLowerInvariant() } else { "totalchi" }
 $repoName = if ($env:GITHUB_REPOSITORY) { ($env:GITHUB_REPOSITORY -split "/")[-1] } else { "TCoaching" }
 $customDomain = [string]::IsNullOrWhiteSpace($env:GH_PAGES_CNAME) -eq $false
+$publicContactEmail = ConvertTo-JsLiteral -Value $env:CONTACT_PUBLIC_EMAIL
+$publicContactPhoneDisplay = ConvertTo-JsLiteral -Value $env:CONTACT_PUBLIC_PHONE_DISPLAY
+$publicContactPhoneLink = ConvertTo-JsLiteral -Value $env:CONTACT_PUBLIC_PHONE_LINK
 
 if ($customDomain) {
     $siteBaseUrl = "https://$($env:GH_PAGES_CNAME.Trim())"
@@ -179,7 +189,9 @@ $configJs = @"
 window.TCOACHING_CONFIG = {
   configVersion: 1,
   apiEnabled: false,
-  contactEmail: 'hello@tcoaching.be',
+  contactEmail: $publicContactEmail,
+  contactPhoneDisplay: $publicContactPhoneDisplay,
+  contactPhoneHref: $publicContactPhoneLink,
   bookingUrl: '',
   trackingWindowMs: 900000,
   mode: 'github-pages'

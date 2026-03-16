@@ -18,7 +18,9 @@ const apiConfig = {
   contactEndpoint: runtimeConfig.contactEndpoint || buildApiUrl('/api/contact'),
   trackEndpoint: runtimeConfig.trackEndpoint || buildApiUrl('/api/track'),
   publicConfigEndpoint: runtimeConfig.publicConfigEndpoint || buildApiUrl('/api/public-config'),
-  contactEmail: runtimeConfig.contactEmail || 'hello@tcoaching.be',
+  contactEmail: runtimeConfig.contactEmail || '',
+  contactPhoneDisplay: runtimeConfig.contactPhoneDisplay || '',
+  contactPhoneHref: runtimeConfig.contactPhoneHref || '',
   bookingUrl: runtimeConfig.bookingUrl || '',
   mode: runtimeConfig.mode || 'app'
 };
@@ -759,6 +761,47 @@ const trimValue = (value) => {
   return trimmed.length ? trimmed : null;
 };
 
+const normalizePhoneHref = (phoneHref, phoneDisplay) => {
+  const configuredHref = trimValue(phoneHref);
+  if (configuredHref) {
+    return configuredHref.startsWith('tel:') ? configuredHref : `tel:${configuredHref}`;
+  }
+
+  const fallbackDisplay = trimValue(phoneDisplay);
+  if (!fallbackDisplay) {
+    return null;
+  }
+
+  const normalizedNumber = fallbackDisplay.replace(/[^\d+]/g, '');
+  return normalizedNumber ? `tel:${normalizedNumber}` : null;
+};
+
+const syncContactNodes = (containerSelector, linkSelector, textSelector, value, href) => {
+  document.querySelectorAll(containerSelector).forEach((container) => {
+    const link = container.querySelector(linkSelector);
+    const text = container.querySelector(textSelector);
+    const shouldShow = Boolean(value && href && link && text);
+
+    container.hidden = !shouldShow;
+    if (!shouldShow) {
+      return;
+    }
+
+    link.href = href;
+    text.textContent = value;
+  });
+};
+
+const applyPublicContactDetails = (config = null) => {
+  const effectiveConfig = config || publicConfigCache || {};
+  const contactEmail = trimValue(effectiveConfig.contactEmail || apiConfig.contactEmail);
+  const contactPhoneDisplay = trimValue(effectiveConfig.contactPhoneDisplay || apiConfig.contactPhoneDisplay);
+  const contactPhoneHref = normalizePhoneHref(effectiveConfig.contactPhoneHref || apiConfig.contactPhoneHref, contactPhoneDisplay);
+
+  syncContactNodes('[data-contact-email-container]', '[data-contact-email-link]', '[data-contact-email-text]', contactEmail, contactEmail ? `mailto:${contactEmail}` : null);
+  syncContactNodes('[data-contact-phone-container]', '[data-contact-phone-link]', '[data-contact-phone-text]', contactPhoneDisplay, contactPhoneHref);
+};
+
 const limitValue = (value, max) => {
   if (!value) {
     return null;
@@ -845,6 +888,16 @@ const fetchPublicConfig = async () => {
     if (publicConfigCache && publicConfigCache.bookingUrl && !apiConfig.bookingUrl) {
       apiConfig.bookingUrl = publicConfigCache.bookingUrl;
     }
+    if (publicConfigCache && publicConfigCache.contactEmail && !apiConfig.contactEmail) {
+      apiConfig.contactEmail = publicConfigCache.contactEmail;
+    }
+    if (publicConfigCache && publicConfigCache.contactPhoneDisplay && !apiConfig.contactPhoneDisplay) {
+      apiConfig.contactPhoneDisplay = publicConfigCache.contactPhoneDisplay;
+    }
+    if (publicConfigCache && publicConfigCache.contactPhoneHref && !apiConfig.contactPhoneHref) {
+      apiConfig.contactPhoneHref = publicConfigCache.contactPhoneHref;
+    }
+    applyPublicContactDetails(publicConfigCache);
     return publicConfigCache;
   } catch (error) {
     return null;
@@ -1254,6 +1307,7 @@ const trackPageView = () => {
 document.addEventListener('DOMContentLoaded', async () => {
   document.body.classList.add('is-loaded');
   cacheLanguageDefaults();
+  applyPublicContactDetails();
   currentLang = getInitialLang();
   currentTheme = getInitialTheme();
   setTheme(currentTheme);

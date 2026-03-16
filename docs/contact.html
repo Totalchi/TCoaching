@@ -29,12 +29,11 @@
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "name": "TCoaching",
-      "areaServed": "Antwerpen",
-      "telephone": "+32 478 00 00 00",
-      "email": "hello@tcoaching.be"
+      "areaServed": "Antwerpen"
     }
   </script>
-  <header>
+  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+<header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">TC</div>
@@ -70,46 +69,7 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <main>
+<main id="main-content">
     <section class="page-hero">
       <div class="container page-hero-grid">
         <div class="page-hero-copy reveal">
@@ -127,7 +87,10 @@
           </div>
         </div>
         <div class="page-hero-visual reveal">
-          <div class="portrait-placeholder"><span data-lang-en="Contact image or calm coach portrait">Contactbeeld of rustige coachfoto</span></div>
+          <figure class="photo-stack portrait-photo-card">
+            <img src="assets/img/coach-about-sea.png" alt="De coach in een rustige omgeving klaar voor een kennismaking" data-alt-en="The coach in a calm setting ready for an introduction" />
+            <figcaption class="portrait-photo-caption" data-lang-en="Personal response, clear next step">Persoonlijk antwoord, heldere volgende stap</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -279,7 +242,14 @@
             </div>
           </div>
           <ul class="bullet-list mt-24">
-            <li>Contact: hello@tcoaching.be</li>
+            <li data-contact-email-container hidden>
+              <span data-lang-en="Contact: ">Contact: </span>
+              <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+            </li>
+            <li data-contact-phone-container hidden>
+              <span data-lang-en="Phone: ">Telefoon: </span>
+              <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+            </li>
             <li data-lang-en="Region Antwerp and coaching by appointment">Regio Antwerpen en begeleiding op afspraak</li>
             <li data-lang-en="Waiting list possible when this month is full">Wachtlijst mogelijk wanneer deze maand vol zit</li>
           </ul>
@@ -303,13 +273,13 @@
 
     <section class="section-tight section-border">
       <div class="container contact-strip">
-        <div class="contact-strip-item">
+        <div class="contact-strip-item" data-contact-email-container hidden>
           <strong>Email</strong>
-          <span itemprop="email">hello@tcoaching.be</span>
+          <a data-contact-email-link href="#"><span itemprop="email" data-contact-email-text></span></a>
         </div>
-        <div class="contact-strip-item">
+        <div class="contact-strip-item" data-contact-phone-container hidden>
           <strong data-lang-en="Phone">Telefoon</strong>
-          <span itemprop="telephone">+32 478 00 00 00</span>
+          <a data-contact-phone-link href="#"><span itemprop="telephone" data-contact-phone-text></span></a>
         </div>
         <div class="contact-strip-item">
           <strong data-lang-en="Region">Regio</strong>
@@ -349,8 +319,14 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Email: hello@tcoaching.be</p>
-      <p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p>
+      <p data-contact-email-container hidden>
+        <span>Email: </span>
+        <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+      </p>
+      <p data-contact-phone-container hidden>
+        <span data-lang-en="Phone: ">Telefoon: </span>
+        <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+      </p>
       <p data-lang-en="Region: Antwerp">Regio: Antwerpen</p>
     </div>
   </div>
@@ -359,46 +335,7 @@
   </div>
 </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="modal-overlay" data-intake-modal>
+<div class="modal-overlay" data-intake-modal>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contact-intake-title">
       <button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button>
       <h3 id="contact-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3>
@@ -434,46 +371,5 @@
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

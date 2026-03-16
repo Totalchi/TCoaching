@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
@@ -27,6 +28,10 @@ class ContactControllerTests extends AbstractWebMvcTest {
         }).when(jdbcTemplate).update(anyString(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
 
         mockMvc.perform(post("/api/contact")
+                        .with((request) -> {
+                            request.setRemoteAddr("203.0.113.42");
+                            return request;
+                        })
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -45,8 +50,24 @@ class ContactControllerTests extends AbstractWebMvcTest {
                 .andExpect(status().isCreated());
 
         org.junit.jupiter.api.Assertions.assertTrue(transactionActiveDuringInsert.get());
-        verify(jdbcTemplate, times(1)).update(anyString(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
-        verify(emailNotificationService, times(1)).sendContactNotification(any(), any(), any(), any());
+        verify(captchaVerificationService, times(1)).verify(any(), eq("203.0.113.42"));
+        verify(jdbcTemplate, times(1)).update(
+                anyString(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                eq("203.0.113.0"),
+                any(),
+                any()
+        );
+        verify(emailNotificationService, times(1)).sendContactNotification(any(), eq("203.0.113.0"), any(), any());
     }
 
     @Test

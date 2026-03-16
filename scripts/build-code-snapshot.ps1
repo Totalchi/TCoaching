@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $outputPath = Join-Path $repoRoot $OutputFile
-$excludedDirectories = @(".git", ".idea", "target", "build", "docs")
+$excludedDirectories = @(".git", ".idea", "target", "build")
 $textExtensions = @(
     ".java", ".html", ".css", ".js", ".json", ".xml", ".properties",
     ".ps1", ".md", ".sql", ".txt", ".cmd", ".yml", ".yaml", ".svg",
@@ -38,8 +38,8 @@ $files = Get-ChildItem -Path $repoRoot -Recurse -File | Where-Object {
 $builder = New-Object System.Text.StringBuilder
 [void]$builder.AppendLine("TCoaching code snapshot")
 [void]$builder.AppendLine("Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')")
-[void]$builder.AppendLine("Included: source, config, scripts, docs markdown, text assets")
-[void]$builder.AppendLine("Excluded: docs/, build/, target/, .idea/, .git/, binary assets, local secret files")
+[void]$builder.AppendLine("Included: full project text code, config, scripts, docs pages, workflows, text assets")
+[void]$builder.AppendLine("Excluded: build/, target/, .idea/, .git/, binary assets, local secret files")
 [void]$builder.AppendLine("")
 
 foreach ($file in $files) {

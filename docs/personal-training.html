@@ -24,7 +24,8 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <header>
+  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+<header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">TC</div>
@@ -60,46 +61,13 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <main>
-    <section class="page-hero"><div class="container page-hero-grid"><div class="page-hero-copy reveal"><div class="page-kicker">Personal Training</div><h1 data-lang-en="Train with <em>confidence</em>, not pressure.">Trainen met <em>vertrouwen</em>, niet met druk.</h1><p data-lang-en="For beginners, people starting over, and anyone who needs a coach who puts technique, progression, and safety first.">Voor beginners, herstarters en mensen die nood hebben aan een coach die techniek, opbouw en veiligheid voorop zet.</p><div class="page-summary" data-lang-en="This journey combines structure, motivation, and realistic progress without a fitness culture you do not identify with.">Dit traject combineert structuur, motivatie en realistische progressie zonder fitnesscultuur waar je je niet in herkent.</div></div><div class="page-hero-visual reveal"><div class="portrait-placeholder"><span data-lang-en="Your own training visual or coach portrait">Eigen trainingsbeeld of coachfoto</span></div></div></div></section>
+<main id="main-content">
+    <section class="page-hero"><div class="container page-hero-grid"><div class="page-hero-copy reveal"><div class="page-kicker">Personal Training</div><h1 data-lang-en="Train with <em>confidence</em>, not pressure.">Trainen met <em>vertrouwen</em>, niet met druk.</h1><p data-lang-en="For beginners, people starting over, and anyone who needs a coach who puts technique, progression, and safety first.">Voor beginners, herstarters en mensen die nood hebben aan een coach die techniek, opbouw en veiligheid voorop zet.</p><div class="page-summary" data-lang-en="This journey combines structure, motivation, and realistic progress without a fitness culture you do not identify with.">Dit traject combineert structuur, motivatie en realistische progressie zonder fitnesscultuur waar je je niet in herkent.</div></div><div class="page-hero-visual reveal">
+          <figure class="photo-stack portrait-photo-card">
+            <img src="assets/img/coach-about-sea.png" alt="Portret van de coach in een rustige, professionele setting" data-alt-en="Portrait of the coach in a calm, professional setting" />
+            <figcaption class="portrait-photo-caption" data-lang-en="Calm, clarity, and personal guidance">Rust, helderheid en persoonlijke begeleiding</figcaption>
+          </figure>
+        </div></div></section>
     <section class="section"><div class="container editorial-grid"><article class="story-card reveal card-surface"><div class="section-label" data-lang-en="What you do get">Wat je wel krijgt</div><h2 data-lang-en="A plan that strengthens your body and builds your confidence.">Een plan dat je lichaam versterkt en je vertrouwen opbouwt.</h2><ul class="bullet-list mt-24"><li data-lang-en="Safe technique and injury prevention">Veilige techniek en blessurepreventie</li><li data-lang-en="Training at your level and pace">Training op jouw niveau en tempo</li><li data-lang-en="A rhythm that remains realistic next to work and life">Ritme dat haalbaar blijft naast werk en leven</li></ul></article><article class="story-card reveal card-surface"><div class="section-label" data-lang-en="What you do not get">Wat je niet krijgt</div><h2 data-lang-en="No exaggerated macho approach or random workouts.">Geen overdreven macho-aanpak of willekeurige workouts.</h2><ul class="bullet-list mt-24"><li data-lang-en="No performance pressure without context">Geen prestatiedruk zonder context</li><li data-lang-en="No copy-paste plans that do not fit you">Geen copy-paste schema's die niet bij jou passen</li><li data-lang-en="No focus on looks without health or capacity">Geen focus op uiterlijk zonder gezondheid of draagkracht</li></ul></article></div></section>
     <section class="section section-border"><div class="container proof-strip"><article class="metric-card reveal card-surface"><strong data-lang-en="Start">Start</strong><span data-lang-en="For beginners and people starting over">Voor beginners en herstarters</span></article><article class="metric-card reveal card-surface"><strong>Focus</strong><span data-lang-en="Technique, safety, strength, and routine">Techniek, veiligheid, kracht en routine</span></article><article class="metric-card reveal card-surface"><strong>Extra</strong><span data-lang-en="Can be combined with coaching for mindset and discipline">Combineerbaar met coaching voor mindset en discipline</span></article></div></section>
     <section class="section"><div class="container testimonial-grid"><article class="testimonial-card reveal card-surface"><blockquote data-lang-en="&quot;I never felt insecure or watched. That finally allowed me to start again.&quot;">"Ik voelde me nooit onzeker of bekeken. Daardoor kon ik eindelijk opnieuw beginnen."</blockquote><footer data-lang-en="Personal training client">Cli&euml;nt personal training</footer></article><article class="testimonial-card reveal card-surface"><blockquote data-lang-en="&quot;The sessions were clear and doable. That made the difference with everything I had tried before.&quot;">"De sessies waren helder en haalbaar. Dat maakte het verschil met alles wat ik eerder probeerde."</blockquote><footer data-lang-en="Restart journey client">Cli&euml;nt herstart traject</footer></article><article class="testimonial-card reveal card-surface"><blockquote data-lang-en="&quot;There was calm in the guidance, but also enough structure to really move forward.&quot;">"Er zat rust in de begeleiding, maar ook genoeg structuur om echt vooruit te gaan."</blockquote><footer data-lang-en="Build-up journey client">Cli&euml;nt opbouwtraject</footer></article></div></section>
@@ -135,8 +103,14 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Email: hello@tcoaching.be</p>
-      <p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p>
+      <p data-contact-email-container hidden>
+        <span>Email: </span>
+        <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+      </p>
+      <p data-contact-phone-container hidden>
+        <span data-lang-en="Phone: ">Telefoon: </span>
+        <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+      </p>
       <p data-lang-en="Region: Antwerp">Regio: Antwerpen</p>
     </div>
   </div>
@@ -145,89 +119,10 @@
   </div>
 </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="modal-overlay" data-intake-modal><div class="modal" role="dialog" aria-modal="true" aria-labelledby="pt-intake-title"><button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button><h3 id="pt-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3><p data-lang-en="Briefly describe your starting point and what you want to work toward.">Beschrijf kort je startpunt en waar je naartoe wil werken.</p><form class="form mt-24" data-contact-form="intake-popup-pt"><input type="hidden" name="page" value="PT Popup" /><input type="hidden" name="requestType" value="intake" /><label class="field-hidden" aria-hidden="true"><span>Website</span><input type="text" name="website" autocomplete="off" tabindex="-1" /></label><label><span data-lang-en="Name">Naam</span><input type="text" name="name" placeholder="Jouw naam" data-placeholder-en="Your name" required /></label><label><span>Email</span><input type="email" name="email" placeholder="jij@email.be" data-placeholder-en="you@email.com" required /></label><label><span data-lang-en="Your goal">Jouw doel</span><textarea name="goal" placeholder="Wat wil je opbouwen of opnieuw oppikken?" data-placeholder-en="What would you like to build or pick up again?"></textarea></label><input type="hidden" name="captchaToken" data-captcha-token /><div class="captcha-widget" data-captcha-widget></div><button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button><p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p></form></div></div>
+<div class="modal-overlay" data-intake-modal><div class="modal" role="dialog" aria-modal="true" aria-labelledby="pt-intake-title"><button class="modal-close" type="button" data-close-intake aria-label="Sluit" data-aria-label-en="Close">&times;</button><h3 id="pt-intake-title" data-lang-en="Book a free intake call">Plan een gratis intakegesprek</h3><p data-lang-en="Briefly describe your starting point and what you want to work toward.">Beschrijf kort je startpunt en waar je naartoe wil werken.</p><form class="form mt-24" data-contact-form="intake-popup-pt"><input type="hidden" name="page" value="PT Popup" /><input type="hidden" name="requestType" value="intake" /><label class="field-hidden" aria-hidden="true"><span>Website</span><input type="text" name="website" autocomplete="off" tabindex="-1" /></label><label><span data-lang-en="Name">Naam</span><input type="text" name="name" placeholder="Jouw naam" data-placeholder-en="Your name" required /></label><label><span>Email</span><input type="email" name="email" placeholder="jij@email.be" data-placeholder-en="you@email.com" required /></label><label><span data-lang-en="Your goal">Jouw doel</span><textarea name="goal" placeholder="Wat wil je opbouwen of opnieuw oppikken?" data-placeholder-en="What would you like to build or pick up again?"></textarea></label><input type="hidden" name="captchaToken" data-captcha-token /><div class="captcha-widget" data-captcha-widget></div><button class="btn btn-primary" type="submit" data-lang-en="Send request">Verstuur aanvraag</button><p class="form-status" data-form-status>Je aanvraag wordt persoonlijk behandeld.</p></form></div></div>
   <script src="assets/js/site-config.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

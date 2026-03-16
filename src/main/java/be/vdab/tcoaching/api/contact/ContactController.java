@@ -1,6 +1,7 @@
 package be.vdab.tcoaching.api.contact;
 
 import be.vdab.tcoaching.api.common.ClientIpResolver;
+import be.vdab.tcoaching.api.common.ClientIpAnonymizer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,17 +31,20 @@ public class ContactController {
     private final EmailNotificationService emailNotificationService;
     private final CaptchaVerificationService captchaVerificationService;
     private final ClientIpResolver clientIpResolver;
+    private final ClientIpAnonymizer clientIpAnonymizer;
 
     public ContactController(
             JdbcTemplate jdbcTemplate,
             EmailNotificationService emailNotificationService,
             CaptchaVerificationService captchaVerificationService,
-            ClientIpResolver clientIpResolver
+            ClientIpResolver clientIpResolver,
+            ClientIpAnonymizer clientIpAnonymizer
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.emailNotificationService = emailNotificationService;
         this.captchaVerificationService = captchaVerificationService;
         this.clientIpResolver = clientIpResolver;
+        this.clientIpAnonymizer = clientIpAnonymizer;
     }
 
     @Transactional
@@ -54,6 +58,7 @@ public class ContactController {
         }
 
         String ip = clientIpResolver.resolve(httpRequest);
+        String anonymizedIp = clientIpAnonymizer.anonymize(ip);
         String userAgent = limitHeader(httpRequest.getHeader("User-Agent"));
         String referrer = limitHeader(httpRequest.getHeader("Referer"));
 
@@ -71,12 +76,12 @@ public class ContactController {
                 request.message(),
                 request.page(),
                 request.lang(),
-                ip,
+                anonymizedIp,
                 userAgent,
                 referrer
         );
 
-        scheduleNotificationAfterCommit(request, ip, userAgent, referrer);
+        scheduleNotificationAfterCommit(request, anonymizedIp, userAgent, referrer);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

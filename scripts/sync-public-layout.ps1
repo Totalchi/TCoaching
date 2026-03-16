@@ -60,6 +60,13 @@ function Normalize-DocumentContent {
     return $Content.Substring($lastDoctype.Index)
 }
 
+function Normalize-LayoutWhitespace {
+    param([string]$Content)
+
+    $normalized = $Content -replace "(\r?\n[ \t]*){3,}", "`r`n`r`n"
+    return $normalized.TrimEnd() + "`r`n"
+}
+
 foreach ($page in $publicPages) {
     $pagePath = Join-Path $staticDir $page
     if (-not (Test-Path $pagePath)) {
@@ -69,11 +76,12 @@ foreach ($page in $publicPages) {
     $headerMarkup = $headerTemplate.Replace('href="../', 'href="').Replace('{{NAV_TRACK_ID}}', $navTrackIds[$page])
     $footerMarkup = $footerTemplate.Replace('href="../', 'href="')
     $content = Normalize-DocumentContent -Content (Get-Content -Raw -Path $pagePath)
-    if (-not [regex]::IsMatch($content, '<header>.*?</header>', $regexOptions) -or -not [regex]::IsMatch($content, '<footer\b[^>]*class="footer"[^>]*>.*?</footer>', $regexOptions)) {
+    if (-not [regex]::IsMatch($content, '(?:<a\b[^>]*class="skip-link"[^>]*>.*?</a>\s*)?<header>.*?</header>', $regexOptions) -or -not [regex]::IsMatch($content, '<footer\b[^>]*class="footer"[^>]*>.*?</footer>', $regexOptions)) {
         throw "Expected header/footer blocks were not found in $page"
     }
-    $updated = [regex]::Replace($content, '<header>.*?</header>', $headerMarkup, $regexOptions)
+    $updated = [regex]::Replace($content, '(?:<a\b[^>]*class="skip-link"[^>]*>.*?</a>\s*)?<header>.*?</header>', $headerMarkup, $regexOptions)
     $updated = [regex]::Replace($updated, '<footer\b[^>]*class="footer"[^>]*>.*?</footer>', $footerMarkup, $regexOptions)
+    $updated = Normalize-LayoutWhitespace -Content $updated
 
     Set-Content -Path $pagePath -Value $updated -Encoding UTF8
 }

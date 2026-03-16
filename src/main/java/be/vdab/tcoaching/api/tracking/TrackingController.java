@@ -1,6 +1,7 @@
 package be.vdab.tcoaching.api.tracking;
 
 import be.vdab.tcoaching.api.common.ClientIpResolver;
+import be.vdab.tcoaching.api.common.ClientIpAnonymizer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -29,13 +30,16 @@ public class TrackingController {
 
     private final JdbcTemplate jdbcTemplate;
     private final ClientIpResolver clientIpResolver;
+    private final ClientIpAnonymizer clientIpAnonymizer;
 
     public TrackingController(
             JdbcTemplate jdbcTemplate,
-            ClientIpResolver clientIpResolver
+            ClientIpResolver clientIpResolver,
+            ClientIpAnonymizer clientIpAnonymizer
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.clientIpResolver = clientIpResolver;
+        this.clientIpAnonymizer = clientIpAnonymizer;
     }
 
     @PostMapping(path = "/track", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +47,7 @@ public class TrackingController {
             @Valid @RequestBody PageViewRequest request,
             HttpServletRequest httpRequest
     ) {
-        String ip = clientIpResolver.resolve(httpRequest);
+        String ip = clientIpAnonymizer.anonymize(clientIpResolver.resolve(httpRequest));
         String userAgent = limitHeader(httpRequest.getHeader("User-Agent"));
         String referrerHeader = limitHeader(httpRequest.getHeader("Referer"));
         String referrer = request.referrer() != null ? request.referrer() : referrerHeader;

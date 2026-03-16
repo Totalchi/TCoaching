@@ -16,7 +16,8 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <header>
+  <a class="skip-link" href="#main-content" data-lang-en="Skip to content">Ga naar inhoud</a>
+<header>
   <div class="container header-inner">
     <a class="brand" href="index.html">
       <div class="brand-mark">TC</div>
@@ -52,45 +53,7 @@
   </div>
 </header>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <main>
+<main id="main-content">
     <section class="page-hero">
       <div class="container page-hero-grid">
         <div class="page-hero-copy reveal">
@@ -99,7 +62,12 @@
           <p data-lang-en="This page explains in clear language which data is processed through the site and why. For a real live version, you should still add your official company details here.">Deze pagina legt in klare taal uit welke gegevens via de site worden verwerkt en waarom. Voor een echte liveversie vul je hier nog je offici&euml;le bedrijfsgegevens aan.</p>
           <div class="page-summary" data-lang-en="This text is a practical foundation, not a custom legal document. It is best finalized once your company details are definitive.">Deze tekst is een praktische basis, geen juridisch maatwerkdocument. Laat hem best nog finaliseren zodra je ondernemingsgegevens definitief vastliggen.</div>
         </div>
-        <div class="page-hero-visual reveal"><div class="portrait-placeholder"><span data-lang-en="Privacy / legal overview">Privacy / juridisch overzicht</span></div></div>
+        <div class="page-hero-visual reveal">
+          <figure class="photo-stack portrait-photo-card">
+            <img src="assets/img/coach-about-sea.png" alt="Portret van de coach in een rustige, professionele setting" data-alt-en="Portrait of the coach in a calm, professional setting" />
+            <figcaption class="portrait-photo-caption" data-lang-en="Calm, clarity, and personal guidance">Rust, helderheid en persoonlijke begeleiding</figcaption>
+          </figure>
+        </div>
       </div>
     </section>
     <section class="section">
@@ -169,8 +137,14 @@
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Email: hello@tcoaching.be</p>
-      <p data-lang-en="Phone: +32 478 00 00 00">Telefoon: +32 478 00 00 00</p>
+      <p data-contact-email-container hidden>
+        <span>Email: </span>
+        <a data-contact-email-link href="#"><span data-contact-email-text></span></a>
+      </p>
+      <p data-contact-phone-container hidden>
+        <span data-lang-en="Phone: ">Telefoon: </span>
+        <a data-contact-phone-link href="#"><span data-contact-phone-text></span></a>
+      </p>
       <p data-lang-en="Region: Antwerp">Regio: Antwerpen</p>
     </div>
   </div>
@@ -179,88 +153,9 @@
   </div>
 </footer>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <script src="assets/js/site-config.js"></script>
+<script src="assets/js/site-config.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
