@@ -16,31 +16,50 @@
     logoutButton: document.querySelector('[data-portal-logout]')
   };
 
-  const readCsrfToken = () => {
-    const token = document.cookie
-      .split('; ')
-      .find((value) => value.startsWith('XSRF-TOKEN='));
-    return token ? decodeURIComponent(token.split('=').slice(1).join('=')) : '';
-  };
-
+  let cachedCsrfToken = null;
   let csrfPromise = null;
 
   const ensureCsrfToken = async () => {
-    const existing = readCsrfToken();
-    if (existing) {
-      return existing;
+    if (cachedCsrfToken) {
+      return cachedCsrfToken;
     }
     if (!csrfPromise) {
       csrfPromise = fetch('/api/csrf', { cache: 'no-store', credentials: 'same-origin' })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error('Beveiligingstoken ontbreekt.');
+          }
+          const data = await response.json();
+          if (!data.token) {
+            throw new Error('Beveiligingstoken ontbreekt.');
+          }
+          cachedCsrfToken = data.token;
+          return cachedCsrfToken;
+        })
         .finally(() => {
           csrfPromise = null;
         });
     }
-    const response = await csrfPromise;
-    if (!response.ok) {
-      throw new Error('Beveiligingstoken ontbreekt.');
+    return csrfPromise;
+  };
+
+  const esc = (value) => {
+    if (value == null) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  };
+
+  const safeUrl = (url) => {
+    if (!url) return null;
+    try {
+      const parsed = new URL(url, window.location.origin);
+      return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? url : null;
+    } catch {
+      return null;
     }
-    return readCsrfToken();
   };
 
   const apiFetch = async (url, options = {}) => {
@@ -90,7 +109,7 @@
     if (!container) {
       return;
     }
-    container.innerHTML = `<div class="portal-empty">${message}</div>`;
+    container.innerHTML = `<div class="portal-empty">${esc(message)}</div>`;
   };
 
   const renderAppointments = (items) => {
@@ -103,10 +122,10 @@
     }
     selectors.appointments.innerHTML = items.map((item) => `
       <article class="portal-item">
-        <strong>${item.title}</strong>
-        <div class="portal-meta">${formatDateTime(item.scheduledAt)} | ${item.type} | ${item.status}</div>
-        <div class="portal-meta">${item.location || 'Locatie volgt'}</div>
-        ${item.notesShared ? `<p class="portal-muted">${item.notesShared}</p>` : ''}
+        <strong>${esc(item.title)}</strong>
+        <div class="portal-meta">${formatDateTime(item.scheduledAt)} | ${esc(item.type)} | ${esc(item.status)}</div>
+        <div class="portal-meta">${esc(item.location) || 'Locatie volgt'}</div>
+        ${item.notesShared ? `<p class="portal-muted">${esc(item.notesShared)}</p>` : ''}
       </article>
     `).join('');
   };
@@ -123,19 +142,19 @@
     const items = Array.isArray(plan.items) ? plan.items : [];
     selectors.trainingPlan.innerHTML = `
       <article class="portal-item">
-        <strong>${plan.title}</strong>
-        <div class="portal-meta">${plan.status}${plan.startDate ? ` | Start ${plan.startDate}` : ''}${plan.endDate ? ` | Einde ${plan.endDate}` : ''}</div>
-        ${plan.description ? `<p class="portal-muted">${plan.description}</p>` : ''}
+        <strong>${esc(plan.title)}</strong>
+        <div class="portal-meta">${esc(plan.status)}${plan.startDate ? ` | Start ${esc(plan.startDate)}` : ''}${plan.endDate ? ` | Einde ${esc(plan.endDate)}` : ''}</div>
+        ${plan.description ? `<p class="portal-muted">${esc(plan.description)}</p>` : ''}
       </article>
       <div class="portal-plan-items">
         ${items.length ? items.map((item) => `
           <article class="portal-plan-item ${item.completedByClient ? 'is-complete' : ''}">
             <label>
-              <input type="checkbox" data-plan-item-toggle="${item.id}" ${item.completedByClient ? 'checked' : ''} />
+              <input type="checkbox" data-plan-item-toggle="${esc(item.id)}" ${item.completedByClient ? 'checked' : ''} />
               <span>
-                <strong>${item.title}</strong>
-                <div class="portal-meta">${item.category}${item.reps ? ` | ${item.reps} reps` : ''}${item.sets ? ` | ${item.sets} sets` : ''}${item.durationSec ? ` | ${Math.round(item.durationSec / 60)} min` : ''}</div>
-                ${item.description ? `<div class="portal-muted">${item.description}</div>` : ''}
+                <strong>${esc(item.title)}</strong>
+                <div class="portal-meta">${esc(item.category)}${item.reps ? ` | ${item.reps} reps` : ''}${item.sets ? ` | ${item.sets} sets` : ''}${item.durationSec ? ` | ${Math.round(item.durationSec / 60)} min` : ''}</div>
+                ${item.description ? `<div class="portal-muted">${esc(item.description)}</div>` : ''}
               </span>
             </label>
           </article>
@@ -175,14 +194,17 @@
       renderEmpty(selectors.invoices, 'Er staan nog geen facturen klaar.');
       return;
     }
-    selectors.invoices.innerHTML = items.map((item) => `
+    selectors.invoices.innerHTML = items.map((item) => {
+      const pdfHref = safeUrl(item.pdfUrl);
+      return `
       <article class="portal-item">
-        <strong>${item.invoiceNumber}</strong>
-        <div class="portal-meta">${(item.amountCents / 100).toFixed(2)} ${item.currency} | ${item.status}${item.dueDate ? ` | Vervaldag ${item.dueDate}` : ''}</div>
-        ${item.description ? `<div class="portal-muted">${item.description}</div>` : ''}
-        ${item.pdfUrl ? `<div class="portal-meta"><a href="${item.pdfUrl}" target="_blank" rel="noopener">PDF openen</a></div>` : ''}
+        <strong>${esc(item.invoiceNumber)}</strong>
+        <div class="portal-meta">${(item.amountCents / 100).toFixed(2)} ${esc(item.currency)} | ${esc(item.status)}${item.dueDate ? ` | Vervaldag ${esc(item.dueDate)}` : ''}</div>
+        ${item.description ? `<div class="portal-muted">${esc(item.description)}</div>` : ''}
+        ${pdfHref ? `<div class="portal-meta"><a href="${esc(pdfHref)}" target="_blank" rel="noopener noreferrer">PDF openen</a></div>` : ''}
       </article>
-    `).join('');
+    `;
+    }).join('');
   };
 
   const renderMessages = (items) => {
@@ -197,7 +219,7 @@
       <article class="portal-message">
         <strong>${item.sender === 'coach' ? 'Coach' : 'Jij'}</strong>
         <div class="portal-meta">${formatDateTime(item.createdAt)}</div>
-        <p class="portal-muted">${item.body}</p>
+        <p class="portal-muted">${esc(item.body)}</p>
       </article>
     `).join('');
   };

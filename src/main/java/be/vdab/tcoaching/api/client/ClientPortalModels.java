@@ -11,7 +11,7 @@ import java.util.List;
 
 record ClientRegistrationRequest(
         @NotBlank @Email @Size(max = 255) String email,
-        @NotBlank @Size(min = 8, max = 72) String password,
+        @NotBlank @Size(min = 8, max = 72) @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$") String password,
         @NotBlank @Size(max = 100) String firstName,
         @Size(max = 100) String lastName,
         @Size(max = 30) String phone,
@@ -32,7 +32,7 @@ record ClientResetPasswordRequest(
 
 record ClientResetPasswordConfirmRequest(
         @NotBlank @Pattern(regexp = "[a-f0-9]{64}") String token,
-        @NotBlank @Size(min = 8, max = 72) String password
+        @NotBlank @Size(min = 8, max = 72) @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$") String password
 ) {
 }
 

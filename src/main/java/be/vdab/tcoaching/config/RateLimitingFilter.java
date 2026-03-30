@@ -26,6 +26,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
 
     private final boolean enabled;
     private final Rule genericRule;
+    private final Rule adminLoginRule;
     private final Rule clientLoginRule;
     private final Rule clientRegisterRule;
     private final Rule clientResetRule;
@@ -34,6 +35,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     public RateLimitingFilter(
             @Value("${security.rate-limit.enabled:true}") boolean enabled,
             @Value("${security.rate-limit.requests-per-minute:180}") int requestsPerMinute,
+            @Value("${security.rate-limit.admin-login-per-minute:5}") int adminLoginPerMinute,
             @Value("${security.rate-limit.client-login-per-minute:5}") int clientLoginPerMinute,
             @Value("${security.rate-limit.client-register-per-hour:3}") int clientRegisterPerHour,
             @Value("${security.rate-limit.client-reset-per-hour:3}") int clientResetPerHour,
@@ -41,6 +43,7 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     ) {
         this.enabled = enabled;
         this.genericRule = new Rule("api", Math.max(1, requestsPerMinute), ONE_MINUTE_MILLIS);
+        this.adminLoginRule = new Rule("admin-login", Math.max(1, adminLoginPerMinute), ONE_MINUTE_MILLIS);
         this.clientLoginRule = new Rule("client-login", Math.max(1, clientLoginPerMinute), ONE_MINUTE_MILLIS);
         this.clientRegisterRule = new Rule("client-register", Math.max(1, clientRegisterPerHour), ONE_HOUR_MILLIS);
         this.clientResetRule = new Rule("client-reset", Math.max(1, clientResetPerHour), ONE_HOUR_MILLIS);
@@ -79,14 +82,26 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String contextPath = request.getContextPath();
         String requestUri = request.getRequestURI();
+        if (requestUri == null) {
+            return true;
+        }
         String apiPrefix = (contextPath == null ? "" : contextPath) + "/api/";
-        return requestUri == null || !requestUri.startsWith(apiPrefix);
+        if (requestUri.startsWith(apiPrefix)) {
+            return false;
+        }
+        String loginPath = (contextPath == null ? "" : contextPath) + "/login";
+        return !("POST".equalsIgnoreCase(request.getMethod()) && requestUri.equals(loginPath));
     }
 
     private Rule resolveRule(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
+        String contextPath = request.getContextPath();
+        String loginPath = (contextPath == null ? "" : contextPath) + "/login";
         if ("POST".equalsIgnoreCase(method) && path != null) {
+            if (path.equals(loginPath)) {
+                return adminLoginRule;
+            }
             if (path.endsWith("/api/client/login")) {
                 return clientLoginRule;
             }

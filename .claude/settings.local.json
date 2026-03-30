@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat /c/Users/Thomas/Desktop/TCoaching/scripts/*)",
+      "Bash(ls -la /c/Users/Thomas/Desktop/TCoaching/docs/*.html)",
+      "Bash(grep:*)",
+      "Bash(grep -rn \"<img\" /c/Users/Thomas/Desktop/TCoaching/docs/*.html)",
+      "Bash(python3 -c \":*)",
+      "Bash(ls /c/Users/Thomas/Desktop/TCoaching/src/main/resources/static/*.html)"
+    ]
+  }
+}

@@ -121,7 +121,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .csrf((csrf) -> csrf
-                        .csrfTokenRepository(org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(httpOnlyCsrfRepository())
                         .ignoringRequestMatchers("/api/contact", "/api/track")
                 )
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -159,7 +159,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .csrf((csrf) -> csrf.csrfTokenRepository(org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf((csrf) -> csrf.csrfTokenRepository(httpOnlyCsrfRepository()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -176,6 +176,12 @@ public class SecurityConfig {
 
         applySecurityHeaders(http);
         return http.build();
+    }
+
+    private static org.springframework.security.web.csrf.CookieCsrfTokenRepository httpOnlyCsrfRepository() {
+        var repo = new org.springframework.security.web.csrf.CookieCsrfTokenRepository();
+        repo.setCookieCustomizer(cookie -> cookie.httpOnly(true));
+        return repo;
     }
 
     private void applySecurityHeaders(HttpSecurity http) {

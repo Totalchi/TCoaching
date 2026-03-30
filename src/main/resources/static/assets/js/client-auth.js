@@ -1,33 +1,29 @@
 (function () {
-  const readCsrfToken = () => {
-    const token = document.cookie
-      .split('; ')
-      .find((value) => value.startsWith('XSRF-TOKEN='));
-    return token ? decodeURIComponent(token.split('=').slice(1).join('=')) : '';
-  };
-
+  let cachedCsrfToken = null;
   let csrfPromise = null;
 
   const ensureCsrfToken = async () => {
-    const existing = readCsrfToken();
-    if (existing) {
-      return existing;
+    if (cachedCsrfToken) {
+      return cachedCsrfToken;
     }
     if (!csrfPromise) {
       csrfPromise = fetch('/api/csrf', { cache: 'no-store', credentials: 'same-origin' })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error('Beveiligingstoken kon niet geladen worden.');
+          }
+          const data = await response.json();
+          if (!data.token) {
+            throw new Error('Beveiligingstoken ontbreekt.');
+          }
+          cachedCsrfToken = data.token;
+          return cachedCsrfToken;
+        })
         .finally(() => {
           csrfPromise = null;
         });
     }
-    const response = await csrfPromise;
-    if (!response.ok) {
-      throw new Error('Beveiligingstoken kon niet geladen worden.');
-    }
-    const token = readCsrfToken();
-    if (!token) {
-      throw new Error('Beveiligingstoken ontbreekt.');
-    }
-    return token;
+    return csrfPromise;
   };
 
   const postJson = async (url, payload) => {

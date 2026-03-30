@@ -30,6 +30,12 @@ public class CaptchaVerificationService {
         this.enabled = enabled;
         this.secret = secret;
         this.verifyUrl = verifyUrl;
+        if (enabled && (secret == null || secret.isBlank())) {
+            throw new IllegalStateException(
+                    "Captcha is enabled (contact.captcha.enabled=true) but CAPTCHA_SECRET is not configured. " +
+                    "Set the CAPTCHA_SECRET environment variable or disable captcha with contact.captcha.enabled=false."
+            );
+        }
     }
 
     public void verify(String token, String remoteIp) {

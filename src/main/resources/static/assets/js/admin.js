@@ -23,6 +23,7 @@ const leadsPageState = {
   total: 0,
   hasMore: false
 };
+let cachedCsrfToken = null;
 let csrfBootstrapPromise = null;
 
 const adminNumberFormat = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-GB' : 'nl-BE');
@@ -55,37 +56,30 @@ const appendCell = (row, value) => {
   row.appendChild(cell);
 };
 
-const readCsrfToken = () => {
-  const token = document.cookie
-    .split('; ')
-    .find((value) => value.startsWith('XSRF-TOKEN='));
-  return token ? decodeURIComponent(token.split('=').slice(1).join('=')) : '';
-};
-
 const ensureCsrfToken = async () => {
-  const existing = readCsrfToken();
-  if (existing) {
-    return existing;
+  if (cachedCsrfToken) {
+    return cachedCsrfToken;
   }
   if (!csrfBootstrapPromise) {
-    csrfBootstrapPromise = fetch('/api/admin/dashboard', {
-      headers: {
-        Accept: 'application/json'
-      },
-      cache: 'no-store'
+    csrfBootstrapPromise = fetch('/api/csrf', {
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+      credentials: 'same-origin'
+    }).then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`CSRF bootstrap failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      if (!data.token) {
+        throw new Error('CSRF token unavailable');
+      }
+      cachedCsrfToken = data.token;
+      return cachedCsrfToken;
     }).finally(() => {
       csrfBootstrapPromise = null;
     });
   }
-  const response = await csrfBootstrapPromise;
-  if (!response.ok) {
-    throw new Error(`CSRF bootstrap failed with status ${response.status}`);
-  }
-  const token = readCsrfToken();
-  if (!token) {
-    throw new Error('CSRF token unavailable');
-  }
-  return token;
+  return csrfBootstrapPromise;
 };
 
 const saveLead = async (id, payload) => {

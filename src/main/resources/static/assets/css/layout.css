@@ -544,6 +544,18 @@
   background: var(--page-visual-bg);
 }
 
+.page-hero-visual--plain {
+  min-height: auto;
+  padding: 0;
+  align-self: center;
+  background: transparent;
+}
+
+.page-hero-visual--plain > .portrait-photo-card {
+  border: none;
+  background: transparent;
+}
+
 .page-hero-visual > .portrait-photo-card {
   width: min(100%, 420px);
   min-height: clamp(260px, 34vw, 360px);
@@ -1357,4 +1369,3 @@
     transform: none;
   }
 }
-

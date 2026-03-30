@@ -100,6 +100,8 @@ class ClientPortalService {
         String email = normalizeEmail(request.email());
         ClientAccount account = findClientByEmail(email);
         if (account == null || !account.active() || !account.verified()) {
+            // Constant-time dummy operation to prevent email enumeration via timing
+            passwordEncoder.encode(email);
             return;
         }
 

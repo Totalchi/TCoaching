@@ -367,3 +367,43 @@ textarea {
     --overlay-surface: rgba(245, 238, 228, 0.94);
   }
 }
+
+@media print {
+  header,
+  footer,
+  nav,
+  .theme-toggle,
+  .skip-link,
+  .btn,
+  .hero-actions,
+  .nav-actions,
+  [data-captcha-widget],
+  [data-booking-embed] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt;
+  }
+
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 10pt;
+    color: #555;
+  }
+
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: '';
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+  }
+}

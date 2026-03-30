@@ -11,10 +11,13 @@ COPY src src
 RUN ./mvnw -q -DskipTests package
 
 FROM eclipse-temurin:25
+RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
+RUN chown appuser:appgroup app.jar
 
+USER appuser
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
