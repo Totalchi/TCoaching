@@ -556,6 +556,17 @@
   background: transparent;
 }
 
+.page-hero-portrait {
+  justify-self: end;
+  align-self: center;
+  width: min(100%, 420px);
+  min-height: clamp(260px, 34vw, 360px);
+  aspect-ratio: 294 / 342;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
 .page-hero-visual > .portrait-photo-card {
   width: min(100%, 420px);
   min-height: clamp(260px, 34vw, 360px);
